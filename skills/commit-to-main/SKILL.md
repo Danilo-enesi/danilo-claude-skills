@@ -9,10 +9,14 @@ description: Come creare commit Git in questo flusso di lavoro — sempre dirett
 
 Ogni commit va **diretto sul branch corrente** (`main`/`master`) — mai creare una branch feature, mai aprire una PR: usa il repo così com'è. Ogni commit contiene **file interi**: mai uno spezzone di un file in un commit e il resto in un altro (niente `git add -p`, niente stage parziale). Se più file cambiano per **motivi diversi**, dividili in **commit distinti raggruppati per funzionalità** — ma un singolo file resta sempre intero dentro un solo commit.
 
+## Ambito — per default, TUTTO ciò che mostra `git status`
+
+Il perimetro di default non è "i file toccati in questa sessione": è **tutto** ciò che `git status` mostra come modificato/nuovo/eliminato nel working tree, comprese modifiche fatte **prima o fuori** da questa conversazione (da un editor, da un altro strumento, da una sessione precedente). Non filtrare implicitamente ai soli file che ricordi di aver modificato tu — `git status` è la fonte di verità, non la tua memoria della sessione. L'unica esclusione è il §Segreti qui sotto.
+
 ## Procedura
 
-1. `git status` per vedere lo stato reale — mai `git add -A`/`git add .` alla cieca: elenca esplicitamente i file da stageare.
-2. Se compare un file sospetto (`.env`, credenziali, chiavi, token) — leggine il contenuto prima di stageare. Se contiene segreti: avvisa l'utente e **non committarlo**.
+1. `git status` per vedere lo stato reale e completo — mai `git add -A`/`git add .` in un colpo solo: elenca esplicitamente i file per nome quando stagei (per rispettare il raggruppamento e il divieto di stage parziale), ma l'insieme totale dei file stageati fra tutti i commit deve coprire **tutto** quello che `git status` riporta, salvo segreti (sotto).
+2. Se compare un file sospetto (`.env`, credenziali, chiavi, token) — leggine il contenuto prima di stageare. Se contiene segreti: avvisa l'utente, **non committarlo**, ed esplicitalo come eccezione nella tabella finale (colonna Motivo: "escluso, contiene segreti").
 3. **Raggruppa** i file modificati/nuovi/eliminati per motivo logico (es. "nuova skill X", "fix bug Y", "aggiorna doc Z"). Un gruppo coerente = un commit.
 4. Per ogni gruppo: `git add <file1> <file2> ...` elencando i file per nome — mai `-p`, mai un path che stagea solo parte di un file.
 5. Messaggio di commit **in italiano, conciso**: un soggetto imperativo breve (indicativamente sotto i 70 caratteri); un corpo solo se aggiunge una motivazione reale ("perché", non "cosa" — il diff mostra già cosa). Niente elenco di file nel messaggio. Usa un HEREDOC per evitare problemi di escaping.
