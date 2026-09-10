@@ -1,0 +1,17 @@
+{
+  "name": "danilo-claude-skills",
+  "metadata": {
+    "description": "Marketplace personale di Danilo con skill, comandi e sub-agenti per Claude Code."
+  },
+  "owner": {
+    "name": "Danilo Casale",
+    "email": "casale@enesi.it"
+  },
+  "plugins": [
+    {
+      "name": "danilo-claude-skills",
+      "source": "./",
+      "description": "Skill, comandi e sub-agenti personali di Danilo per Claude Code"
+    }
+  ]
+}

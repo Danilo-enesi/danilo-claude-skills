@@ -1,0 +1,11 @@
+# macOS
+.DS_Store
+**/.DS_Store
+
+# IDE
+.idea/
+
+# Artefatti locali di Claude Code (NON vanno versionati nel plugin)
+.claude/
+.agents/
+skills-lock.json

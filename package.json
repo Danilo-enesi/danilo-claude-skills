@@ -1,0 +1,8 @@
+{
+  "name": "danilo-claude-skills",
+  "version": "0.1.0",
+  "description": "Skill, comandi e sub-agenti personali di Danilo per Claude Code",
+  "author": "Danilo Casale",
+  "license": "UNLICENSED",
+  "private": true
+}
