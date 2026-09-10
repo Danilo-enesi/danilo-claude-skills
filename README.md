@@ -54,6 +54,7 @@ Oppure in locale (percorso assoluto al repo clonato):
 | `master-page-content` | Sistema di blocchi di contenuto DB-driven (`Contents` field, `page_contents`/`blog_contents`/...): come installarlo su un modulo nuovo, estendere un tipo di blocco, scrivere il rendering frontend. |
 | `template-to-blade` | Trasforma un HTML statico di prototipo (`template/*.html`) in una view Blade del front, replicando markup/classi 1:1 ed estraendo CSS/JS chirurgicamente (mai inline). |
 | `master-code-review` | Revisione di qualità del codice PHP/Laravel del Master: esegue script deterministici (`scripts/`) per le convenzioni strutturali/comportamentali, poi valuta best practice Laravel e DRY/SOLID. Sola lettura, solo segnala. |
+| `commit-to-main` | Come creare commit Git: sempre diretti sul branch corrente (niente branch/PR), sempre a file intero (mai frammentati), messaggio in italiano e conciso, raggruppati per funzionalità. Al termine restituisce una tabella file→motivo. |
 
 Comandi e sub-agenti (`commands/`, `agents/`) sono al momento vuoti (solo `.gitkeep`).
 
