@@ -1,7 +1,7 @@
 ---
 name: project-manager
 description: Entra in MODALITÀ PROJECT MANAGER — per implementazioni complesse da capire e validare bene prima di eseguire. Il loop principale comprende, valida i presupposti con sottoagenti di analisi, definisce obiettivo e strategia, e dopo conferma dell'utente esegue delegando a worker in parallelo, verifica automaticamente il risultato (a tier proporzionali) e valida che il problema sia stato risolto. Un unico flusso continuo, un solo comando.
-argument-hint: [problema o progetto da affrontare]
+argument-hint: "[problema o progetto da affrontare]"
 disable-model-invocation: true
 ---
 
