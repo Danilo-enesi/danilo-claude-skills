@@ -57,7 +57,13 @@ Oppure in locale (percorso assoluto al repo clonato):
 | `commit-to-main` | Come creare commit Git: sempre diretti sul branch corrente (niente branch/PR), sempre a file intero (mai frammentati), messaggio in italiano e conciso, raggruppati per funzionalità. Al termine restituisce una tabella file→motivo. |
 | `keep-it-simple` | Criterio per i commenti nel codice: solo dove servono davvero, brevi (1-2 righe), mai una cronologia di modifiche — solo stato attuale o il perché di una decisione. |
 
-Comandi e sub-agenti (`commands/`, `agents/`) sono al momento vuoti (solo `.gitkeep`).
+## Comandi disponibili
+
+| Comando | Descrizione |
+|---|---|
+| `riepilogo-oggi` | Genera un riepilogo breve (max 50 parole, in italiano) di quanto fatto oggi, basandosi sui commit del giorno e sul contesto della sessione. |
+
+I sub-agenti (`agents/`) sono al momento vuoti (solo `.gitkeep`).
 
 ## Aggiungere una nuova skill
 
