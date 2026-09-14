@@ -25,6 +25,11 @@ Fuori da questi casi: non commentare.
 - ❌ È una **cronologia di modifiche** ("modificato il 12/03 da X", "rimosso perché...", codice vecchio lasciato commentato "nel dubbio") — la storia la tiene git, non i commenti.
 - ❌ Ripete in prosa il nome della funzione/variabile.
 - ❌ Blocco multi-paragrafo o docstring lunga quando basterebbe una riga — o nessuna.
+- ❌ È una modifica isolata e banale (una riga, un dettaglio minore) che non merita di per sé una spiegazione a parte.
+- ❌ Occupa più spazio/attenzione di quanto aiuti — il costo di leggerlo supera il valore che dà.
+- ❌ Dice qualcosa di ovvio, che chiunque dedurrebbe leggendo il codice circostante.
+- ❌ Aumenta la difficoltà di lettura del file (rompe il flusso, appesantisce una riga semplice, o si accumula insieme ad altri commenti simili).
+- ❌ Non è stato richiesto dall'utente — se l'utente non ha chiesto un commento, il default resta non scriverlo, anche se sembra "utile".
 
 ## Forma
 
@@ -39,3 +44,4 @@ Fuori da questi casi: non commentare.
 3. È una parte davvero cruciale (vincolo, workaround, edge case)? → prosegui, altrimenti fermati.
 4. Sta in 1-2 righe? → scrivilo. Se no, accorcialo o semplifica il codice.
 5. Fra un anno, senza il contesto della task corrente, sarà ancora vero? → se no, non è un commento valido: è una nota di processo, non di codice.
+6. L'utente lo ha chiesto, o aiuta più di quanto pesa sulla lettura del file? → se né l'uno né l'altro, non scriverlo.
