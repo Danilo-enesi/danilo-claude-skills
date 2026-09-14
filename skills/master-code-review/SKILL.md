@@ -1,5 +1,6 @@
 ---
 name: master-code-review
+author: Danilo-enesi
 description: Controllo qualità del codice PHP/Laravel del Master Laravel Enesi — esegue script deterministici per le convenzioni strutturali e comportamentali (Fase 1), poi valuta ciò che gli script non possono coprire (best practice Laravel, DRY/SOLID, riuso di campi/blocchi esistenti). Produce l'elenco delle discrepanze (`file:line`, gravità, come correggerle), in ordine di priorità: (1) convenzioni master-core, (2) best practice Laravel, (3) DRY/SOLID. Attivala quando pensi «questo codice è fatto come si deve?», «controlla che segua le convenzioni», «un agente ha messo la query/logica nel posto sbagliato», «cosa andrebbe rifattorizzato?», «questo file è idiomatico per il progetto?». SOLO SEGNALA (sola lettura, solo PHP/Laravel): non scrive né modifica — restituisce i findings a chi l'ha invocata (utente, worker, Orchestratore), che decide se e come applicarli.
 ---
 

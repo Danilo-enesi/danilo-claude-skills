@@ -1,5 +1,6 @@
 ---
 name: master-core-fields
+author: Danilo-enesi
 description: Come creare, valorizzare e personalizzare i CAMPI (Field) dei form admin del Master Laravel Enesi (laravel-master-core). Attivala quando aggiungi o modifichi un campo in un `config.php` di modulo (`$form->addField(...)`): scegliere il tipo giusto, capire dove finisce il valore (colonna / traduzione / tabella valori / media / indirizzo), impostare validazioni/regole, o creare un Field custom estendendo la classe base. Frasi tipiche: «aggiungi un campo», «nuovo field / addField», «campo del form», «validazione campo», «campo multilingua», «campo select/checkbox/media/data», «field custom», «personalizzare un campo».
 ---
 

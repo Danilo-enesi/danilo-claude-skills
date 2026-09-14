@@ -1,5 +1,6 @@
 ---
 name: subagent-empowerment
+author: Danilo-enesi
 description: Come loop principale (Orchestratore o Project Manager), prima di delegare lavoro a uno o più sottoagenti (tool `Agent` o `Workflow`), per decidere QUANTO potere dargli: quale modello, quali skill fargli caricare, quali MCP autorizzargli, se può scrivere su CLAUDE.md, e con quali tetti di concorrenza. Attivala quando pensi «creo un worker per…», «delego questa attività», «lancio N sottoagenti in parallelo», «che modello uso per questo agente», «quanti agenti alla volta». Regola guida: default POTERE MINIMO, si promuove solo con un innesco osservabile, con tetti duri di modello e concorrenza (mai far esplodere costi/macchina).
 ---
 

@@ -1,5 +1,6 @@
 ---
 name: template-to-blade
+author: Danilo-enesi
 description: Trasforma un HTML statico del prototipo di design (`template/*.html`, `template_storia/*.html`, `typo.html`, o un nuovo template consegnato) in una view Blade del front (`private/front/Main/Views/`). Attivala quando senti «migra il template», «porta questo HTML in Blade», «crea la pagina Storia/Contatti/…», «trasforma il prototipo in view», «integra il nuovo template», «converti l'HTML in Blade», o quando devi estrarre gli stili/JS di un HTML statico nel progetto. Ricorda: `template/` è la FONTE DI VERITÀ del design (sola lettura, markup/classi replicati 1:1) e nel Blade non si mette mai JS/CSS inline (CSS in `template/assets/css`, JS in `assets/js` + Mix).
 ---
 

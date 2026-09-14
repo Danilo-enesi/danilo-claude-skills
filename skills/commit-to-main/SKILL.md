@@ -1,5 +1,6 @@
 ---
 name: commit-to-main
+author: Danilo-enesi
 description: Come creare commit Git in questo flusso di lavoro — sempre diretti sul branch corrente (main/master, mai una branch feature o una PR), sempre a livello di file intero (mai frammentare un file fra più commit o usare `git add -p`), messaggio di commit in italiano e conciso, raggruppando i file per funzionalità in commit distinti quando cambiano per motivi diversi. Attivala quando senti «fai il commit», «committa queste modifiche», «crea i commit», «salva il lavoro su git», o quando un task di codice va concluso con un commit. Al termine restituisce SEMPRE una tabella file→motivo, mai un semplice "fatto".
 ---
 

@@ -1,5 +1,6 @@
 ---
 name: master-front-rules
+author: Danilo-enesi
 description: Regole di setup del LAYOUT del front nei progetti Master Laravel Enesi (`private/front/Main/Views/base/`) — separazione head/footer, i due stack `@stack('head')` / `@stack('scripts')`, classi `lang-`/`route-`/`theme-` sul body, `Meta::render()` e `Meta::set()`, `Dom::renderCookieBanner()`, blocco preventivo degli script che richiedono il consenso cookie (attributi `data-epp-*`), e condivisione dati cross-Blade via view composer o `Front::loadSharedContent()` + `Dom::config()`. Attivala quando senti «imposta/rifattorizza il layout del front», «head/scripts blade», «dove metto questo script/CSS», «meta tag / SEO / title / og:image», «cookie banner», «EPP / privacy.ene.si», «script bloccato fino al consenso», «Google Analytics/Fonts/Maps/YouTube nel front», «questo dato serve in header e footer», «view composer», «dati condivisi fra le view». Ricorda: nelle Blade NON si scrive mai JS/CSS inline, i meta non si scrivono a mano, e ogni risorsa di terze parti nasce BLOCCATA.
 ---
 

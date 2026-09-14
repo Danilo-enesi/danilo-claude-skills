@@ -1,5 +1,6 @@
 ---
 name: master-page-content
+author: Danilo-enesi
 description: Sistema di blocchi di contenuto (`Contents` field, `page_contents`/`blog_contents`/`project_contents`...) del Master Laravel Enesi. Attivala quando si parla di blocco/block/content block, `page_contents`, aggiungere/estendere un tipo di blocco, installare i blocchi su un modulo nuovo (es. Products), `BlockRenderer`, componente blocco frontend, o `moduleName`/`viewsModuleName` del field `Contents`. Ricorda: NON sono componenti statici — contenuto, ordine, tipo e formato arrivano dalle righe DB (`<entity>_contents.data` JSON) inserite dall'admin.
 ---
 

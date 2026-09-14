@@ -1,5 +1,6 @@
 ---
 name: keep-it-simple
+author: Danilo-enesi
 description: Criterio per i commenti nel codice — quando scriverli, quanto devono essere lunghi, e cosa devono contenere. Attivala quando scrivi o modifichi codice e stai per aggiungere un commento, o quando rivedi commenti esistenti in un file. Regola d'oro — l'utente sa leggere il codice, un commento serve solo dove il codice da solo non basta: mai una cronologia di modifiche, sempre lo stato attuale o il perché di una decisione.
 ---
 
