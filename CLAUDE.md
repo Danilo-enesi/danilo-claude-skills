@@ -16,6 +16,7 @@ danilo-claude-skills/
 ├── skills/                ← skills (SKILL.md + resources)
 ├── commands/              ← slash commands (*.md)
 ├── agents/                ← sub-agents (*.md)
+├── hooks/                 ← hooks.json + scripts (active wherever the plugin is enabled)
 └── README.md
 ```
 
@@ -37,6 +38,7 @@ Most of the current skills are domain knowledge for the **Master Laravel Enesi**
 
 - Commands: `commands/<name>.md`
 - Sub-agents: `agents/<name>.md`
+- Hooks: register in `hooks/hooks.json` (script via `${CLAUDE_PLUGIN_ROOT}/hooks/...`). The plugin is enabled globally, so a hook must self-gate on the project (e.g. `block-lang-edits.sh` exits 0 unless `ln_upd.php` exists).
 
 ## Skill authoring conventions observed in this repo
 

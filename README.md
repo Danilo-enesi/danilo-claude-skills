@@ -24,6 +24,7 @@ danilo-claude-skills/
 ├── skills/                ← skill (SKILL.md + risorse, in inglese)
 ├── commands/               ← comandi slash (*.md)
 ├── agents/                 ← sub-agenti (*.md)
+├── hooks/                  ← hook (hooks.json + script)
 └── README.md
 ```
 
@@ -64,6 +65,16 @@ Oppure in locale (percorso assoluto al repo clonato):
 | `riepilogo-oggi` | Genera un riepilogo breve (max 50 parole, in italiano) di quanto fatto oggi, basandosi sui commit del giorno e sul contesto della sessione. |
 
 I sub-agenti (`agents/`) sono al momento vuoti (solo `.gitkeep`).
+
+## Hook disponibili
+
+| Hook | Descrizione |
+|---|---|
+| `block-lang-edits` | `PreToolUse` su Edit/Write: blocca le modifiche dirette a `resources/lang/**` e rimanda a `app/Console/Commands/Utility/ln_upd.php` + `php artisan ln:upd`. Si attiva **solo** nei progetti che hanno `ln_upd.php` (Master Laravel Enesi): negli altri Laravel non fa nulla. Richiede `bash` (Git Bash su Windows). |
+
+Gli hook sono attivi in ogni progetto dove il plugin è abilitato; per escluderlo
+da un progetto, disabilitare il plugin in quel progetto (`enabledPlugins` nel suo
+`.claude/settings.json`).
 
 ## Aggiungere una nuova skill
 
