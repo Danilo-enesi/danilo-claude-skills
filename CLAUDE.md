@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this repo is
 
-This repo is simultaneously a Claude Code **marketplace** and the single **plugin** it distributes. `.claude-plugin/marketplace.json` defines the marketplace and points to one plugin whose source is `./` (this same repo); `.claude-plugin/plugin.json` holds that plugin's metadata (name, version, description, author). There is no build, lint, or test tooling — this is a content repo of Claude Code skills/commands/agents, not application code.
+This repo is a Claude Code **marketplace** that distributes two plugins. `.claude-plugin/marketplace.json` lists them: `danilo-claude-skills` with source `./` (the repo root; metadata in `.claude-plugin/plugin.json`) and `pdf-design` with source `./plugins/pdf-design` (its own `.claude-plugin/plugin.json`, `skills/`, `README.md`). The root plugin only loads the root `skills/`, so the two never mix. A self-contained group of related skills goes in its own plugin under `plugins/<name>/`; bump that plugin's own version on changes. There is no build, lint, or test tooling — this is a content repo of Claude Code skills/commands/agents, not application code.
 
 ## Structure
 
@@ -17,6 +17,8 @@ danilo-claude-skills/
 ├── commands/              ← slash commands (*.md)
 ├── agents/                ← sub-agents (*.md)
 ├── hooks/                 ← hooks.json + scripts (active wherever the plugin is enabled)
+├── plugins/
+│   └── pdf-design/        ← separate plugin: PDF design comprehension (skills + Python scripts, all English)
 └── README.md
 ```
 

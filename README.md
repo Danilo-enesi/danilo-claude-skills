@@ -44,6 +44,17 @@ Oppure in locale (percorso assoluto al repo clonato):
 /plugin install danilo-claude-skills
 ```
 
+## Plugin `pdf-design`
+
+Plugin separato nello stesso marketplace (`plugins/pdf-design/`): comprensione sistematica di un design
+consegnato in PDF (estrazione, font anche anonimizzati, token, sezioni, brief per agenti AI, anteprima
+del design in HTML con diff visivo, SVG→PNG con varianti dark). Skill e script in inglese, vedi
+`plugins/pdf-design/README.md`.
+
+```
+/plugin install pdf-design --marketplace Danilo-enesi/danilo-claude-skills
+```
+
 ## Skill disponibili
 
 | Skill | Descrizione |

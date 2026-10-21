@@ -12,6 +12,11 @@
       "name": "danilo-claude-skills",
       "source": "./",
       "description": "Skill, comandi e sub-agenti personali di Danilo per Claude Code"
+    },
+    {
+      "name": "pdf-design",
+      "source": "./plugins/pdf-design",
+      "description": "Understand a design delivered as PDF: extract, fonts, tokens, sections, brief for AI builders, HTML preview with visual diff, SVG to PNG with dark variants."
     }
   ]
 }

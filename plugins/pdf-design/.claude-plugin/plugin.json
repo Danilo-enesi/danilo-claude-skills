@@ -1,0 +1,9 @@
+{
+  "name": "pdf-design",
+  "version": "0.1.0",
+  "description": "Understand a design delivered as PDF, step by step: extract text, shapes, images and fonts, build design tokens, split sections, document the design and recreate it as HTML with visual diffing.",
+  "author": {
+    "name": "Danilo Casale",
+    "email": "casale@enesi.it"
+  }
+}
