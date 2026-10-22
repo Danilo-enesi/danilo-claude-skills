@@ -22,7 +22,7 @@ Il perimetro di default non è "i file toccati in questa sessione": è **tutto**
 4. Per ogni gruppo: `git add <file1> <file2> ...` elencando i file per nome — mai `-p`, mai un path che stagea solo parte di un file.
 5. Messaggio di commit **in italiano, conciso**: un soggetto imperativo breve (indicativamente sotto i 70 caratteri); un corpo solo se aggiunge una motivazione reale ("perché", non "cosa" — il diff mostra già cosa). Niente elenco di file nel messaggio. Usa un HEREDOC per evitare problemi di escaping.
 6. Ripeti il passo 4-5 per ogni gruppo — è normale creare **più commit** in una sola esecuzione.
-7. Dopo l'ultimo commit: push diretto su `origin/<branch-corrente>`. Se il remoto ha commit non presenti in locale, fai prima pull/rebase — mai sovrascrivere la storia altrui. Mai `--force` salvo richiesta esplicita dell'utente.
+7. Dopo l'ultimo commit: **fermati, niente push**. I commit restano in locale; il push si fa solo se l'utente lo chiede esplicitamente (nella richiesta o dopo), mai di tua iniziativa.
 8. Se le istruzioni di sistema della sessione richiedono una riga di attribuzione (es. `Co-Authored-By: ...`), aggiungila in fondo a ogni messaggio di commit.
 
 ## Cosa NON fare
@@ -31,6 +31,7 @@ Il perimetro di default non è "i file toccati in questa sessione": è **tutto**
 - ❌ `git add -A` / `git add .` senza aver prima controllato cosa include.
 - ❌ Frammentare un file fra due commit (`git add -p`, hunk parziali, `git add` su un file già in parte staged con modifiche successive non incluse).
 - ❌ Messaggio di commit in inglese, prolisso, o che elenca semplicemente i file toccati.
+- ❌ `git push` senza richiesta esplicita dell'utente.
 - ❌ `--no-verify`, `--no-gpg-sign`, `push --force` senza richiesta esplicita.
 - ❌ Committare un file con segreti/credenziali senza prima avvisare l'utente.
 
@@ -44,3 +45,5 @@ Al termine di tutti i commit di questa esecuzione (prima di considerare il task 
 | `path/al/file2.ext` | breve motivo del cambiamento |
 
 Una riga per **ogni file toccato** (aggiunto, modificato o eliminato) in **qualsiasi** commit creato in questa esecuzione, anche se sono finiti in commit diversi. Il "motivo" è una frase breve e concreta — non il messaggio di commit letterale, ma il perché di quel singolo file.
+
+Dopo la tabella, una riga che ricorda che i commit sono solo locali (non pushati).
