@@ -17,6 +17,11 @@
       "name": "pdf-design",
       "source": "./plugins/pdf-design",
       "description": "Understand a design delivered as PDF: extract, fonts, tokens, sections, brief for AI builders, HTML preview with visual diff, SVG to PNG with dark variants."
+    },
+    {
+      "name": "prod-to-local",
+      "source": "./plugins/prod-to-local",
+      "description": "Copy a site (files + DB dump) from a production server to this PC as one all-or-nothing job, with a DPAPI credential vault Claude never reads."
     }
   ]
 }

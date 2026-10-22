@@ -1,0 +1,9 @@
+{
+  "name": "prod-to-local",
+  "version": "0.1.0",
+  "description": "Copy a site (files + database dump) from a production server to this PC as an all-or-nothing job: read-only preflight, no locks, temp files only in $HOME and always removed, credentials in a DPAPI vault Claude never reads.",
+  "author": {
+    "name": "Danilo Casale",
+    "email": "casale@enesi.it"
+  }
+}
