@@ -116,5 +116,5 @@ export async function scan($: EngineInterface): Promise<Catalog> {
     }
     entries.push(...own)
   }
-  return { root, entries, scannedMs: Date.now() - started }
+  return { root, market: String(market.name ?? ''), entries, scannedMs: Date.now() - started }
 }

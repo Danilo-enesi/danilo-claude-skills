@@ -8,7 +8,7 @@ import { installLocal } from './install'
 import { scan } from './scan'
 
 const PANE = 'repo-deck'
-const catalog = atom({ plugin: 'repo-deck', key: 'catalog' } as const, { root: '', entries: [], scannedMs: 0 } as Catalog, { shape: 'catalog-2' })
+const catalog = atom({ plugin: 'repo-deck', key: 'catalog' } as const, { root: '', market: '', entries: [], scannedMs: 0 } as Catalog, { shape: 'catalog-3' })
 const selected = atom({ plugin: 'repo-deck', key: 'selected' } as const, '', { shape: 'selected-1' })
 const collapsed = atom({ plugin: 'repo-deck', key: 'collapsed' } as const, [] as Kind[], { shape: 'collapsed-1' })
 const error = atom({ plugin: 'repo-deck', key: 'error' } as const, '', { shape: 'error-1' })
@@ -55,7 +55,7 @@ export const register: Register = on => {
   on('ui.render', { component: 'Pane', requestId: PANE }, async ($, e) => {
     const el = $.ui.resolve(e)
     if (e.surface !== 'terminal') return <el.Text>Repo deck è pensato per il terminale.</el.Text>
-    const { Box, Text, Button } = el
+    const { Box, Text, Button, Markdown } = el
     const { Header, Card, Kv } = deck(el as never)
     const cat = await read($, catalog)
     const sel = await read($, selected)
@@ -70,7 +70,7 @@ export const register: Register = on => {
 
     return (
       <Box flexDirection="column">
-        <Header title={`REPO DECK · ${cat.root === '.' ? 'cwd' : cat.root}`} legend={SECTIONS.map(s => [s.kind, s.color] as [string, Tone])} />
+        <Header title={`MARKETPLACE · ${cat.market}`} legend={SECTIONS.filter(s => count(s.kind) > 0).map(s => [s.kind, s.color] as [string, Tone])} />
         {problem ? <Text color="red">{problem}</Text> : null}
 
         {SECTIONS.map(s => {
@@ -87,7 +87,7 @@ export const register: Register = on => {
             >
               {rows.map(x => {
                   const isSel = keyOf(x) === sel
-                  const head = s.kind === 'skill' || s.kind === 'plugin' ? x.name : `${x.owner}:${x.name}`
+                  const head = x.name
                   const tail = cut(x.meta ? `${x.meta} · ${x.description}` : x.description, cols - head.length - 4)
                   return (
                     <Button key={keyOf(x)} plain onPress={pick(x)}>
@@ -103,7 +103,7 @@ export const register: Register = on => {
         {current ? (
           <Card title={current.name} right={current.meta} color={colorOf(current.kind) as Tone}>
             <Box marginTop={1}>
-              <Text wrap="wrap" color={tone.text}>{current.description || 'Nessuna descrizione.'}</Text>
+              <Markdown text={current.description || 'Nessuna descrizione.'} />
             </Box>
             <Box flexDirection="row" gap={1} marginTop={1}>
               {current.invoke ? (
