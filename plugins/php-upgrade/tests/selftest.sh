@@ -10,6 +10,9 @@ ko()  { echo "FAIL $*"; fail=1; }
 for f in "$P"/scripts/*.sh; do bash -n "$f" && ok "bash -n $(basename "$f")" || ko "bash -n $(basename "$f")"; done
 for f in "$P"/scripts/*.php "$P"/lib/*.php "$P"/templates/*.php; do "$PHP" -l "$f" > /dev/null && ok "php -l $(basename "$f")" || ko "php -l $(basename "$f")"; done
 python -I "$P/tests/guard_test.py" && ok "guardia" || ko "guardia"
+bash "$P/tests/maint_test.sh" > /dev/null && ok "manutenzione (.htaccess)" || { bash "$P/tests/maint_test.sh" | grep FAIL; ko "manutenzione"; }
+bash "$P/tests/deploy_test.sh" > /dev/null && ok "deploy remoto (istantanea, rollback)" || { bash "$P/tests/deploy_test.sh" | grep FAIL; ko "deploy"; }
+for f in "$P"/remote/*.sh; do bash -n "$f" && ok "bash -n remote/$(basename "$f")" || ko "bash -n remote/$(basename "$f")"; done
 
 # A1/A2 su un progetto finto: devono trovare i casi veri e ignorare definizioni, nativi e protetti da defined()
 T=$(mktemp -d); mkdir -p "$T/admin/lang" "$T/lib" "$T/front/app/settings/lang/w1"

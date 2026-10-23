@@ -24,24 +24,14 @@ Riferimento del comportamento: **PROD (`PHP_PROD`)**, non il PHP vecchio locale.
 |---|---|---|---|
 | P0 | `ssh … "<php nuovo> -m" \| Out-File -Encoding ascii _migration/prod-phpXX-modules.txt` e `ssh … "<php nuovo> -i \| grep -E '^(short_open_tag\|display_errors) '" \| Out-File -Encoding ascii _migration/prod-phpXX-ini.txt`; controllare anche cPanel › MultiPHP INI Editor | utente | `env.sh` senza avvisi su PROD |
 | P1-P2 | Backup PROD con `prod-to-local` (sito reale: occhio ai link `www` → `public_html`) e `backup-db.sh --verify <dump>` | agente, password dell'utente | copia + `.verified` |
-| P3 | `bash $PU/deploy-pack.sh --prod-copy <dir> --prod-dump <dump>` (prima `--dry-run`) | agente | `out/deploy-*/` |
-| P3b | Manutenzione ON: carica `manutenzione.html`, incolla il blocco 503 nel `.htaccess` di PROD dopo `RewriteEngine On` (con l'IP pubblico dell'utente) | utente | da un'altra rete si vede la pagina 503 |
-| P4 | Cancella le cartelle in `deploy-delete.txt`, carica ed **estrai** (`tar -xzf`, non `-tzf`) `deploy.tar.gz` nella radice reale del sito | utente | i file chiave esistono |
+| P3 | `bash $PU/deploy-pack.sh --prod-copy <dir> --prod-dump <dump>` (prima `--dry-run`) | agente | `out/deploy-*/` con `deploy-manifest.txt` |
+| P3b | Manutenzione ON: `bash $PU/maintenance.sh on` (pagina `_migration/manutenzione.html`, blocco 503 dopo `RewriteEngine On`, escluso l'IP di questo PC) | agente, con permesso | da questo PC 200, da un'altra rete la pagina 503 |
+| P4 | `bash $PU/deploy-push.sh --pack <out/deploy-…> --dry-run`, poi senza `--dry-run` (istantanea, applica, verifica SHA, rollback automatico) | agente, con permesso | «OK: deploy applicato» |
 | P5 | cPanel › MultiPHP Manager → handler nuovo | utente | versione cambiata |
-| P6 | `smoke.sh --target prod --confirm-prod`, `compare-prod.sh --confirm-prod --shots`, `error_log`; prove manuali: upload foto, PDF con login, invio form (SMTP reale) | agente + utente | 0 FAIL |
-| P7 | Manutenzione OFF: togli il blocco dal `.htaccess` | utente | il sito risponde da un'altra rete |
+| P6 | `smoke.sh --target prod --confirm-prod`, `compare-prod.sh --confirm-prod --shots`, `error_log`; prove manuali: upload foto, PDF con login, invio form (SMTP reale), tutte le lingue | agente + utente | 0 FAIL |
+| P7 | Manutenzione OFF: `bash $PU/maintenance.sh off` (toglie solo il suo blocco) | agente, con permesso | il sito risponde da un'altra rete |
 
-**Rollback PROD**: handler vecchio; cancella `rollback-delete.txt`, estrai `rollback.tar.gz`; smoke. Il DB non cambia.
+**Rollback PROD**: `bash $PU/deploy-rollback.sh --pack <out/deploy-…>` (rimette l'istantanea) + l'utente rimette l'handler vecchio; smoke. Il DB non cambia. Senza SSH: `rollback.tar.gz` + `rollback-delete.txt` dal File Manager.
 **Mai caricare**: `.htaccess` (si modifica solo a mano), `.user.ini`, `.dunebox/`, `_migration/`, `.claude/`, `.git/`, i `KEEP_UNTRACKED`.
 
-Blocco di manutenzione (P3b):
-```apache
-    # >>> MANUTENZIONE (togliere a fine aggiornamento, P7)
-    ErrorDocument 503 /manutenzione.html
-    RewriteCond %{REMOTE_ADDR} !^1\.2\.3\.4$
-    RewriteCond %{REQUEST_URI} !^/manutenzione\.html$
-    RewriteCond %{REQUEST_URI} !\.(png|jpe?g|svg|css)$
-    RewriteCond %{REQUEST_URI} !^/\.well-known/
-    RewriteRule ^ - [R=503,L]
-    # <<< MANUTENZIONE
-```
+Il blocco di manutenzione lo scrive `remote/htaccess-maint.sh` (solo righe tra marcatori `# >>> php-upgrade manutenzione` … `# <<< php-upgrade manutenzione <<<`). Se serve incollarlo a mano: `bash $PU/../remote/htaccess-maint.sh on <copia del .htaccess> /tmp/stato manutenzione.html <IP>` lo genera su una copia.

@@ -16,6 +16,8 @@ PROD_SSH_PORT=22
 PROD_SITE=/home/user/public_html
 PROD_PHP_HANDLER_FROM=ea-php70    # cPanel › MultiPHP Manager
 PROD_PHP_HANDLER_TO=ea-php83
+PROD_VAULT_PROFILE=example-login  # profilo del vault di prod-to-local con la password SSH (deploy-push/maintenance)
+MAINT_PAGE=manutenzione.html      # pagina di manutenzione: sorgente in _migration/, pubblicata da maintenance.sh
 
 # DB LOCALE (Dunebox)
 DB_NAME=example_db

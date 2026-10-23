@@ -14,6 +14,7 @@ put SPEC.md SPEC.md
 put patches.php patches.php
 put checks.php checks.php
 put files/php8_polyfill.inc files/php8_polyfill.inc
+put manutenzione.html manutenzione.html   # adattare nome, logo e colore; la pubblica maintenance.sh
 for f in urls.txt urls-pdf.txt urls-admin.txt urls-compare.txt lint-ignore.txt argcount-ignore.txt const-ignore.txt; do
   [ -e "$M/$f" ] || { echo "# vedi $T/lists.txt" > "$M/$f"; echo "   creato:     _migration/$f"; }
 done

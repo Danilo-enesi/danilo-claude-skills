@@ -3,7 +3,8 @@
 set -euo pipefail
 
 PLUGIN_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-ROOT="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
+# cd + pwd: percorso POSIX (/c/...). Con "C:/..." GNU tar crede che "C:" sia un host remoto.
+ROOT="$(cd "$(git rev-parse --show-toplevel 2>/dev/null || pwd)" && pwd)"
 MIG_DIR="$ROOT/_migration"
 OUT="$MIG_DIR/out"
 

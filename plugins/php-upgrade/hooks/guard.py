@@ -56,6 +56,11 @@ ASK_CMD = [
     (r"\brestore-db\.sh\b(?!.*--dry-run)", "ripristino del DB locale (sovrascrive il DB del sito)"),
     (r"\brollback\.sh\b(?!.*--dry-run)", "rollback dei file del sito"),
     (r"\bdeploy-pack\.sh\b(?!.*--dry-run)", "creazione del pacchetto per PROD"),
+    (r"\bdeploy-push\.sh\b.*--dry-run", "controllo in PRODUZIONE via SSH (solo lettura)"),
+    (r"\bdeploy-push\.sh\b(?!.*--dry-run)", "DEPLOY IN PRODUZIONE via SSH (istantanea + applica, rollback automatico)"),
+    (r"\bdeploy-rollback\.sh\b", "ROLLBACK IN PRODUZIONE via SSH"),
+    (r"\bmaintenance\.sh\b\s+(on|off)\b", "modo manutenzione in PRODUZIONE (.htaccess, solo il blocco tra marcatori)"),
+    (r"\bmaintenance\.sh\b", "lettura dello stato di manutenzione in PRODUZIONE via SSH"),
     (PTL_SCRIPT, "script prod-to-local: si collega alla produzione"),
 ]
 # Redirezioni innocue ed email nei messaggi di commit: tolte prima di cercare scritture

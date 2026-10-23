@@ -27,7 +27,7 @@ description: Entry point for upgrading a legacy PHP site (Enesi "Master 7" / php
 - The reference is **PROD's PHP (`PHP_PROD`)**, not the old local PHP: changes from 7.1-7.4 matter too (tests A1, A2).
 - Third-party libraries are replaced whole (`update-lib.sh`), never edited. The core (Master 7) is patched minimally, never upgraded.
 - Out of scope: deprecations that do not break output, refactoring, the DB, sacrificable features (`SACRIFICABLE` in config), errors that exist **only locally** (Windows paths, missing `it_IT` locale, `addslashes` on `$_FILES`): note them in REPORT and add them to the P6 manual checks.
-- Never write in PROD, never `ssh/scp` yourself; give the user exact commands (PowerShell: `| Out-File -Encoding ascii`, not `>`; `tar -xzf`, not `-tzf`).
+- PROD is changed only by the plugin's fixed scripts (`deploy-push.sh`, `deploy-rollback.sh`, `maintenance.sh`), each run approved by the user; never hand-written `ssh/scp`. cPanel actions (PHP version, ini) stay with the user: give exact commands when they need a shell (PowerShell: `| Out-File -Encoding ascii`, not `>`).
 
 ## Keep the user in the loop, but fast
 - **Batch approvals by pattern.** When a fix is the same in N files (e.g. `count($x[..])` in 22 modules), grep the whole project first and ask once for all of them. Same for a family of errors (all `count(null)`, all missing arguments).

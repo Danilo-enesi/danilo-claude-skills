@@ -3,7 +3,8 @@
 #   deploy-pack.sh --prod-copy DIR --prod-dump FILE [--dry-run]
 #     DIR  = copia fresca di PROD (prod-to-local), FILE = suo dump già verificato con backup-db.sh --verify
 # Si ferma se i file da sostituire in PROD non sono identici a mig/base (PROD cambiato nel frattempo).
-# Uscita in _migration/out/deploy-<data>/: deploy.tar.gz, deploy-delete.txt, rollback.tar.gz, rollback-delete.txt, MANIFEST.txt
+# Uscita in _migration/out/deploy-<data>/: deploy.tar.gz, deploy-manifest.txt (per deploy-push.sh), deploy-delete.txt,
+#   rollback.tar.gz, rollback-delete.txt (per il deploy manuale), MANIFEST.txt
 source "$(dirname "$0")/lib.sh"
 
 PC=""; PD=""; DRY=0
@@ -24,7 +25,10 @@ bash "$PLUGIN_DIR/scripts/run-tests.sh" --static > /dev/null || die "i test stat
 
 cd "$ROOT"
 LIBDIRS=$(list_file "$MIG_DIR/libs.lock" | awk '{print $6}')
-git diff --name-status --no-renames "$BASE_TAG" HEAD -- "${SITE_PATHS[@]}" > "$OUT/changes.tmp"
+# KEEP_UNTRACKED (config e lingue che il sito scrive da sé, es. front/app/settings/) non va mai in PROD, anche se versionato:
+# in PROD vale la loro versione (es. traduzioni aggiunte dall'admin)
+mapfile -t EXCL < <(keep_excludes)
+git diff --name-status --no-renames "$BASE_TAG" HEAD -- "${SITE_PATHS[@]}" "${EXCL[@]}" > "$OUT/changes.tmp"
 [ -s "$OUT/changes.tmp" ] || die "nessuna modifica fra $BASE_TAG e HEAD"
 
 # 1) PROD deve essere identico a mig/base sui file che tocchiamo
@@ -34,7 +38,8 @@ while read -r st f; do
     [ ! -e "$PC/$f" ] || { echo "DIVERSO: $f esiste già in PROD"; bad=1; }
   else
     [ -f "$PC/$f" ] || { echo "DIVERSO: $f manca in PROD"; bad=1; continue; }
-    [ "$(git hash-object "$PC/$f")" = "$(git rev-parse "$BASE_TAG:$f")" ] || { echo "DIVERSO: $f è cambiato in PROD dopo $BASE_TAG"; bad=1; }
+    # --no-filters: byte grezzi (con core.autocrlf=true hash-object convertirebbe CRLF→LF e i file CRLF sembrerebbero cambiati)
+    [ "$(git hash-object --no-filters "$PC/$f")" = "$(git rev-parse "$BASE_TAG:$f")" ] || { echo "DIVERSO: $f è cambiato in PROD dopo $BASE_TAG"; bad=1; }
   fi
 done < "$OUT/changes.tmp"
 [ $bad = 0 ] || die "PROD non coincide con $BASE_TAG: riallinea prima di procedere"
@@ -59,10 +64,24 @@ pack() { # pack REF LISTA OUT LIBDIR... -> tar.gz con i file di REF (le librerie
   mapfile -t args < "$list"; args+=("$@")
   [ ${#args[@]} -gt 0 ] || return 0
   rm -rf "$OUT/pack"; mkdir -p "$OUT/pack"
-  git archive --format=tar "$ref" -- "${args[@]}" | tar -xf - -C "$OUT/pack"
+  # autocrlf=false: i byte esatti del repo (su Windows git archive convertirebbe in CRLF), gli stessi SHA del manifest
+  git -c core.autocrlf=false archive --format=tar "$ref" -- "${args[@]}" | tar -xf - -C "$OUT/pack"
   tar -czf "$out" -C "$OUT/pack" .
 }
 pack HEAD "$OUT/up.tmp" "$D/deploy.tar.gz" $touched_libs
+# manifest per deploy-push.sh (remote/deploy.sh): SHA in mig/base dei file che cambiano + SHA di ogni file del pacchetto
+{
+  while read -r st f; do
+    case "$st" in
+      M|D) echo "BASE $st $(git cat-file blob "$BASE_TAG:$f" | sha256sum | cut -d' ' -f1) $f" ;;
+      A)   echo "ADD $f" ;;
+    esac
+  done < "$OUT/changes.tmp"
+  for l in $touched_libs; do echo "LIBDIR $l"; done
+  (cd "$OUT/pack" && find . -type f | sed 's#^\./##' | sort | while read -r f; do echo "PKG $(sha256sum "$f" | cut -d' ' -f1) $f"; done)
+} > "$D/deploy-manifest.txt"
+awk '($1=="ADD"||$1=="LIBDIR") && NF!=2 || $1=="BASE" && NF!=4 || $1=="PKG" && NF!=3 {bad=1} END{exit !bad}' "$D/deploy-manifest.txt" &&
+  die "percorsi con spazi nel pacchetto: non supportati da deploy-push (deploy manuale)"
 pack "$BASE_TAG" "$OUT/down.tmp" "$D/rollback.tar.gz" $touched_libs
 rm -rf "$OUT/pack" "$OUT"/*.tmp
 
@@ -70,7 +89,8 @@ rm -rf "$OUT/pack" "$OUT"/*.tmp
   echo "Pacchetto: $(git log -1 --format='%h %s') vs $BASE_TAG   creato: $(date -Iseconds)"
   echo "Dump PROD verificato: $(cat "$PD.verified")"
   echo "Destinazione in PROD: $PROD_SITE"
-  echo; echo "== File modificati (git diff --stat)"; git diff --stat "$BASE_TAG" HEAD -- "${SITE_PATHS[@]}" | tail -n 30
+  echo; echo "== File modificati (git diff --stat)"; git diff --stat "$BASE_TAG" HEAD -- "${SITE_PATHS[@]}" "${EXCL[@]}" | tail -n 30
+  echo "Esclusi (restano quelli di PROD): ${KEEP_UNTRACKED[*]}"
   echo; echo "== SHA-256"; sha256sum "$D"/*.tar.gz | sed "s#$D/##"
 } > "$D/MANIFEST.txt"
 info "OK: pacchetti in $D"

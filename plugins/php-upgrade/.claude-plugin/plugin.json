@@ -1,6 +1,6 @@
 {
   "name": "php-upgrade",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Upgrade a legacy PHP site (Master 7 / phplib, PHP 7.x) to PHP 8.x step by step: verified backups, red tests first, minimal patches, whole-library swaps, front/admin smoke, PROD packages and rollback. A project-scoped guard blocks out-of-scope or dangerous actions.",
   "author": {
     "name": "Danilo Casale",
