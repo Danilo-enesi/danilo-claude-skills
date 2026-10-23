@@ -43,7 +43,8 @@ async function list($: EngineInterface, path: string) {
 }
 
 // Standalone skills, commands, agents and hooks: those of the root plugin, which is the repo itself.
-async function scanDir($: EngineInterface, dir: string, owner: string): Promise<Entry[]> {
+// `absDir` replaces ${CLAUDE_PLUGIN_ROOT} so a hook can be installed outside the plugin.
+async function scanDir($: EngineInterface, dir: string, absDir: string, owner: string): Promise<Entry[]> {
   const out: Entry[] = []
   {
     for (const e of await list($, `${dir}/skills`)) {
@@ -76,8 +77,13 @@ async function scanDir($: EngineInterface, dir: string, owner: string): Promise<
             kind: 'hook',
             name: script ? script.replace(/^hooks[\\/]/, '') : event,
             owner,
-            meta: `${event}${group.matcher ? ` · ${group.matcher}` : ''}`,
+            meta: event,
             description: own || String(hook.command ?? ''),
+            install: {
+              event,
+              ...(group.matcher ? { matcher: String(group.matcher) } : {}),
+              command: String(hook.command ?? '').replace(/\$\{CLAUDE_PLUGIN_ROOT\}|\$CLAUDE_PLUGIN_ROOT/g, absDir),
+            },
           })
         }
       }
@@ -90,12 +96,13 @@ export async function scan($: EngineInterface): Promise<Catalog> {
   const started = Date.now()
   const root = (await $.fs.exists(MARKET)) ? '.' : FALLBACK_ROOT
   const market = JSON.parse(await $.fs.read(`${root}/${MARKET}`))
+  const abs = ((await $.fs.stat(root, { resolve: true })).realPath ?? root).replace(/\\/g, '/')
   const entries: Entry[] = []
   for (const p of market.plugins ?? []) {
     const rel = String(p.source).replace(/^\.\/?/, '').replace(/\/$/, '')
     const dir = rel ? `${root}/${rel}` : root
     const meta = JSON.parse(await $.fs.read(`${dir}/.claude-plugin/plugin.json`))
-    const own = rel === '' ? await scanDir($, dir, p.name) : []
+    const own = rel === '' ? await scanDir($, dir, abs, p.name) : []
     if (rel !== '') {
       entries.push({
         kind: 'plugin',
@@ -103,7 +110,8 @@ export async function scan($: EngineInterface): Promise<Catalog> {
         owner: p.name,
         description: p.description ?? meta.description ?? '',
         meta: `v${meta.version ?? '?'}`,
-        invoke: `/plugin install ${p.name}@${market.name} `,
+        // args of the built-in /plugin command, run as is by the INSTALLA button
+        invoke: `install ${p.name}@${market.name}`,
       })
     }
     entries.push(...own)

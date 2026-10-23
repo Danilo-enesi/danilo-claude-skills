@@ -4,10 +4,11 @@ import type { Register, EngineInterface } from 'claude-code'
 import type { Catalog, Entry, Kind } from '../types'
 import { cut, deck, tone } from './deck'
 import type { Tone } from './deck'
+import { installLocal } from './install'
 import { scan } from './scan'
 
 const PANE = 'repo-deck'
-const catalog = atom({ plugin: 'repo-deck', key: 'catalog' } as const, { root: '', entries: [], scannedMs: 0 } as Catalog, { shape: 'catalog-1' })
+const catalog = atom({ plugin: 'repo-deck', key: 'catalog' } as const, { root: '', entries: [], scannedMs: 0 } as Catalog, { shape: 'catalog-2' })
 const selected = atom({ plugin: 'repo-deck', key: 'selected' } as const, '', { shape: 'selected-1' })
 const collapsed = atom({ plugin: 'repo-deck', key: 'collapsed' } as const, [] as Kind[], { shape: 'collapsed-1' })
 const error = atom({ plugin: 'repo-deck', key: 'error' } as const, '', { shape: 'error-1' })
@@ -30,6 +31,12 @@ async function load($: EngineInterface) {
   } catch (err) {
     await update($, error, () => `Scansione fallita: ${String(err)}`)
   }
+}
+
+// A plugin installs through the built-in /plugin command; anything else goes in the prompt.
+async function use($: EngineInterface, x: Entry) {
+  if (x.kind !== 'plugin') return void (await $.prompt.fill({ text: x.invoke ?? '' }))
+  await $.command.run({ command: 'plugin', args: x.invoke ?? '' }).catch(err => $.ui.toast(`Installazione non avviata: ${String(err)}`))
 }
 
 export const register: Register = on => {
@@ -94,27 +101,27 @@ export const register: Register = on => {
         })}
 
         {current ? (
-          <Card title={current.name} color={colorOf(current.kind) as Tone}>
-            {current.meta ? <Text color={tone.muted}>{current.meta}</Text> : null}
+          <Card title={current.name} right={current.meta} color={colorOf(current.kind) as Tone}>
             <Box marginTop={1}>
               <Text wrap="wrap" color={tone.text}>{current.description || 'Nessuna descrizione.'}</Text>
             </Box>
             <Box flexDirection="row" gap={1} marginTop={1}>
               {current.invoke ? (
-                <Button key="use" variant="primary" hotkey="u" onPress={() => void $.prompt.fill({ text: current.invoke ?? '' })}>
-                  {current.kind === 'plugin' ? 'INSTALLA' : 'USA NEL PROMPT'}
+                <Button key="use" variant="primary" hotkey="u" onPress={() => void use($, current)}>
+                  {current.kind === 'plugin' ? 'INSTALLA' : 'USA NELLA CHAT'}
                 </Button>
-              ) : (
-                <Text color={tone.faint}>parte da solo: non si invoca</Text>
-              )}
+              ) : current.install ? (
+                <Button key="install-local" variant="primary" hotkey="l" onPress={() => void installLocal($, current.install!).then(msg => $.ui.toast(msg), err => $.ui.toast(String(err)))}>
+                  INSTALLA
+                </Button>
+              ) : null}
             </Box>
           </Card>
         ) : null}
 
         <Box borderStyle="round" borderColor={tone.orange} borderDimColor paddingX={1} flexDirection="row" justifyContent="space-between">
           <Text>
-            <Text color={tone.green}>✓ </Text>
-            <Kv pairs={SECTIONS.map(s => [s.kind, count(s.kind)] as [string, number])} />
+            <Kv pairs={SECTIONS.filter(s => count(s.kind) > 0).map(s => [s.kind, count(s.kind)] as [string, number])} />
             <Text color={tone.faint}> · {cat.scannedMs}ms</Text>
           </Text>
         </Box>

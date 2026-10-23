@@ -81,7 +81,7 @@ I sub-agenti (`agents/`) sono al momento vuoti (solo `.gitkeep`).
 
 `mods/` non è caricato da nessun plugin del marketplace: contiene mod per il terminale.
 
-- `mods/repo-deck/` — pane `/repo-deck` in stile "Flightdeck": plugin del marketplace e skill, comandi, hook e agenti standalone del repo, con descrizione e pulsante USA NEL PROMPT / INSTALLA.
+- `mods/repo-deck/` — pane `/repo-deck` in stile "Flightdeck": plugin del marketplace e skill, comandi, hook e agenti standalone del repo, con descrizione e pulsante USA NELLA CHAT / INSTALLA.
 - `mods/mod-kit/` — template (`hooks/deck.tsx`: Header, Card richiudibile, Meter, Kv, palette) e script: `new-mod.sh <nome> "<Titolo>" [cartella]` crea un mod, `check.sh <cartella>` lo valida e testa.
 
 Per provarlo: `claude --plugin-dir mods/repo-deck`.
