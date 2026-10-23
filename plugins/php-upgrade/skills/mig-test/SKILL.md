@@ -13,7 +13,8 @@ description: Runs and reads the php-upgrade tests — static checks (project che
 | `bash $PU/run-tests.sh --smoke` | host on the new PHP: same statuses as the reference, valid PDFs, no Fatal (front only) |
 | `bash $PU/smoke.sh --target local --admin-cookie 'NAME=VALUE'` | admin modules with the user's session (F12 › Application › Cookies); a 302 = expired session |
 | `bash $PU/compare-prod.sh --confirm-prod [--shots]` | visible text (and screenshots) LOCAL vs PROD, GET only, after the user's ok |
-| `python -I .../plugins/php-upgrade/tests/guard_test.py` | after changing the guard |
+| `bash $PU/lang.sh missing [DIR]` | A3 on its own: front translations present in one language and missing in another; `DIR` = the PROD copy (language files are not deployed, PROD's state is what counts) |
+| `bash $PU/tests/selftest.sh` (in the plugin) / `python -I .../tests/guard_test.py` | after changing the plugin / the guard |
 
 ## Reading results
 - `FAIL` = broken (HTTP differs from the reference, PDF not generated, Fatal/Parse/Uncaught in page or log). Step not done.

@@ -9,7 +9,7 @@ Riferimento del comportamento: **PROD (`PHP_PROD`)**, non il PHP vecchio locale.
 |---|---|---|---|
 | L0 | Ambiente | `bash $PU/env.sh`. Se il CLI nuovo non ha `php.ini`: crearlo con **solo** `extension_dir` (assoluto) e `extension=curl/gd/mbstring/mysqli/openssl` | nessuna estensione mancante, nessun avviso sull'ini |
 | L1 | Backup DB | `bash $PU/backup-db.sh` | `….verified` creato |
-| L2 | Riferimento + test rossi | sito sul PHP vecchio: `bash $PU/smoke.sh --target local --record`; poi `bash $PU/run-tests.sh --static --expect-red` | «tutti i test falliscono» |
+| L2 | Riferimento + test rossi | `urls.txt` da `urls-from-routes.php` (tutte le lingue); sito sul PHP vecchio: `bash $PU/smoke.sh --target local --record`; poi `bash $PU/run-tests.sh --static --expect-red` | «tutti i test falliscono» |
 | L3 | Host sul PHP nuovo | `"php": "<PHP_TO>"` in `.dunebox/config.json` (MCP `set_host_php`); ini **web** `C:/devConfig/php/php-<PHP_TO>.ini`: `short_open_tag = On` se il sito usa `<?`, `display_errors = Off`; **riavvio servizi** | `env.sh` senza avvisi; `run-tests.sh --smoke` FALLISCE |
 | L4 | Core e progetto | `php $PU/patch.php` (dry-run) poi `--apply` | checks C*/P* PASS, lint `from` ok, commit |
 | L5 | Librerie | skill `mig-update-lib` per ogni riga di `libs.lock` | L* PASS, API dei chiamanti verificate, commit |

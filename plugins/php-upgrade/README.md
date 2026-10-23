@@ -23,7 +23,8 @@ Nato dalla migrazione di seychellesweb (PHP 7.0 → 8.3, ottobre 2026): ogni reg
 | `mig-rollback` | annulla un passo o tutto, in LOCAL o in PROD |
 
 ## Script (`scripts/`, Git Bash dalla radice del progetto)
-`env.sh` · `backup-db.sh` · `restore-db.sh` · `lint.sh from|to` · `patch.php` · `update-lib.sh` · `run-tests.sh --static|--smoke` · `smoke.sh` (`--admin-cookie`, `--target prod`) · `compare-prod.sh` (`--shots`) · `rollback.sh` · `deploy-pack.sh` · `init.sh`.
+`env.sh` · `backup-db.sh` · `restore-db.sh` · `lint.sh from|to` · `patch.php` · `update-lib.sh` · `run-tests.sh --static|--smoke` · `smoke.sh` (`--admin-cookie`, `--target prod`) · `compare-prod.sh` (`--shots`) · `rollback.sh` · `deploy-pack.sh` · `init.sh` · `urls-from-routes.php` (tutte le rotte statiche di `route.json` in tutte le lingue) · `lang.sh missing|sql|regen` (lingue del front: voci mancanti, SQL per aggiungerle, rigenerazione come «Aggiorna i linguaggi»).
+**A3** `scan-langs.php`: tutte le lingue del front hanno le stesse voci (se ne carica una sola: una voce assente in eng rompe solo la versione inglese).
 Test statici generici: **G1** lint, **A1** `scan-argcount.php` (meno argomenti: fatale da 7.1), **A2** `scan-undefconst.php` (costanti senza fallback `defined()`, non definite nel codice e senza valore nei file di lingua — front: in tutte le lingue, perché se ne carica una sola; admin: in almeno una. Fatali da 8.0). Il progetto aggiunge i suoi in `_migration/checks.php` (helper in `lib/checks-lib.php`).
 
 ## Guardia (`hooks/guard.py`)

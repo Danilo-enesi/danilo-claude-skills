@@ -12,6 +12,7 @@ description: Takes a finished php-upgrade migration to production — PHP ini ch
 2. Banner (`env.sh`) and one AskUserQuestion: «Next step: PRODUCTION».
 3. **P0** (user): two `ssh` commands → `_migration/prod-php<XX>-modules.txt` and `-ini.txt` (exact PowerShell commands in GUIA: filter on the server with `grep` inside the quotes, `| Out-File -Encoding ascii`). `env.sh` must show no missing extension, `short_open_tag => On` (if the site uses `<?`: without it the whole front is 500) and `display_errors => Off`; the user also checks cPanel › MultiPHP INI Editor for the domain. If a file came out UTF-16, convert it (`iconv -f UTF-16 -t ASCII`) instead of asking again.
 4. **P1-P2**: fresh verified PROD backup (`mig-backup` › PROD).
+5. Data that stays in PROD (not in the package): `bash $PU/lang.sh missing <PROD copy>` and A2 on the copy (`MIG_ROOT=<PROD copy> "$PHP_TO_BIN" -d short_open_tag=1 $PU/scan-undefconst.php`). Every missing translation is a fatal waiting on the new PHP: the user fills it in Admin › Linguaggi **before** P5.
 
 ## Package (P3)
 `git status` clean (untracked config in `KEEP_UNTRACKED` is ignored), then `bash $PU/deploy-pack.sh --prod-copy <dir> --prod-dump <dump> --dry-run`, then without `--dry-run`. It stops if PROD changed since `mig/base`: stop and report which files, never force. Check the tarball contains no protected file.

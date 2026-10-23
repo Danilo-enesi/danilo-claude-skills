@@ -36,6 +36,19 @@ a2=$(MIG_ROOT="$T" MIG_SKIP_PREFIXES="lib/" "$PHP" -d short_open_tag=1 "$P/scrip
 [ "$(echo "$a2" | grep -c .)" = 3 ] && echo "$a2" | grep -q 'a.php:8 MISSING_CONST — senza definizione' \
   && echo "$a2" | grep -q 'f.php:2 ONLY_ITA — traduzione mancante in: eng (front)' && echo "$a2" | grep -q 'f.php:2 NOWHERE — senza' \
   && ok "A2" || ko "A2: $a2"
+a3=$(MIG_ROOT="$T" "$PHP" "$P/scripts/scan-langs.php" || true)
+[ "$(echo "$a3" | grep -c .)" = 1 ] && echo "$a3" | grep -q 'w1 eng ONLY_ITA' && ok "A3" || ko "A3: $a3"
+MIG_ROOT="$T" "$PHP" "$P/scripts/scan-langs.php" --sql | grep -q "SELECT 'w1' s, 'ONLY_ITA' c, 'eng' l, 'x' v" && ok "A3 --sql" || ko "A3 --sql"
+cat > "$T/route.json" <<'EOF'
+{"default": {"callable": "X"}, "notFound": "X::nf", "map": {
+  "home": {"pattern": {"it": "/it/", "en": "/en/"}},
+  "news": {"pattern": {"it": "/it/news(/:slug)", "en": "/en/news(/:slug)"}},
+  "pdf":  {"pattern": {"it": "/it/p/:slug.pdf", "en": "/en/p/:slug.pdf"}},
+  "solo": {"pattern": {"it": "/it/solo/"}}}}
+EOF
+urls=$("$PHP" "$P/scripts/urls-from-routes.php" "$T/route.json" 2>"$T/err.txt" | paste -sd' ')
+[ "$urls" = "/it/ /en/ /it/news /en/news /it/solo/" ] && grep -q "senza lingua en" "$T/err.txt" && grep -q "parametri obbligatori" "$T/err.txt" \
+  && ok "urls-from-routes" || ko "urls-from-routes: $urls / $(cat "$T/err.txt")"
 rm -rf "$T"
 
 [ $fail = 0 ] && echo "== tutto ok" || { echo "== ci sono errori"; exit 1; }

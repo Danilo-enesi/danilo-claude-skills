@@ -3,7 +3,7 @@
 #   run-tests.sh --static [--expect-red]   checks del progetto (_migration/checks.php) + G1 lint + A1 argomenti + A2 costanti
 #   run-tests.sh --smoke                   prova in esecuzione (host locale su PHP_TO), solo front
 # --expect-red: prima di migrare OGNI test deve fallire; uno che passa non dimostra nulla e viene segnalato
-#   (A2 può passare già prima: se succede è solo informativo, non blocca).
+#   (A2 e A3 possono passare già prima: se succede è solo informativo, non blocca).
 source "$(dirname "$0")/lib.sh"
 require_local
 
@@ -40,11 +40,16 @@ if "${P[@]}" "$PLUGIN_DIR/scripts/scan-undefconst.php" > "$OUT/undefconst.txt" 2
 out="${out:+$out
 }G1   $g  tutto il sito compila in PHP $PHP_TO (esclusi lint-ignore.txt) -> $OUT/lint.txt
 A1   $a1  nessuna chiamata con meno argomenti dei richiesti (7.1+; eccezioni in argcount-ignore.txt) -> $OUT/argcount.txt
-A2   $a2  nessuna costante usata e mai definita (8.0+; eccezioni in const-ignore.txt) -> $OUT/undefconst.txt"
+A2   $a2  nessuna costante senza fallback, definizione o valore in tutte le lingue (8.0+; eccezioni in const-ignore.txt) -> $OUT/undefconst.txt"
+if [ -d "$ROOT/front/app/settings/lang" ]; then
+  if "${P[@]}" "$PLUGIN_DIR/scripts/scan-langs.php" > "$OUT/langs.txt" 2>&1; then a3=PASS; else a3=FAIL; fi
+  out="$out
+A3   $a3  le lingue del front hanno le stesse voci (lang.sh sql per aggiungerle) -> $OUT/langs.txt"
+fi
 echo "$out"
 
 if [ $RED = 1 ]; then
-  useless=$(echo "$out" | awk '$2=="PASS" && $1!="A2"{print $1}' | paste -sd' ')
+  useless=$(echo "$out" | awk '$2=="PASS" && $1!="A2" && $1!="A3"{print $1}' | paste -sd' ')
   [ -z "$useless" ] || die "questi test passano già PRIMA della migrazione, quindi non rilevano nulla: $useless"
   info "OK: tutti i test falliscono prima della migrazione (rilevano i problemi della SPEC)"
   exit 0
