@@ -22,6 +22,11 @@
       "name": "prod-to-local",
       "source": "./plugins/prod-to-local",
       "description": "Copy a site (files + DB dump) from a production server to this PC as one all-or-nothing job, with a DPAPI credential vault Claude never reads."
+    },
+    {
+      "name": "php-upgrade",
+      "source": "./plugins/php-upgrade",
+      "description": "Upgrade a legacy PHP site (Master 7 / phplib, PHP 7.x) to PHP 8.x: verified backups, red tests, minimal patches, whole-library swaps, front/admin smoke, PROD packages and rollback, with a project-scoped guard."
     }
   ]
 }

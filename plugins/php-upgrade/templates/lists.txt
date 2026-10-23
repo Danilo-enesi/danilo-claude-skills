@@ -1,0 +1,10 @@
+# Questo file non si copia: descrive le liste che mig-init crea in _migration/ (una voce per riga, # = commento).
+#
+# urls.txt            percorsi del front da provare (pagine statiche + un campione di quelle dinamiche, IT/EN)
+# urls-pdf.txt        percorsi dei PDF generati dal sito (devono restituire %PDF-)
+# urls-admin.txt      moduli dell'admin (dal menu, es. grep ROOT_PATH in admin/pers/config/nav.inc); MAI logout.php
+# urls-compare.txt    pagine da confrontare con PROD (testo + screenshot); ignora privacy/cookie/dati societari
+# lint-ignore.txt     prefissi esclusi dal lint, con il motivo (driver mai caricati, librerie sacrificabili)
+# argcount-ignore.txt eccezioni di A1: "percorso nomefunzione  # motivo" (metodi nativi omonimi, codice morto, sacrificabili)
+# const-ignore.txt    eccezioni di A2: "percorso NOME  # motivo" (codice morto, librerie)
+# libs.lock           librerie da sostituire intere (vedi update-lib.sh)
