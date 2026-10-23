@@ -4,11 +4,11 @@ import type { Register, EngineInterface } from 'claude-code'
 import type { Catalog, Entry, Kind } from '../types'
 import { cut, deck, tone } from './deck'
 import type { Tone } from './deck'
-import { installLocal } from './install'
+import { installLocal, rememberStart } from './install'
 import { scan, shortVersion } from './scan'
 
 const PANE = 'repo-deck'
-const catalog = atom({ plugin: 'repo-deck', key: 'catalog' } as const, { root: '', market: '', entries: [], scannedMs: 0 } as Catalog, { shape: 'catalog-3' })
+const catalog = atom({ plugin: 'repo-deck', key: 'catalog' } as const, { root: '', market: '', entries: [], scannedMs: 0 } as Catalog, { shape: 'catalog-4' })
 const selected = atom({ plugin: 'repo-deck', key: 'selected' } as const, '', { shape: 'selected-1' })
 const collapsed = atom({ plugin: 'repo-deck', key: 'collapsed' } as const, [] as Kind[], { shape: 'collapsed-1' })
 const error = atom({ plugin: 'repo-deck', key: 'error' } as const, '', { shape: 'error-1' })
@@ -46,6 +46,7 @@ async function use($: EngineInterface, x: Entry) {
 
 export const register: Register = on => {
   on('session.start', async ($, e, next) => {
+    await rememberStart($, e.cwd)
     await $.command.register({ name: 'repo-deck', description: 'Pane: plugin, comandi, skill, hook e agenti del repo danilo-claude-skills' })
     void load($)
     return next(e)

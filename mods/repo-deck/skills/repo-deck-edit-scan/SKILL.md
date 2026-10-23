@@ -10,7 +10,7 @@ description: Change what repo-deck lists or what an entry carries - which plugin
 
 ## How the scan works
 
-1. Root: the cwd if it has `.claude-plugin/marketplace.json`, else `installLocation` of `danilo-claude-skills` in `~/.claude/plugins/known_marketplaces.json`.
+1. Root: the project folder (`projectRoot` in `hooks/install.ts`: where the session started, never the moving `$.session.cwd()`) if it has `.claude-plugin/marketplace.json`, else `installLocation` of `danilo-claude-skills` in `~/.claude/plugins/known_marketplaces.json`.
 2. Each `marketplace.json` plugin with a non-root source -> one `plugin` entry (`meta` = `v<version>`, `invoke` = `/plugin install` args).
 3. Only the root plugin (source `./`) is scanned for `skills/*/SKILL.md`, `commands/*.md`, `agents/*.md`, `hooks/hooks.json`: these are the standalone ones.
 4. Hook: name = script file, description = first comment of the script, `meta` = event, `install` = event + matcher + command with `${CLAUDE_PLUGIN_ROOT}` made absolute.

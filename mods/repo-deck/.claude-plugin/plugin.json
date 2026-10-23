@@ -1,6 +1,6 @@
 {
   "name": "repo-deck",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Terminal pane (/repo-deck) listing the marketplace plugins and the standalone skills, commands, hooks and agents, with install and ask-Claude actions.",
   "author": { "name": "Danilo Casale", "email": "casale@enesi.it" },
   "types": "./types/index.d.ts"

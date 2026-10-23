@@ -59,7 +59,9 @@ def main():
     tone = dict(re.findall(r"^\s+(\w+): '(#[0-9a-fA-F]{6})',", deck.split('as const')[0], re.M))
     sections = [dict(zip(('kind', 'title', 'color'), m))
                 for m in re.findall(r"\{ kind: '(\w+)', title: '([^']+)', color: '(\w+)' \}", reg)]
-    atoms = [dict(zip(('key', 'shape'), m)) for m in re.findall(r"key: '(\w+)' \} as const, .*?\{ shape: '([^']+)' \}", reg)]
+    modules = {p.name: read(p) for p in sorted((mod / 'hooks').glob('*.ts*')) if '.test.' not in p.name}
+    atoms = [dict(zip(('key', 'shape', 'file'), (*m, name)))
+             for name, src in modules.items() for m in re.findall(r"key: '(\w+)' \} as const, .*?\{ shape: '([^']+)' \}", src)]
     block = re.search(r"'repo-deck': \{(.*?)\n    \}", types, re.S)
     declared = re.findall(r'(\w+): Shaped<', block.group(1)) if block else []
     btns = buttons(reg)
@@ -97,7 +99,7 @@ def main():
         print(f"repo-deck v{facts['version']} · /{', /'.join(commands)} · pane {facts['pane']}")
         print('palette:  ' + '  '.join(f"{p['name']} {p['hex']} ({p['uses_in_register']})" for p in facts['palette']))
         print('sections: ' + '  '.join(f"{s['title']}={s['color']}" for s in sections))
-        print('atoms:    ' + '  '.join(f"{a['key']}@{a['shape']}" for a in atoms))
+        print('atoms:    ' + '  '.join(f"{a['key']}@{a['shape']} ({a['file']})" for a in atoms))
         for b in btns:
             print(f"button    l{b['line']:<4} key={b['key']}  hotkey={b['hotkey'] or '-'}  {b['label']}")
         print('free hotkeys: ' + ''.join(facts['free_hotkeys']))

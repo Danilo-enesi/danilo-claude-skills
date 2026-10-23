@@ -1,6 +1,7 @@
 import type { EngineInterface } from 'claude-code'
 
 import type { Catalog, Entry } from '../types'
+import { projectRoot } from './install'
 
 // The marketplace this deck shows when the session is not opened inside a marketplace repo.
 const MARKET_NAME = 'danilo-claude-skills'
@@ -88,6 +89,7 @@ async function scanDir($: EngineInterface, dir: string, absDir: string, owner: s
               event,
               ...(group.matcher ? { matcher: String(group.matcher) } : {}),
               command: String(hook.command ?? '').replace(/\$\{CLAUDE_PLUGIN_ROOT\}|\$CLAUDE_PLUGIN_ROOT/g, absDir),
+              ...(typeof hook.timeout === 'number' ? { timeout: hook.timeout } : {}),
             },
           })
         }
@@ -108,7 +110,8 @@ async function installedMarket($: EngineInterface): Promise<string> {
 
 export async function scan($: EngineInterface): Promise<Catalog> {
   const started = Date.now()
-  const root = (await $.fs.exists(MARKET)) ? '.' : await installedMarket($)
+  const project = await projectRoot($)
+  const root = (await $.fs.exists(`${project}/${MARKET}`)) ? project : await installedMarket($)
   const market = JSON.parse(await $.fs.read(`${root}/${MARKET}`))
   const abs = ((await $.fs.stat(root, { resolve: true })).realPath ?? root).replace(/\\/g, '/')
   const entries: Entry[] = []

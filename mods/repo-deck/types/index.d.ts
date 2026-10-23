@@ -1,5 +1,5 @@
 export type Kind = 'plugin' | 'command' | 'skill' | 'hook' | 'agent'
-export type HookInstall = { event: string; matcher?: string; command: string }
+export type HookInstall = { event: string; matcher?: string; command: string; timeout?: number }
 export type Entry = { kind: Kind; name: string; owner: string; description: string; meta?: string; invoke?: string; install?: HookInstall }
 export type Catalog = { root: string; market: string; entries: Entry[]; scannedMs: number }
 
@@ -10,6 +10,7 @@ declare module 'claude-code' {
       selected: Shaped<string>
       collapsed: Shaped<Kind[]>
       error: Shaped<string>
+      startCwd: Shaped<string>
     }
   }
 }
