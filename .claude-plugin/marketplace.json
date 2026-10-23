@@ -27,6 +27,11 @@
       "name": "php-upgrade",
       "source": "./plugins/php-upgrade",
       "description": "Upgrade a legacy PHP site (Master 7 / phplib, PHP 7.x) to PHP 8.x: verified backups, red tests, minimal patches, whole-library swaps, front/admin smoke, PROD packages and rollback, with a project-scoped guard."
+    },
+    {
+      "name": "repo-deck",
+      "source": "./mods/repo-deck",
+      "description": "Terminal pane (/repo-deck) listing this marketplace's plugins and standalone skills, commands, hooks and agents, with install and ask-Claude actions."
     }
   ]
 }

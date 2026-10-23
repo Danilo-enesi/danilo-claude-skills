@@ -2,8 +2,8 @@ import type { EngineInterface } from 'claude-code'
 
 import type { Catalog, Entry } from '../types'
 
-// shortcut: fallback path of this PC, used only when the session is not opened inside the repo
-const FALLBACK_ROOT = 'C:/Users/danilo/Dev/danilo-claude-skills'
+// The marketplace this deck shows when the session is not opened inside a marketplace repo.
+const MARKET_NAME = 'danilo-claude-skills'
 const MARKET = '.claude-plugin/marketplace.json'
 
 // Frontmatter `key:` value, also the folded `key: >` form.
@@ -97,9 +97,18 @@ async function scanDir($: EngineInterface, dir: string, absDir: string, owner: s
   return out
 }
 
+// Where Claude Code keeps the marketplace: a git clone, or the folder of a directory marketplace.
+async function installedMarket($: EngineInterface): Promise<string> {
+  const home = (await $.env.get('USERPROFILE')) ?? (await $.env.get('HOME'))
+  const known = JSON.parse(await $.fs.read(`${home}/.claude/plugins/known_marketplaces.json`))
+  const at = known[MARKET_NAME]?.installLocation
+  if (!at) throw new Error(`marketplace ${MARKET_NAME} non aggiunto: /plugin marketplace add Danilo-enesi/${MARKET_NAME}`)
+  return String(at).replace(/\\/g, '/')
+}
+
 export async function scan($: EngineInterface): Promise<Catalog> {
   const started = Date.now()
-  const root = (await $.fs.exists(MARKET)) ? '.' : FALLBACK_ROOT
+  const root = (await $.fs.exists(MARKET)) ? '.' : await installedMarket($)
   const market = JSON.parse(await $.fs.read(`${root}/${MARKET}`))
   const abs = ((await $.fs.stat(root, { resolve: true })).realPath ?? root).replace(/\\/g, '/')
   const entries: Entry[] = []
