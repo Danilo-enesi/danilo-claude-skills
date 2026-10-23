@@ -86,6 +86,8 @@ I sub-agenti (`agents/`) sono al momento vuoti (solo `.gitkeep`).
 
 `repo-deck` è anche un plugin del marketplace: `/plugin install repo-deck@danilo-claude-skills` (scope user). Fuori dal repo legge il marketplace dove Claude Code lo ha installato (`~/.claude/plugins/known_marketplaces.json`). Per svilupparlo: `claude --plugin-dir mods/repo-deck`.
 
+Skill di manutenzione incluse nel plugin (`mods/repo-deck/skills/`), una per passo: `repo-deck-workflow` (mappa e ordine), `repo-deck-inspect` (script: palette, sezioni, atom, bottoni, hotkey liberi, incoerenze), `repo-deck-style` (regole grafiche), `repo-deck-edit-pane`, `repo-deck-edit-scan`, `repo-deck-check`, `repo-deck-release` (script di bump della versione).
+
 ## Hook disponibili
 
 | Hook | Descrizione |
