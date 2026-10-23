@@ -24,7 +24,7 @@ Nato dalla migrazione di seychellesweb (PHP 7.0 → 8.3, ottobre 2026): ogni reg
 
 ## Script (`scripts/`, Git Bash dalla radice del progetto)
 `env.sh` · `backup-db.sh` · `restore-db.sh` · `lint.sh from|to` · `patch.php` · `update-lib.sh` · `run-tests.sh --static|--smoke` · `smoke.sh` (`--admin-cookie`, `--target prod`) · `compare-prod.sh` (`--shots`) · `rollback.sh` · `deploy-pack.sh` · `init.sh`.
-Test statici generici: **G1** lint, **A1** `scan-argcount.php` (meno argomenti: fatale da 7.1), **A2** `scan-undefconst.php` (costanti mai definite: fatali da 8.0). Il progetto aggiunge i suoi in `_migration/checks.php` (helper in `lib/checks-lib.php`).
+Test statici generici: **G1** lint, **A1** `scan-argcount.php` (meno argomenti: fatale da 7.1), **A2** `scan-undefconst.php` (costanti senza fallback `defined()`, non definite nel codice e senza valore nei file di lingua — front: in tutte le lingue, perché se ne carica una sola; admin: in almeno una. Fatali da 8.0). Il progetto aggiunge i suoi in `_migration/checks.php` (helper in `lib/checks-lib.php`).
 
 ## Guardia (`hooks/guard.py`)
 Attiva solo nei progetti con `_migration/config.sh`; legge `PROTECTED` e `PROD_HOST` da lì. Blocca: scritture nei percorsi protetti e nell'harness, git che cambia lo stato, SQL che scrive, accesso diretto a PROD, `ssh` scritto a mano. Chiede il permesso per: smoke/confronto in PROD, rollback, restore del DB, pacchetto di deploy, script di prod-to-local.

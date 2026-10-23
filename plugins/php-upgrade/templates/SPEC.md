@@ -10,7 +10,7 @@ Ogni riga ha un test. Prima di migrare **tutti** devono fallire (`run-tests.sh -
 | L… | (una riga per libreria di `libs.lock`) | | sostituzione intera | checks L… + smoke |
 | G1 | tutto il sito compila (tranne `lint-ignore.txt`) | — | — | `lint.sh to` |
 | A1 | nessuna chiamata con meno argomenti dei richiesti (ArgumentCountError da 7.1) | tutto il progetto | default `null` sul parametro | `scan-argcount.php` |
-| A2 | nessuna costante usata e mai definita (Error da 8.0) | tutto il progetto | `defined() ? X : ''` o termine in Linguaggi | `scan-undefconst.php` |
+| A2 | nessuna costante senza fallback, definizione o valore in tutte le lingue (Error da 8.0) | tutto il progetto | traduzione in Linguaggi, o `defined() ? X : ''` per le costanti di config | `scan-undefconst.php` |
 | R1 | stessi stati HTTP di prima, PDF validi, nessun Fatal | front | — | `run-tests.sh --smoke` |
 | R2 | admin: nessun Fatal nei moduli | admin | — | `smoke.sh --admin-cookie` + prove manuali |
 
