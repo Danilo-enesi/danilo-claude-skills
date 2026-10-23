@@ -38,6 +38,11 @@ export function firstComment(text: string): string {
   return ''
 }
 
+// `v0.1.0` -> `v0.1` for the list rows: the patch number only when it is not zero.
+export function shortVersion(version: string): string {
+  return version.replace(/^(v?\d+\.\d+)\.0$/, '$1')
+}
+
 async function list($: EngineInterface, path: string) {
   return (await $.fs.exists(path)) ? $.fs.list(path) : []
 }

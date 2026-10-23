@@ -5,7 +5,7 @@ import type { Catalog, Entry, Kind } from '../types'
 import { cut, deck, tone } from './deck'
 import type { Tone } from './deck'
 import { installLocal } from './install'
-import { scan } from './scan'
+import { scan, shortVersion } from './scan'
 
 const PANE = 'repo-deck'
 const catalog = atom({ plugin: 'repo-deck', key: 'catalog' } as const, { root: '', market: '', entries: [], scannedMs: 0 } as Catalog, { shape: 'catalog-3' })
@@ -31,6 +31,11 @@ async function load($: EngineInterface) {
   } catch (err) {
     await update($, error, () => `Scansione fallita: ${String(err)}`)
   }
+}
+
+// Question about one entry, sent as a prompt of its own.
+export function askText(x: Entry): string {
+  return `Voglio saperne di più su: ${x.kind} ${x.name} (${x.owner}).`
 }
 
 // A plugin installs through the built-in /plugin command; anything else goes in the prompt.
@@ -88,7 +93,7 @@ export const register: Register = on => {
               {rows.map(x => {
                   const isSel = keyOf(x) === sel
                   const head = x.name
-                  const tail = cut(x.meta ? `${x.meta} · ${x.description}` : x.description, cols - head.length - 4)
+                  const tail = cut(x.meta ? `${shortVersion(x.meta)} · ${x.description}` : x.description, cols - head.length - 4)
                   return (
                     <Button key={keyOf(x)} plain onPress={pick(x)}>
                       <Text color={isSel ? tone[s.color] : tone.text}>{isSel ? '◆ ' : '◇ '}{head}</Text>
@@ -115,6 +120,9 @@ export const register: Register = on => {
                   INSTALLA
                 </Button>
               ) : null}
+              <Button key="ask" hotkey="c" onPress={() => void $.prompt.submit({ text: askText(current) })}>
+                CHIEDI A CLAUDE
+              </Button>
             </Box>
           </Card>
         ) : null}

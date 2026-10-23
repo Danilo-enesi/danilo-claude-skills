@@ -1,6 +1,6 @@
 import { test, expect } from 'claude-code/testing'
 
-import { firstComment, frontmatter, hookScript } from './scan'
+import { firstComment, frontmatter, hookScript, shortVersion } from './scan'
 
 test('frontmatter reads inline and folded values', async () => {
   expect(frontmatter('---\nname: a\ndescription: "Fa X"\n---\nbody', 'description')).toBe('Fa X')
@@ -18,4 +18,13 @@ test('firstComment skips the shebang', async () => {
   expect(firstComment('#!/usr/bin/env bash\n# Blocca X\nset -e')).toBe('Blocca X')
   expect(firstComment('"""Guard del progetto."""\nimport os')).toBe('Guard del progetto.')
   expect(firstComment('echo')).toBe('')
+})
+
+test('shortVersion drops a zero patch only', async () => {
+  expect(shortVersion('0.1.0')).toBe('0.1')
+  expect(shortVersion('0.3.2')).toBe('0.3.2')
+  expect(shortVersion('1.10.0')).toBe('1.10')
+  expect(shortVersion('2.0')).toBe('2.0')
+  expect(shortVersion('v0.3.0')).toBe('v0.3')
+  expect(shortVersion('PreToolUse')).toBe('PreToolUse')
 })
