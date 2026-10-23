@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this repo is
 
-This repo is a Claude Code **marketplace** that distributes three plugins. `.claude-plugin/marketplace.json` lists them: `danilo-claude-skills` with source `./` (the repo root; metadata in `.claude-plugin/plugin.json`), `pdf-design` with source `./plugins/pdf-design` (its own `.claude-plugin/plugin.json`, `skills/`, `README.md`), and `prod-to-local` with source `./plugins/prod-to-local` (same layout plus `scripts/`, `remote/`, `hooks/`, `tests/`). The root plugin only loads the root `skills/`, so they never mix. A self-contained group of related skills goes in its own plugin under `plugins/<name>/`; bump that plugin's own version on changes. There is no build, lint, or test tooling — this is a content repo of Claude Code skills/commands/agents, not application code.
+This repo is a Claude Code **marketplace** that distributes four plugins (the fourth, `php-upgrade` with source `./plugins/php-upgrade`, has the same layout as `prod-to-local` plus `lib/` and `templates/`, and a project-scoped guard hook that self-gates on `_migration/config.sh`). `.claude-plugin/marketplace.json` lists them: `danilo-claude-skills` with source `./` (the repo root; metadata in `.claude-plugin/plugin.json`), `pdf-design` with source `./plugins/pdf-design` (its own `.claude-plugin/plugin.json`, `skills/`, `README.md`), and `prod-to-local` with source `./plugins/prod-to-local` (same layout plus `scripts/`, `remote/`, `hooks/`, `tests/`). The root plugin only loads the root `skills/`, so they never mix. A self-contained group of related skills goes in its own plugin under `plugins/<name>/`; bump that plugin's own version on changes. There is no build, lint, or test tooling — this is a content repo of Claude Code skills/commands/agents, not application code.
 
 ## Structure
 
@@ -19,6 +19,7 @@ danilo-claude-skills/
 ├── hooks/                 ← hooks.json + scripts (active wherever the plugin is enabled)
 ├── plugins/
 │   ├── pdf-design/        ← separate plugin: PDF design comprehension (skills + Python scripts, all English)
+│   ├── php-upgrade/       ← separate plugin: step-by-step PHP 7.x → 8.x upgrade of legacy Master 7 sites (bash/PHP scripts, guard hook, templates)
 │   └── prod-to-local/     ← separate plugin: copy a site from a production server to this PC (bash scripts, DPAPI vault, all English)
 └── README.md
 ```
