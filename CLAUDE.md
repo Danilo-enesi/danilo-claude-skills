@@ -17,6 +17,7 @@ danilo-claude-skills/
 ├── commands/              ← slash commands (*.md)
 ├── agents/                ← sub-agents (*.md)
 ├── hooks/                 ← hooks.json + scripts (active wherever the plugin is enabled)
+├── mods/                  ← Claude Code mods (repo-deck pane + mod-kit template/scripts), loaded by no plugin
 ├── plugins/
 │   ├── pdf-design/        ← separate plugin: PDF design comprehension (skills + Python scripts, all English)
 │   ├── php-upgrade/       ← separate plugin: step-by-step PHP 7.x → 8.x upgrade of legacy Master 7 sites (bash/PHP scripts, guard hook, templates)

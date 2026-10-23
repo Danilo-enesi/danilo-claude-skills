@@ -13,3 +13,7 @@ skills-lock.json
 # Python
 __pycache__/
 *.pyc
+
+# Mod: tipi e tsconfig generati dal motore di Claude Code al caricamento
+mods/**/.claude-plugin/types/
+mods/**/tsconfig.json
