@@ -1,6 +1,6 @@
 import type { Elements, RenderChildren } from 'claude-code'
 
-// Flightdeck look: dark pane, one accent per actor (border + title + legend), mono grid, `·` separators.
+// Flightdeck look: dark pane, one accent per actor (border + title), mono grid, `·` separators.
 export const tone = {
   orange: '#c06050',
   violet: '#a078f8',
@@ -28,17 +28,18 @@ export function cut(text: string, width: number): string {
 export function deck(el: Elements['terminal']) {
   const { Box, Text, Button } = el
 
-  const Header = ({ title, legend }: { title: string; legend: [string, Tone][] }) => (
-    <Box flexDirection="column" alignItems="center">
-      <Text bold color={tone.text}>{title}</Text>
-      <Text>
-        {legend.map(([label, t]) => (
-          <Text>
-            <Text color={tone[t]}>■</Text>
-            <Text color={tone.muted}> {label}  </Text>
-          </Text>
-        ))}
-      </Text>
+  // With `onTitle` the title is a Button
+  const Header = ({ title, onTitle }: { title: string; onTitle?: () => void }) => (
+    <Box flexDirection="column" alignItems="center" marginBottom={1}>
+      <Box flexDirection="row" justifyContent="center">
+        {onTitle ? (
+          <Button key="header:title" plain onPress={onTitle}>
+            <Text bold color={tone.text}>{title}</Text>
+          </Button>
+        ) : (
+          <Text bold color={tone.text}>{title}</Text>
+        )}
+      </Box>
     </Box>
   )
 

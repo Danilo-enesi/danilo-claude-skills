@@ -14,7 +14,7 @@ description: Change what the repo-deck pane draws or does - a card, a row, the h
 2. Find the spot:
    - list cards: the `SECTIONS.map(...)` block; card order/colour/title: the `SECTIONS` array;
    - detail card: the `{current ? (<Card ...` block; its buttons are the row Box with `marginTop={1}`;
-   - header/legend: `<Header ...>`; summary: the last Box with `borderDimColor`.
+   - header: `<Header ...>`; summary: the last Box with `borderDimColor`.
 3. Edit. Element rules (refused trees skip the whole render):
    - a `Button` holds only strings and `Text`; every Button in a list has its own `key`;
    - `hotkey` = one digit or lowercase letter not already used (`free hotkeys` from inspect);

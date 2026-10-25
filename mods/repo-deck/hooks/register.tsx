@@ -44,6 +44,12 @@ async function use($: EngineInterface, x: Entry) {
   await $.command.run({ command: 'plugin', args: x.invoke ?? '' }).catch(err => $.ui.toast(`Installazione non avviata: ${String(err)}`))
 }
 
+// Opens the repo root, not a file; on Windows `code` is a .cmd, which only cmd can start without a shell.
+async function openInCode($: EngineInterface, root: string) {
+  const res = await $.process.run(['code', root]).catch(() => $.process.run(['cmd', '/c', 'code', root]))
+  if (res.exitCode !== 0) throw new Error(res.stderr.trim() || `code è uscito con ${res.exitCode}`)
+}
+
 export const register: Register = on => {
   on('session.start', async ($, e, next) => {
     await rememberStart($, e.cwd)
@@ -76,7 +82,9 @@ export const register: Register = on => {
 
     return (
       <Box flexDirection="column">
-        <Header title={`MARKETPLACE · ${cat.market}`} legend={SECTIONS.filter(s => count(s.kind) > 0).map(s => [s.kind, s.color] as [string, Tone])} />
+        <Header
+          title={cat.market}          onTitle={() => void openInCode($, cat.root).catch(err => $.ui.toast(`VS Code non aperto: ${String(err)}`))}
+        />
         {problem ? <Text color="red">{problem}</Text> : null}
 
         {SECTIONS.map(s => {
