@@ -25,7 +25,7 @@ Dark background comes from the terminal; never set `backgroundColor`.
 
 ## Layout
 
-- Header: the marketplace name alone, centred, then a blank line; clicking it opens the repo in VS Code. No legend: each card already names its kind.
+- Header: the marketplace name, centred, then a blank line; clicking it opens the repo in VS Code. A CHIUDI button (hotkey x) sits on the right edge of the same row and closes the pane. No legend: each card already names its kind.
 - One card per kind, in `SECTIONS` order; a kind with 0 rows draws no card.
 - Card: `borderStyle="round"` in the kind colour; title row = `▾/▸ TITLE` (one Button: caret and title both collapse) + count on the right; no gap between cards.
 - Row: `◇ name` (`◆` + kind colour when selected) + muted `meta · description`, cut to one row with `cut()`; names without the `marketplace:` prefix.
@@ -36,7 +36,7 @@ Dark background comes from the terminal; never set `backgroundColor`.
 
 - Italian UI; buttons UPPERCASE, short verbs: `INSTALLA`, `USA NELLA CHAT`, `CHIEDI A CLAUDE`.
 - List versions drop a zero patch (`v0.1`); the detail shows it whole (`v0.1.0`).
-- No decorations the user removed: no ✓ in the summary, no subtitles after titles, no numeric hotkeys on cards, no "Chiudi"/"ricarica" buttons.
+- No decorations the user removed: no ✓ in the summary, no subtitles after titles, no numeric hotkeys on cards, no "ricarica" button.
 
 ## Terminal limits
 

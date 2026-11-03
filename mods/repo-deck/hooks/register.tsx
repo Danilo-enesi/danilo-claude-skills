@@ -83,7 +83,9 @@ export const register: Register = on => {
     return (
       <Box flexDirection="column">
         <Header
-          title={cat.market}          onTitle={() => void openInCode($, cat.root).catch(err => $.ui.toast(`VS Code non aperto: ${String(err)}`))}
+          title={cat.market}
+          onTitle={() => void openInCode($, cat.root).catch(err => $.ui.toast(`VS Code non aperto: ${String(err)}`))}
+          onClose={() => void $.ui.close({ id: PANE })}
         />
         {problem ? <Text color="red">{problem}</Text> : null}
 

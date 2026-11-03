@@ -29,9 +29,10 @@ export function deck(el: Elements['terminal']) {
   const { Box, Text, Button } = el
 
   // With `onTitle` the title is a Button
-  const Header = ({ title, onTitle }: { title: string; onTitle?: () => void }) => (
-    <Box flexDirection="column" alignItems="center" marginBottom={1}>
-      <Box flexDirection="row" justifyContent="center">
+  // With `onClose` a CHIUDI button sits on the right edge of the title row
+  const Header = ({ title, onTitle, onClose }: { title: string; onTitle?: () => void; onClose?: () => void }) => (
+    <Box flexDirection="row" marginBottom={1}>
+      <Box flexGrow={1} justifyContent="center">
         {onTitle ? (
           <Button key="header:title" plain onPress={onTitle}>
             <Text bold color={tone.text}>{title}</Text>
@@ -40,6 +41,11 @@ export function deck(el: Elements['terminal']) {
           <Text bold color={tone.text}>{title}</Text>
         )}
       </Box>
+      {onClose ? (
+        <Button key="header:close" role="dismiss" hotkey="x" onPress={onClose}>
+          CHIUDI
+        </Button>
+      ) : null}
     </Box>
   )
 
