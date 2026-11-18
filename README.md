@@ -73,7 +73,9 @@ del design in HTML con diff visivo, SVG→PNG con varianti dark). Skill e script
 
 | Comando | Descrizione |
 |---|---|
-| `riepilogo-oggi` | Genera un riepilogo breve (max 50 parole, in italiano) di quanto fatto oggi, basandosi sui commit del giorno e sul contesto della sessione. |
+| `riepilogo-oggi` | Riepilogo di oggi in una sola frase in italiano (anche di poche parole), pronta per una textarea; usa la sessione e i commit del giorno. |
+| `riepilogo-ticket <codice>` | Commento in italiano per un ticket Jira con quanto fatto, ricavato dai tuoi ultimi commit; pronto da incollare. |
+| `user-title <nome>` | Rinomina la sessione in `<UTENTE>-<nome>` (es. `DANILO-FIX-ESPANGO`); lo fa l'hook `session-title`, il comando solo conferma. |
 
 I sub-agenti (`agents/`) sono al momento vuoti (solo `.gitkeep`).
 
@@ -93,6 +95,7 @@ Skill di manutenzione incluse nel plugin (`mods/repo-deck/skills/`), una per pas
 | Hook | Descrizione |
 |---|---|
 | `block-lang-edits` | `PreToolUse` su Edit/Write: blocca le modifiche dirette a `resources/lang/**` e rimanda a `app/Console/Commands/Utility/ln_upd.php` + `php artisan ln:upd`. Si attiva **solo** nei progetti che hanno `ln_upd.php` (Master Laravel Enesi): negli altri Laravel non fa nulla. Richiede `bash` (Git Bash su Windows). |
+| `session-title` | `SessionStart` (solo avvio) e `UserPromptSubmit`. Prefisso = nome della cartella di config in maiuscolo (`/srv/claude-config/danilo` → `DANILO`; con `~/.claude` l'utente di sistema). `/user-title FIX-ESPANGO` rinomina in `DANILO-FIX-ESPANGO`. All'avvio rinomina la sessione in `DANILO-<PROGETTO>-CLAUDE`, dove il progetto è la cartella subito dopo quella delle iniziali (`ABC`, `YZ`, `0-9`), es. `/home/www/html/web/GHI/hpmotorrad` → `DANILO-HPMOTORRAD-CLAUDE` (vale la prima cartella di iniziali, il resto del path si ignora). Se un'altra sessione dello stesso progetto (sottocartelle comprese) ha già quel nome aggiunge `-2`, `-3`, … Fuori da quella struttura non fa nulla. |
 
 Gli hook sono attivi in ogni progetto dove il plugin è abilitato; per escluderlo
 da un progetto, disabilitare il plugin in quel progetto (`enabledPlugins` nel suo
