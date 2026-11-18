@@ -1,0 +1,9 @@
+{
+  "name": "session-title",
+  "version": "0.2.0",
+  "description": "Session names with the user prefix taken from the config folder: <USER>-<PROJECT>-CLAUDE on the first prompt, /user-title <name> for a manual rename; numbered when the name is already used in the project.",
+  "author": {
+    "name": "Danilo Casale",
+    "email": "casale@enesi.it"
+  }
+}

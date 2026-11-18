@@ -29,6 +29,11 @@
       "description": "Upgrade a legacy PHP site (Master 7 / phplib, PHP 7.x) to PHP 8.x: verified backups, red tests, minimal patches, whole-library swaps, front/admin smoke, PROD packages and rollback, with a project-scoped guard."
     },
     {
+      "name": "session-title",
+      "source": "./plugins/session-title",
+      "description": "Session names with the user prefix from the config folder: <USER>-<PROJECT>-CLAUDE on the first prompt, /user-title <name> by hand. Meant for the shared staging server."
+    },
+    {
       "name": "repo-deck",
       "source": "./mods/repo-deck",
       "description": "Terminal pane (/repo-deck) listing this marketplace's plugins and standalone skills, commands, hooks and agents, with install and ask-Claude actions."

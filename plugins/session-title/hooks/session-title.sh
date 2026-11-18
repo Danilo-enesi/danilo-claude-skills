@@ -1,16 +1,18 @@
 #!/usr/bin/env bash
 # Nome della sessione con il prefisso dell'utente (la cartella di config: /srv/claude-config/danilo → DANILO).
-# - SessionStart: <UTENTE>-<PROGETTO>-CLAUDE, dove il progetto è la cartella dopo la PRIMA cartella di iniziali
-#   (es. /home/www/html/web/GHI/hpmotorrad/admin → HPMOTORRAD). Fuori da quella struttura non fa nulla.
-# - UserPromptSubmit "/user-title FIX-ESPANGO": rinomina in <UTENTE>-FIX-ESPANGO.
+# Gira su UserPromptSubmit:
+# - "/user-title FIX-ESPANGO": rinomina in <UTENTE>-FIX-ESPANGO.
+# - qualsiasi altro prompt di una sessione ancora senza nome: <UTENTE>-<PROGETTO>-CLAUDE, dove il progetto è la cartella
+#   dopo la PRIMA cartella di iniziali (es. /home/www/html/web/GHI/hpmotorrad/admin → HPMOTORRAD). Fuori da quella
+#   struttura non fa nulla. Non si usa SessionStart: dare un nome salva la sessione, e /resume si riempirebbe di sessioni vuote.
 # Se il nome è già usato da un'altra sessione dello stesso progetto (sottocartelle comprese) aggiunge -2, -3, ...
 input=$(cat)
 json() { grep -oE "\"$1\"[[:space:]]*:[[:space:]]*\"([^\"\\\\]|\\\\.)*\"" <<< "$input" | head -1 | sed -E 's/^[^:]*:[[:space:]]*"//; s/"$//'; }
 
-event=$(json hook_event_name)
-if [ "$event" = UserPromptSubmit ]; then
-  [[ $(json prompt) =~ ^/(danilo-claude-skills:)?user-title[[:space:]]+([^[:space:]].*[^[:space:]]|[^[:space:]])[[:space:]]*$ ]] || exit 0
+if [[ $(json prompt) =~ ^/(session-title:)?user-title[[:space:]]+([^[:space:]].*[^[:space:]]|[^[:space:]])[[:space:]]*$ ]]; then
   name=${BASH_REMATCH[2]//[\"\\]/}
+else
+  [ -z "$(json session_title)" ] || exit 0
 fi
 
 prev=
@@ -65,5 +67,5 @@ if [ -n "$name" ]; then
   # Niente "block": con il prompt bloccato Claude Code scarta sessionTitle. Il modello conferma con una riga.
   printf '{"hookSpecificOutput":{"hookEventName":"UserPromptSubmit","sessionTitle":"%s","additionalContext":"session-title hook: sesión renombrada a %s"}}\n' "$title" "$title"
 else
-  printf '{"hookSpecificOutput":{"hookEventName":"SessionStart","sessionTitle":"%s"}}\n' "$title"
+  printf '{"hookSpecificOutput":{"hookEventName":"UserPromptSubmit","sessionTitle":"%s"}}\n' "$title"
 fi
