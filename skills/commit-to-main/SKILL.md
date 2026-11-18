@@ -21,6 +21,7 @@ Il perimetro di default non è "i file toccati in questa sessione": è **tutto**
 3. **Raggruppa** i file modificati/nuovi/eliminati per motivo logico (es. "nuova skill X", "fix bug Y", "aggiorna doc Z"). Un gruppo coerente = un commit.
 4. Per ogni gruppo: `git add <file1> <file2> ...` elencando i file per nome — mai `-p`, mai un path che stagea solo parte di un file.
 5. Messaggio di commit **in italiano, conciso**: un soggetto imperativo breve (indicativamente sotto i 70 caratteri); un corpo solo se aggiunge una motivazione reale ("perché", non "cosa" — il diff mostra già cosa). Niente elenco di file nel messaggio. Usa un HEREDOC per evitare problemi di escaping.
+   - Solo se si sta lavorando su un ticket Jira (citato nella sessione o letto dal MCP di Jira), metti la sua chiave all'inizio del soggetto (es. `ESP-123 Aggiungi ricerca nei select multipli`); se i commit coprono ticket diversi, ognuno porta la chiave del suo. Altrimenti non nominare Jira.
 6. Ripeti il passo 4-5 per ogni gruppo — è normale creare **più commit** in una sola esecuzione.
 7. Dopo l'ultimo commit: **fermati, niente push**. I commit restano in locale; il push si fa solo se l'utente lo chiede esplicitamente (nella richiesta o dopo), mai di tua iniziativa.
 8. Se le istruzioni di sistema della sessione richiedono una riga di attribuzione (es. `Co-Authored-By: ...`), aggiungila in fondo a ogni messaggio di commit.
