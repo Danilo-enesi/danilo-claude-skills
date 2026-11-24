@@ -14,7 +14,7 @@ I percorsi `rules/`, `scripts/`, `templates/` sono relativi alla radice del plug
 | Lavoro | Skill |
 |---|---|
 | progetto nuovo o front da impostare | comando `/master-front:scaffold` |
-| progetto appena avviato con il front disallineato (quasi vuoto) | comando `/master-front:rescaffold` |
+| vedere cosa cambierebbe lo scaffold, senza toccare nulla | comando `/master-front:analysis` |
 | il sito ha sitemap, structured data, llms.txt, robots.txt, SEO, Core Web Vitals? (solo verifica) | comando `/master-front:site-checklist` |
 | scrivere una vista (pagina, partial, componente) | `front-views` |
 | toccare `layouts/main.blade.php` | `front-layout` |

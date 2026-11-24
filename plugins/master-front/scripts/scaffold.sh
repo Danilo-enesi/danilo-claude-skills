@@ -1,10 +1,20 @@
 #!/usr/bin/env bash
-# Creates the front scaffolding (Views + assets) from templates/. Never overwrites: an existing file is reported as SKIP.
-# With --force it rewrites the template files and drops the old Views/base/, after copying everything it replaces
-# into <root>/.scaffold-backup/<timestamp>/. Files outside the templates (pages, components, ...) are never touched.
-# Usage: scaffold.sh [--force] [project-root]
-FORCE=
-if [ "$1" = --force ]; then FORCE=1; shift; fi
+# Writes the front scaffolding from templates/, overwriting what differs. Files outside the templates are never touched.
+#   --dry-run          only print what would happen (NEW / OVER / SAME / DEL / TODO), write nothing
+#   --backup           copy every file or folder it replaces or deletes into <root>/.scaffold-backup/<timestamp>/
+#   --only <groups>    comma-separated optional groups: views, assets/main/css, assets/main/js, assets/mail (default: all)
+# Always installed, whatever --only says: component classes (private/front/Main/Components/) and the empty
+# convention folders of assets/main/ (lib, icons, images/defaults, images/icons, videos, documents).
+# Usage: scaffold.sh [--dry-run] [--backup] [--only g1,g2] [project-root]
+DRY= BACKUP_ON= ONLY="views,assets/main/css,assets/main/js,assets/mail"
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --dry-run) DRY=1; shift ;;
+    --backup) BACKUP_ON=1; shift ;;
+    --only) ONLY="$2"; shift 2 ;;
+    *) break ;;
+  esac
+done
 source "$(dirname "$0")/lib.sh" "$@"
 T="$PLUGIN_DIR/templates"
 
@@ -12,44 +22,57 @@ if [ ! -d "$ROOT/private/front/Main" ]; then
   echo "STOP: $(rel "$ROOT/private/front/Main") non esiste. Non è un progetto Master Laravel Enesi (o il tema non è Main)."
   exit 1
 fi
+for g in ${ONLY//,/ }; do
+  case "$g" in views | assets/main/css | assets/main/js | assets/mail) ;; *) echo "STOP: gruppo sconosciuto '$g'"; exit 1 ;; esac
+done
+want() { [[ ",$ONLY," == *",$1,"* ]]; }
+[ -n "$DRY" ] && echo "DRY-RUN: nessun file viene scritto"
 
 BACKUP="$ROOT/.scaffold-backup/$(date +%Y%m%d-%H%M%S)"
 backup() { # backup <path>: copy a file or folder into the backup, keeping its path
+  [ -n "$BACKUP_ON" ] || return 0
   mkdir -p "$(dirname "$BACKUP/$(rel "$1")")" && cp -R "$1" "$BACKUP/$(rel "$1")"
 }
 
 copy() { # copy <template file> <destination>
   if [ -e "$2" ]; then
-    if [ -z "$FORCE" ]; then echo "SKIP  $(rel "$2") (esiste già)"; return; fi
     if cmp -s "$1" "$2"; then echo "SAME  $(rel "$2")"; return; fi
-    backup "$2" && cp "$1" "$2" && echo "OVER  $(rel "$2")"
+    [ -n "$DRY" ] || { backup "$2" && cp "$1" "$2"; } && echo "OVER  $(rel "$2")"
     return
   fi
-  mkdir -p "$(dirname "$2")" && cp "$1" "$2" && echo "NEW   $(rel "$2")"
+  [ -n "$DRY" ] || { mkdir -p "$(dirname "$2")" && cp "$1" "$2"; } && echo "NEW   $(rel "$2")"
 }
 
-while IFS= read -r file; do copy "$file" "$VIEWS/${file#"$T/views/"}"; done < <(find "$T/views" -type f ! -name '.gitkeep')
-while IFS= read -r file; do copy "$file" "$ASSETS/${file#"$T/assets/"}"; done < <(find "$T/assets" -type f ! -name '.gitkeep')
-while IFS= read -r file; do copy "$file" "$ROOT/private/front/Main/Components/${file#"$T/components/"}"; done < <(find "$T/components" -type f ! -name '.gitkeep')
+folder() { # folder <dir>: an empty convention folder, kept in git with a .gitkeep
+  [ -d "$1" ] && return
+  [ -n "$DRY" ] || { mkdir -p "$1" && touch "$1/.gitkeep"; } && echo "NEW   $(rel "$1")/"
+}
 
-# Empty folders of the convention (kept in git with a .gitkeep)
-for dir in "$VIEWS/components" "$VIEWS/mail" \
-  "$ASSETS/main/lib" "$ASSETS/main/icons" "$ASSETS/main/images/defaults" "$ASSETS/main/images/icons" \
-  "$ASSETS/main/videos" "$ASSETS/main/documents" "$ASSETS/mail"; do
-  if [ ! -d "$dir" ]; then mkdir -p "$dir" && touch "$dir/.gitkeep" && echo "NEW   $(rel "$dir")/"; fi
-done
+copy_tree() { # copy_tree <template dir> <destination dir>
+  [ -d "$1" ] || return 0
+  while IFS= read -r file; do copy "$file" "$2/${file#"$1/"}"; done < <(find "$1" -type f ! -name '.gitkeep')
+}
+
+# Optional groups
+if want views; then
+  copy_tree "$T/views" "$VIEWS"
+  folder "$VIEWS/components"; folder "$VIEWS/mail"
+  if [ -d "$VIEWS/base" ]; then
+    [ -n "$DRY" ] || { backup "$VIEWS/base" && rm -rf "$VIEWS/base"; } && echo "DEL   $(rel "$VIEWS/base")/ (struttura vecchia)"
+  fi
+fi
+want assets/main/css && copy_tree "$T/assets/main/css" "$ASSETS/main/css"
+want assets/main/js && copy_tree "$T/assets/main/js" "$ASSETS/main/js"
+want assets/mail && folder "$ASSETS/mail"
+
+# Always installed
+copy_tree "$T/components" "$ROOT/private/front/Main/Components"
+for dir in lib icons images/defaults images/icons videos documents; do folder "$ASSETS/main/$dir"; done
 
 # The component class is useless until a provider registers it; the provider belongs to the project, so only report it.
 PROVIDER=private/app/Providers/FrontServiceProvider.php
 [ -f "$ROOT/$PROVIDER" ] || PROVIDER=private/app/Providers/AppServiceProvider.php
 grep -rqsF "PictureWebP" "$ROOT/private/app" || echo "TODO  registra il componente in $PROVIDER, boot(): Blade::component('picture-web-p', \\Front\\Main\\Components\\PictureWebP::class);"
 [ -f "$ASSETS/common/beers/beers.js" ] || echo "TODO  copia Beers (js, css, immagini) in assets/common/beers/ da un progetto che la usa (es. motoupgrade)"
-if [ -d "$VIEWS/base" ]; then
-  if [ -n "$FORCE" ]; then
-    backup "$VIEWS/base" && rm -rf "$VIEWS/base" && echo "DEL   $(rel "$VIEWS/base")/ (struttura vecchia)"
-  else
-    echo "TODO  Views/base/ è la struttura vecchia: sposta header/footer in partials/, poi elimina base/"
-  fi
-fi
 [ -d "$BACKUP" ] && echo "BACKUP $(rel "$BACKUP")/"
 exit 0
