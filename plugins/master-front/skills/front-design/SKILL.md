@@ -61,7 +61,7 @@ Scrive (o riscrive) in cima a `main.css` il blocco `:root` fra `design-tokens: s
 
 - Il markup usa **solo le classi** del passo 3: niente `style=""` con colori o misure, niente classi inventate per un caso solo (`rules/no-inline.md`).
 - Lo stesso pezzo in due viste è un componente Blade in `components/<concetto>/` (`rules/components-reuse.md`); il nome del componente Blade segue quello di DESIGN.md (`<x-ui.button-primary>` ↔ `components.button-primary`).
-- Testi con `@lang`, attributi con `{{ __() }}` (`rules/translations.md`); immagini con `<x-picture-web-p>`.
+- Testi con `@lang`, attributi con `{{ __() }}` (`rules/translations.md`); immagini con `<x-picture-webp>`.
 
 ## 5. Tieni DESIGN.md aggiornato
 

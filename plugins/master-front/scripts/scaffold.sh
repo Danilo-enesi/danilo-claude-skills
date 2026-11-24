@@ -114,6 +114,8 @@ fi
 # The component class is useless until a provider registers it; the provider belongs to the project, so only report it.
 PROVIDER=private/app/Providers/FrontServiceProvider.php
 [ -f "$ROOT/$PROVIDER" ] || PROVIDER=private/app/Providers/AppServiceProvider.php
-grep -rqsF "PictureWebP" "$ROOT/private/app" || echo "TODO  registra il componente in $PROVIDER, boot(): Blade::component('picture-web-p', \\Front\\Main\\Components\\PictureWebP::class);"
+grep -rqsF "PictureWebp::class" "$ROOT/private/app" || echo "TODO  registra il componente in $PROVIDER, boot(): Blade::component('picture-webp', \\Front\\Main\\Components\\PictureWebp::class);"
+# <x-picture-webp> falls back to this image when it gets none
+[ -f "$ASSETS/main/images/defaults/placeholder.jpg" ] || echo "TODO  aggiungi assets/main/images/defaults/placeholder.jpg (+ .webp): l'immagine di ripiego di <x-picture-webp>"
 [ -d "$BACKUP" ] && echo "BACKUP $(rel "$BACKUP")/"
 exit 0

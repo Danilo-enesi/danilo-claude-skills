@@ -11,7 +11,7 @@ Un pezzo di markup che compare in **due o più viste** (card, bottone, titolo di
 | card di un post, sidebar del blog | `components/blog/post-card.blade.php`, `components/blog/sidebar.blade.php` |
 | carrello, riepilogo ordine | `components/ecommerce/cart.blade.php`, `components/ecommerce/order-resume.blade.php` |
 | blocchi di contenuto | `components/blocks/gallery-block.blade.php` |
-| generico, senza concetto (immagine, bottone, select) | radice: `components/picture-web-p.blade.php` |
+| generico, senza concetto (immagine, bottone, select) | radice: `components/picture-webp.blade.php` |
 
 La classe, se c'è, segue la stessa cartella: `private/front/Main/Components/Blog/PostCard.php` (namespace `Front\Main\Components\Blog`).
 
@@ -36,7 +36,7 @@ Il nome registrato è quello del tag (`<x-blog.post-card>`) e la classe fa `rend
 - Componente con poca logica → solo Blade anonima con `@props`.
 - Componente con molta logica (prepara dati, calcola url o prezzi, sceglie varianti) → **class based component**: la classe in `private/front/Main/Components/` fa i conti, la Blade mostra soltanto.
 - Prima di scrivere una card nuova cerca nella cartella del suo concetto in `components/`: riusa o estendi quella.
-- Immagini da media/default: `<x-picture-web-p :media="$media" title="..." />`, mai un `<picture>` scritto a mano.
+- Immagini: `<x-picture-webp>`, mai un `<picture>` scritto a mano. Media della media library: `<x-picture-webp :image="$media" conversion="cover" :alt="$titolo" />`; file statico: `<x-picture-webp image="/assets/main/images/home/hero.jpg" :alt="__('front::home.hero_alt')" />`. Il webp lo trova da solo (conversione `<conversion>-webp` o `.webp` accanto al file); `:sources` (media query → conversione o percorso) per l'art direction; gli altri attributi (`class`, `loading`, `width`...) vanno sull'`<img>`.
 
 ## No
 - Niente cartelle per tipo (`components/cards/`, `components/buttons/`) né tutto piatto nella radice di `components/`: si raggruppa per concetto.
