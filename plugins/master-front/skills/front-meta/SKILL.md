@@ -15,7 +15,7 @@ Percorsi relativi alla radice del plugin (`../../` da questa skill).
    ```php
    Meta::set('title', $model->meta_title ?: $model->title);
    Meta::set('description', $model->meta_description ?: $model->summary);
-   Meta::set('canonical', Front::route('<entità>.show', ['rewurl' => $model->rewurl]));
+   Meta::set('canonical', $model->url); // dettaglio: URL con gli slug giusti
    ```
    Pagine statiche: testi da `__('front::controllers.<pagina>_meta_title')` / `_meta_desc`, canonical `Front::route('<nome>')`.
 2. og:tags:

@@ -7,7 +7,7 @@
 ```php
 Meta::set('title', $post->meta_title ?: $post->title);
 Meta::set('description', $post->meta_description ?: $post->summary);
-Meta::set('canonical', Front::route('blog.show', ['rewurl' => $post->rewurl]));
+Meta::set('canonical', $post->url); // URL con gli slug giusti (routes.md)
 ```
 
 | Chiave | Valore | Perché va impostata |
@@ -39,10 +39,10 @@ public function index(Request $request) {
 
     // ?page=1 (o meno) duplica la lista base: si rimanda lì, conservando gli altri parametri
     if ($request->has('page') && $page <= 1) {
-        return Response::redirectTo(Front::route('blog.index', $request->except('page')), 301);
+        return Response::redirectTo(Front::route('blog', $request->except('page')), 301);
     }
 
-    Meta::set('canonical', Front::route('blog.index', $page > 1 ? ['page' => $page] : []));
+    Meta::set('canonical', Front::route('blog', $page > 1 ? ['page' => $page] : []));
     // ...
 }
 ```
