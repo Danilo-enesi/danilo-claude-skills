@@ -12,6 +12,7 @@ assets, e un manuale d'uso per l'AI fatto di skill piccole, regole satellite e c
 ```
 plugins/master-front/
 ├── commands/scaffold.md   /master-front:scaffold [root]: crea Views + assets dai template, non sovrascrive mai
+├── commands/site-checklist.md /master-front:site-checklist [root]: verifica veloce (sola lettura) di sitemap, structured data, llms.txt, robots.txt, SEO, Core Web Vitals
 ├── commands/rescaffold.md /master-front:rescaffold [root]: riscrive i file dei template e toglie Views/base/, con backup in .scaffold-backup/
 ├── skills/                skill atomiche (una per lavoro), entry point: front-manual
 ├── rules/                 regole satellite: una regola per file, l'id è il nome del file
@@ -34,15 +35,16 @@ plugins/master-front/
 | `front-scripts` | `partials/base/scripts.blade.php`: window.front, librerie, JS, callbacks Beers |
 | `front-assets` | dove va un file in `assets/` |
 | `front-cookie-consent` | risorse di terze parti e cookie banner EPP |
-| `front-meta` | title, description, og:image |
+| `front-meta` | title, description, canonical e og:tags in ogni action che rende una vista; pagina 1 = lista base; bug del canonical come `<meta>` |
 | `front-shared-data` | dati condivisi fra più viste |
+| `front-routes` | controller per entità (resource), PagesController, rotte per lingua tradotte, redirect della root |
 | `front-mail` | email: trova se il design vive nell'admin o nel front e lavora solo lì |
 
 ## Controlli
 
 ```bash
 bash plugins/master-front/scripts/check-all.sh <root-progetto>   # tutti
-bash plugins/master-front/scripts/check-views.sh <root-progetto> # uno solo (views, layout, head, scripts, assets)
+bash plugins/master-front/scripts/check-views.sh <root-progetto> # uno solo (views, layout, head, scripts, assets, meta)
 ```
 
 Senza argomento usano la root git della cartella corrente. Exit code 1 se c'è almeno un `FAIL`.

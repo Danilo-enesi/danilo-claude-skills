@@ -15,14 +15,16 @@ I percorsi `rules/`, `scripts/`, `templates/` sono relativi alla radice del plug
 |---|---|
 | progetto nuovo o front da impostare | comando `/master-front:scaffold` |
 | progetto appena avviato con il front disallineato (quasi vuoto) | comando `/master-front:rescaffold` |
+| il sito ha sitemap, structured data, llms.txt, robots.txt, SEO, Core Web Vitals? (solo verifica) | comando `/master-front:site-checklist` |
 | scrivere una vista (pagina, partial, componente) | `front-views` |
 | toccare `layouts/main.blade.php` | `front-layout` |
 | aggiungere CSS, font, librerie, icone in `<head>` | `front-head` |
 | aggiungere JS o librerie JS | `front-scripts` |
 | salvare un file in `assets/` | `front-assets` |
 | script, iframe o font di terze parti | `front-cookie-consent` |
-| title, description, og:image | `front-meta` |
+| title, description, canonical, og:tags (ogni action che rende una vista) | `front-meta` |
 | template, blocchi, header/footer delle email | `front-mail` |
+| controller, rotte, home, redirect della root | `front-routes` |
 | un dato che serve a più viste | `front-shared-data` |
 
 ## 2. Flusso di lavoro
