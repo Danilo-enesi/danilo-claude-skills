@@ -36,6 +36,12 @@ for css in /assets/main/css/main.css /assets/main/css/responsive.css; do
   has "$F" "$css" || fail assets-versioning "manca $css nel ramo debug"
 done
 
+# Beers first in the debug branch: our styles override it
+beers=$(line_of "$F" "/assets/common/beers/beers.css"); main=$(line_of "$F" "/assets/main/css/main.css")
+if [ -z "$beers" ]; then fail head "manca beers.css nel ramo debug"
+elif [ -n "$main" ] && [ "$beers" -gt "$main" ]; then fail head "beers.css va caricato prima di main.css"
+else ok head "beers.css prima dei nostri CSS"; fi
+
 # Google tag: blocked loader, statistics category
 if has "$F" "googletagmanager.com"; then
   if has "$F" 'data-epp-src="https://www.googletagmanager.com' && has "$F" 'data-epp-category="10002"'; then

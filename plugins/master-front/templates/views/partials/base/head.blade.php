@@ -15,11 +15,11 @@
 
 <!-- Theme -->
 @if(config('app.debug'))
-  <link href="{{ \Master\Facades\Version::get('/assets/common/beers/beers.css') }}" rel="stylesheet">
-  <link href="{{ \Master\Facades\Version::get('/assets/main/css/main.css') }}" rel="stylesheet">
-  <link href="{{ \Master\Facades\Version::get('/assets/main/css/responsive.css') }}" rel="stylesheet">
+    <link href="{{\Master\Facades\Version::get('/assets/common/beers/beers.css')}}" rel="stylesheet">
+    <link href="{{\Master\Facades\Version::get('/assets/main/css/main.css')}}" rel="stylesheet">
+    <link href="{{\Master\Facades\Version::get('/assets/main/css/responsive.css')}}" rel="stylesheet">
 @else
-  <link href="{{ \Master\Facades\Version::get('/assets/main/css/base.min.css') }}" rel="stylesheet">
+    <link href="{{\Master\Facades\Version::get('/assets/main/css/base.min.css')}}" rel="stylesheet">
 @endif
 
 <!-- Icons -->

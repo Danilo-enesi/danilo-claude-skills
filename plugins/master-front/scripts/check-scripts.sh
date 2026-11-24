@@ -36,6 +36,12 @@ if [ -n "$theme" ]; then
   done < <(grep -nE '<script[^>]+src=' "$F" | grep -vE '/assets/(main/js|common/beers)/')
 fi
 
+# Beers first in the debug branch: our scripts use it
+beers=$(line_of "$F" "/assets/common/beers/beers.js"); main=$(line_of "$F" "/assets/main/js/main.js")
+if [ -z "$beers" ]; then fail scripts "manca beers.js nel ramo debug"
+elif [ -n "$main" ] && [ "$beers" -gt "$main" ]; then fail scripts "beers.js va caricato prima di main.js"
+else ok scripts "beers.js prima dei nostri script"; fi
+
 # Beers callbacks from the session
 if has "$F" "session()->has('callbacks')" && has "$F" "Beers.callbacks.fireList"; then
   ok scripts "callbacks di Beers"
