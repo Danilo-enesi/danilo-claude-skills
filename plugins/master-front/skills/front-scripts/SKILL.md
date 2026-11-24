@@ -18,7 +18,9 @@ Percorsi relativi alla radice del plugin (`../../` da questa skill).
    3. blocco `@if(config('app.debug'))`: beers.js + main.js (+ moduli), altrimenti `base.min.js`
    4. blocco `@if(session()->has('callbacks'))` con `Beers.callbacks.fireList`
 3. Ogni script locale dentro `\Master\Facades\Version::get(...)` (`rules/assets-versioning.md`).
-4. Un JS nostro nuovo: entra nel ramo debug **e** nel bundle `base.min.js`. Se serve a una sola pagina, `@push('scripts')` dalla pagina.
+4. **Dove va il nostro JS** (`rules/css-split.md`):
+   - logica di una pagina del front (slider, filtri, form, toggle...) → **in `main.js`**, in una sezione per pagina che parte solo se la pagina c'è (elemento presente o `window.front.route`);
+   - funzionalità **complessa** che gestisce molte cose (ecommerce: carrello e checkout; `map.js`: mappa, marker, filtri, popup) → modulo `<nome>.js`: entra nel ramo debug **e** nel bundle `base.min.js`, oppure `@push('scripts')` solo dalle pagine che lo usano.
 5. Verifica: `bash scripts/check-scripts.sh <root>`.
 
 ## No

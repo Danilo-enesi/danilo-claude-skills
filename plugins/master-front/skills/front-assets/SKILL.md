@@ -19,8 +19,8 @@ Percorsi relativi alla radice del plugin (`../../` da questa skill).
    - Beers → `assets/common/beers/`
    - email per l'utente → `assets/mail/`
 2. **Scegli il file** (`rules/css-split.md`):
-   - codice generico → `main.js` / `main.css`
-   - funzionalità autonoma → `<modulo>.js` / `<modulo>.css`
+   - codice generico **e logica delle pagine** → `main.js` / `main.css`
+   - funzionalità **complessa e autonoma** (ecommerce, mappa con marker e filtri...) → `<modulo>.js` / `<modulo>.css`
    - media query → **solo** `responsive.css`
 3. **Immagine statica**: salva anche il `.webp` (`rules/images-webp.md`).
 4. **Caricalo**: in head o scripts con `Version::get()` e nel bundle minificato (skill `front-head` / `front-scripts`).

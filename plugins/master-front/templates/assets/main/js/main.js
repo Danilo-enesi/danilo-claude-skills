@@ -1,5 +1,6 @@
-/* Global front scripts: global helpers, plugin initialisation, generic listeners.
-   A self-contained feature (map, auth, ...) goes in its own module file (map.js) instead. */
+/* Front scripts: global helpers, plugin initialisation, generic listeners and the logic of the front pages
+   (one section per page, run only when the page is there). Only a complex, self-contained feature
+   (ecommerce, a map with markers and filters...) goes in its own module file (map.js). */
 
 (function ($) {
   'use strict';
