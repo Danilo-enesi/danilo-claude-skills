@@ -16,5 +16,5 @@ Solo per progetti appena avviati, con il front quasi vuoto: riscrive i file dei 
    - Se esce `STOP`, fermati e riporta il motivo.
 4. Se `.scaffold-backup/` non è in `.gitignore`, dillo: va tolta dopo il controllo, non committata.
 5. Lancia `bash "${CLAUDE_PLUGIN_ROOT}/scripts/check-all.sh" <root>`.
-6. Le rotte e i controller restano al progetto: `pages/home/index.blade.php` serve un'action che renda `view('pages.home.index')`. Se nel backup c'erano viste referenziate da controller (es. `base.*`), elenca i `view('...')` da aggiornare.
+6. Rotte e controller non li crea lo script: segui la skill `front-routes` (`PagesController@home` nei gruppi lingua, gruppo `root.` + `PagesController@index` per il redirect alla lingua preferita); la home rende `view('pages.home.index')`.
 7. Rispondi con una tabella `file → NEW/OVER/SAME/DEL/TODO`, il percorso del backup e i `FAIL` rimasti, ognuno con la sua regola (`rules/<id>.md`).

@@ -16,5 +16,5 @@ Crea solo ciò che manca. **Non sovrascrivere mai** un file esistente.
 3. Per ogni `SKIP` di `layouts/main.blade.php`, `partials/base/head.blade.php` e `partials/base/scripts.blade.php`: confronta il file con il template in `${CLAUDE_PLUGIN_ROOT}/templates/views/` e **proponi** le differenze. Non applicarle senza conferma.
 4. Per ogni `TODO`: spiega cosa va fatto (es. copiare Beers in `assets/common/beers/`).
 5. Lancia `bash "${CLAUDE_PLUGIN_ROOT}/scripts/check-all.sh" <root>`.
-6. Le rotte e i controller restano al progetto: la pagina `pages/home/index.blade.php` serve un'action che renda `view('pages.home.index')`.
+6. Rotte e controller non li crea lo script: segui la skill `front-routes` (`PagesController@home` nei gruppi lingua, gruppo `root.` + `PagesController@index` per il redirect alla lingua preferita); la home rende `view('pages.home.index')`.
 7. Rispondi con una tabella `file → NEW/SKIP/TODO` e l'elenco dei `FAIL` rimasti, ognuno con la sua regola (`rules/<id>.md`).
