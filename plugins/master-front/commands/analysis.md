@@ -16,5 +16,6 @@ Sola lettura: **non creare né modificare nulla**.
 5. Rispondi con:
    - tabella `file → NEW/OVER/SAME/SKIP/DEL/TODO` (`SKIP` = Beers già presente, non si tocca), raggruppata per cartella (`views/layouts`, `views/partials`, `views/components`, `views/pages`, `views/mail`, `assets/main/css`, `assets/main/js`, `assets/mail`, `assets/main/lib|icons|images|videos|documents`, sempre installati: Beers, classi dei componenti);
    - i `FAIL` di `check-all`, ognuno con la sua regola (`rules/<id>.md`);
+   - se manca `DESIGN.md` nella root: lo scaffold lo creerà e lo compilerà con il design che il front ha già (elenca cosa hai trovato: colori, font, breakpoint) o vuoto;
    - se `check-meta` segnala il canonical stampato come `<meta>`: dillo, `/master-front:scaffold` chiederà se riparare Meta;
    - una riga finale: se è sicuro lanciare `/master-front:scaffold` e su quali cartelle conviene fermarsi.

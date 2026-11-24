@@ -16,8 +16,8 @@ plugins/master-front/
 ├── commands/site-checklist.md /master-front:site-checklist [root]: verifica veloce (sola lettura) di sitemap, structured data, llms.txt, robots.txt, SEO, Core Web Vitals
 ├── skills/                skill atomiche (una per lavoro), entry point: front-manual
 ├── rules/                 regole satellite: una regola per file, l'id è il nome del file
-├── templates/             layout, head, scripts, header, footer, home, componente picture-web-p (+ classe), main.css, responsive.css, main.js, Beers
-└── scripts/               scaffold.sh + check-*.sh (OK / WARN / FAIL con il rimando alla regola)
+├── templates/             layout, head, scripts, header, footer, home, componente picture-web-p (+ classe), main.css, responsive.css, main.js, Beers, DESIGN.md
+└── scripts/               scaffold.sh + check-*.sh (OK / WARN / FAIL con il rimando alla regola) + design-tokens.py (DESIGN.md → variabili CSS)
 ```
 
 - Le **skill** dicono *cosa fare*, in passi brevi, e rimandano alle regole.
@@ -38,13 +38,14 @@ plugins/master-front/
 | `front-meta` | title, description, canonical e og:tags in ogni action che rende una vista; pagina 1 = lista base; bug del canonical come `<meta>` |
 | `front-shared-data` | dati condivisi fra più viste |
 | `front-routes` | controller per entità (resource), PagesController, rotte per lingua tradotte, redirect della root |
+| `front-design` | CSS e HTML da `DESIGN.md`: token in variabili CSS (`scripts/design-tokens.py`), componenti come classi, DESIGN.md sempre aggiornato |
 | `front-mail` | email: trova se il design vive nell'admin o nel front e lavora solo lì |
 
 ## Controlli
 
 ```bash
 bash plugins/master-front/scripts/check-all.sh <root-progetto>   # tutti
-bash plugins/master-front/scripts/check-views.sh <root-progetto> # uno solo (views, layout, head, scripts, assets, meta)
+bash plugins/master-front/scripts/check-views.sh <root-progetto> # uno solo (views, layout, head, scripts, assets, meta, design)
 ```
 
 Senza argomento usano la root git della cartella corrente. Exit code 1 se c'è almeno un `FAIL`.

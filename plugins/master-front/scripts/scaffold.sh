@@ -7,7 +7,8 @@
 #                      assets/main/videos, assets/main/documents; 'views' = every views/* group.
 #                      Default: every views/* group + assets/main/css, assets/main/js, assets/mail
 # Always installed, whatever --only says: Beers (assets/common/beers/, loaded by head and scripts; skipped entirely if
-# the project already has it) and the component classes (private/front/Main/Components/).
+# the project already has it), the component classes (private/front/Main/Components/) and DESIGN.md in the project
+# root (only when missing, then referenced from the project's CLAUDE.md if it has one).
 # Usage: scaffold.sh [--dry-run] [--backup] [--only g1,g2] [project-root]
 VIEW_GROUPS="views/layouts,views/partials,views/components,views/pages,views/mail"
 DRY= BACKUP_ON= ONLY="$VIEW_GROUPS,assets/main/css,assets/main/js,assets/mail"
@@ -89,6 +90,26 @@ else
   copy_tree "$T/assets/common/beers" "$ASSETS/common/beers"
 fi
 copy_tree "$T/components" "$ROOT/private/front/Main/Components"
+
+# DESIGN.md (https://github.com/google-labs-code/design.md): created empty only when missing; Claude fills it from the
+# front read before the scaffold (commands/scaffold.md). It holds the project's design, so it is never overwritten.
+if [ -f "$ROOT/DESIGN.md" ]; then
+  echo "SKIP  DESIGN.md (esiste già)"
+else
+  [ -n "$DRY" ] || sed "s/__PROJECT__/$(basename "$ROOT")/" "$T/DESIGN.md" > "$ROOT/DESIGN.md" && echo "NEW   DESIGN.md (vuoto, da compilare dal front)"
+fi
+# The project's CLAUDE.md must point the front work to DESIGN.md (a project without CLAUDE.md is skipped, never created)
+if [ -f "$ROOT/CLAUDE.md" ] && ! grep -qF 'DESIGN.md' "$ROOT/CLAUDE.md"; then
+  tag=EDIT
+  if [ -z "$DRY" ]; then
+    [ -s "$ROOT/CLAUDE.md" ] && printf '\n' >> "$ROOT/CLAUDE.md"
+    printf '%s\n' "## Front: design system" "" \
+      "Per il front usa \`DESIGN.md\` (formato https://github.com/google-labs-code/design.md): colori, tipografia, spaziature e componenti si prendono da lì; se manca un valore, aggiungilo a \`DESIGN.md\` invece di inventarlo nel CSS." "" \
+      "Tienilo aggiornato: ogni modifica al design del front (un colore, un font, un breakpoint, un componente nuovo o cambiato) si riporta in \`DESIGN.md\` nella stessa modifica." \
+      >> "$ROOT/CLAUDE.md"
+  fi
+  echo "$tag  CLAUDE.md (rimanda a DESIGN.md per il front)"
+fi
 
 # The component class is useless until a provider registers it; the provider belongs to the project, so only report it.
 PROVIDER=private/app/Providers/FrontServiceProvider.php

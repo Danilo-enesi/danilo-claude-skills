@@ -18,6 +18,7 @@ I percorsi `rules/`, `scripts/`, `templates/` sono relativi alla radice del plug
 | il sito ha sitemap, structured data, llms.txt, robots.txt, SEO, Core Web Vitals? (solo verifica) | comando `/master-front:site-checklist` |
 | scrivere una vista (pagina, partial, componente) | `front-views` |
 | toccare `layouts/main.blade.php` | `front-layout` |
+| scrivere CSS o markup a partire dal design (`DESIGN.md`) | `front-design` |
 | aggiungere CSS, font, librerie, icone in `<head>` | `front-head` |
 | aggiungere JS o librerie JS | `front-scripts` |
 | salvare un file in `assets/` | `front-assets` |
@@ -39,6 +40,7 @@ I percorsi `rules/`, `scripts/`, `templates/` sono relativi alla radice del plug
 
 - Niente CSS/JS inline nelle Blade (`rules/no-inline.md`).
 - Ciò che si usa due volte è un componente in `components/`, mai due copie (`rules/components-reuse.md`).
+- `DESIGN.md` nella root è obbligatorio: si usa per colori, font, spaziature e componenti, e ogni modifica al design si riporta lì nella stessa modifica (`rules/design-md.md`).
 - Direttive Blade, non PHP crudo (`rules/blade-directives.md`).
 - Traduzioni: `@lang` per il testo, `{{ __() }}` negli attributi (`rules/translations.md`).
 - Logica complessa nel controller o in un viewController, mai nella Blade (`rules/blade-logic.md`).
