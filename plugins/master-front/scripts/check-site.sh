@@ -19,7 +19,8 @@ fi
 # sitemap: generated files, or at least the command that generates them
 if [ -d "$WEB/sitemaps" ] || [ -f "$WEB/sitemap.xml" ]; then
   ok $R "sitemap: $( [ -d "$WEB/sitemaps" ] && rel "$WEB/sitemaps/" || rel "$WEB/sitemap.xml")"
-elif grep -rqil 'sitemap' "$ROOT/private/app/Console" 2>/dev/null; then
+# Commands live in app/Console (older Master) or private/routes/console.php (newer Master).
+elif grep -rqil 'sitemap' "$ROOT/private/app/Console" "$ROOT/private/routes/console.php" 2>/dev/null; then
   warn $R "sitemap: c'è il comando ma nessun file generato (sitemaps/ o sitemap.xml)"
 else
   warn $R "sitemap: nessuna sitemap né comando che la generi"
