@@ -16,6 +16,7 @@ plugins/master-front/
 ├── commands/site-checklist.md /master-front:site-checklist [root]: verifica veloce (sola lettura) di sitemap, structured data, llms.txt, robots.txt, SEO, Core Web Vitals
 ├── skills/                skill atomiche (una per lavoro), entry point: front-manual
 ├── rules/                 regole satellite: una regola per file, l'id è il nome del file
+├── data/cdn-plugins.md    plugin disponibili su cdn.ene.si (si consulta con scripts/cdn.sh, non si legge intero)
 ├── templates/             layout, head, scripts, header, footer, home, componente picture-webp (+ classe), main.css, responsive.css, main.js, Beers, DESIGN.md
 └── scripts/               scaffold.sh + check-*.sh (OK / WARN / FAIL con il rimando alla regola) + design-tokens.py (DESIGN.md → variabili CSS)
 ```
@@ -39,6 +40,7 @@ plugins/master-front/
 | `front-shared-data` | dati condivisi fra più viste |
 | `front-routes` | controller per entità (resource), PagesController, rotte per lingua tradotte, redirect della root |
 | `front-design` | CSS e HTML da `DESIGN.md`: token in variabili CSS (`scripts/design-tokens.py`), componenti come classi, DESIGN.md sempre aggiornato |
+| `front-cdn` | prima di installare una libreria: `scripts/cdn.sh <nome>` dà URL, versioni e blocco preventivo EPP su cdn.ene.si (lista in `data/cdn-plugins.md`, mai letta intera) |
 | `front-mail` | email: trova se il design vive nell'admin o nel front e lavora solo lì |
 
 ## Controlli

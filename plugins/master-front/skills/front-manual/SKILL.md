@@ -20,6 +20,7 @@ I percorsi `rules/`, `scripts/`, `templates/` sono relativi alla radice del plug
 | toccare `layouts/main.blade.php` | `front-layout` |
 | scrivere CSS o markup a partire dal design (`DESIGN.md`) | `front-design` |
 | aggiungere CSS, font, librerie, icone in `<head>` | `front-head` |
+| installare una libreria/plugin JS o CSS (prima la CDN di Enesi) | `front-cdn` |
 | aggiungere JS o librerie JS | `front-scripts` |
 | salvare un file in `assets/` | `front-assets` |
 | script, iframe o font di terze parti | `front-cookie-consent` |
