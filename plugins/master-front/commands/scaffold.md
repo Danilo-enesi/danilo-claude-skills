@@ -11,19 +11,41 @@ Lo scaffold **sovrascrive**. Prima l'utente sceglie cosa installare e se fare un
 
 1. Root del progetto: `$ARGUMENTS`, altrimenti la root git della cartella corrente.
 2. **Anteprima**: `bash "${CLAUDE_PLUGIN_ROOT}/scripts/scaffold.sh" --dry-run <root>`. Se esce `STOP`, fermati e riporta il motivo. Mostra il riepilogo (quanti `NEW`, `OVER`, `DEL`) e i file `OVER`/`DEL` per nome.
-3. **Cartelle da integrare**: chiedi con `AskUserQuestion` (`multiSelect: true`), tutte proposte come scelta di default. La `description` di ogni opzione dice, dal dry-run, cosa verrà **sovrascritto o eliminato** in quella cartella, con le righe del file del progetto:
-   - `views` (tutte le Views: layouts, partials, components, pages, mail; toglie `Views/base/`) — es. «⚠ sovrascrive layouts/main.blade.php (180 righe), partials/header.blade.php (95 righe); elimina Views/base/ (4 file)»
-   - `assets/main/css` — es. «⚠ sovrascrive main.css (2300 righe)»
-   - `assets/main/js` — es. «⚠ sovrascrive main.js (1000 righe)»
-   - `assets/mail`
+   Controlla anche il canonical: `bash "${CLAUDE_PLUGIN_ROOT}/scripts/check-meta.sh" <root> | grep -i 'canonical come'`. Se esce `FAIL ... come <meta>`, il bug del core non è corretto (`rules/meta.md`).
+3. **Cartelle da integrare**: mostra la lista; **marcate di default** `[x]` le cartelle 1-8, non marcate `[ ]` le altre cartelle di `assets/main/` (9-13); accanto a ognuna, dal dry-run, cosa verrà sovrascritto o eliminato, con le righe del file del progetto (o «solo file nuovi»):
+   ```
+   Cartelle da installare ([x] = installata):
+   [x] 1  views/layouts      ⚠ sovrascrive main.blade.php (180 righe → 24); elimina Views/base/ (4 file)
+   [x] 2  views/partials     ⚠ sovrascrive header.blade.php (95 righe → 8)
+   [x] 3  views/components   solo file nuovi
+   [x] 4  views/pages        solo file nuovi
+   [x] 5  views/mail         solo file nuovi
+   [x] 6  assets/main/css    ⚠ sovrascrive main.css (2300 righe → 30)
+   [x] 7  assets/main/js     ⚠ sovrascrive main.js (1000 righe → 21)
+   [x] 8  assets/mail        solo file nuovi
+   [ ] 9  assets/main/lib        solo file nuovi
+   [ ] 10 assets/main/icons      già presente
+   [ ] 11 assets/main/images     solo file nuovi (images/defaults, images/icons)
+   [ ] 12 assets/main/videos     solo file nuovi
+   [ ] 13 assets/main/documents  solo file nuovi
+   [x] 14 ripara Meta            ⚠ il core stampa il canonical come <meta>: override di render_property in private/master/Foundation/Meta.php
+   Sempre installati: Beers (assets/common/beers/, solo se manca: se esiste non si tocca mai, il layout la carica)
+   e le classi dei componenti (private/front/Main/Components/).
+   ```
+   Se un file da sovrascrivere ha molte più righe del template (lavoro vero del progetto), mettilo in evidenza. Poi chiedi con `AskUserQuestion` (scelta singola):
+   - «Installa le marcate» (consigliato se non c'è nulla di grosso da sovrascrivere)
+   - «Le marcate + tutte le cartelle di assets» → aggiunge 9-13
+   - «Togli quelle con ⚠» → restano solo le marcate con file nuovi (la 14, ripara Meta, resta marcata)
+   - con «Other» l'utente scrive i numeri da aggiungere o togliere (es. `+9 +11 -7`, `-14` per non riparare Meta).
 
-   Se in una cartella non c'è nulla da sovrascrivere, scrivi «solo file nuovi». Se un file da sovrascrivere ha molte più righe del template (lavoro vero del progetto), mettilo in evidenza e suggerisci di togliere quella cartella.
-   Beers (`assets/common/beers/`, solo se il progetto non ce l'ha: se esiste non si tocca mai, è adattata al progetto), le classi dei componenti (`private/front/Main/Components/`) e le cartelle vuote di `assets/main/` (lib, icons, images, videos, documents) si installano sempre: dillo nella domanda.
+   Le cartelle di assets 9-13 sono vuote (`.gitkeep`): non sovrascrivono mai nulla. La voce **14 compare solo se al passo 2 il canonical è uscito `FAIL`**, ed è marcata di default; se il canonical è già a posto non si mostra. Ripeti la lista aggiornata solo se l'utente l'ha cambiata a mano.
 4. **Backup**: chiedi con `AskUserQuestion`, nominando i file che verranno sovrascritti o eliminati nelle cartelle scelte:
    - «Sì, fai il backup» (consigliato): copia ciò che sostituisce in `.scaffold-backup/<data>/`
    - «No, senza backup»
-5. Lancia `bash "${CLAUDE_PLUGIN_ROOT}/scripts/scaffold.sh" [--backup] --only <gruppi scelti, separati da virgola> <root>`.
+
+5. Lancia `bash "${CLAUDE_PLUGIN_ROOT}/scripts/scaffold.sh" [--backup] --only <cartelle scelte, separate da virgola, es. views/layouts,assets/main/js> <root>`.
+   Se la voce 14 (ripara Meta) è rimasta marcata: applica la correzione di `rules/meta.md` in `private/master/Foundation/Meta.php` (mai in `vendor/`), con la **stessa firma** di `render_property` del core installato; se il file ha già un `render_property`, aggiungi il caso lì dentro. Con backup, copia prima il file in `.scaffold-backup/<data>/private/master/Foundation/Meta.php`. Poi rilancia `check-meta.sh`: la riga del canonical deve essere `OK`.
 6. Con backup: se `.scaffold-backup/` non è in `.gitignore`, dillo: va tolta dopo il controllo, non committata.
 7. Lancia `bash "${CLAUDE_PLUGIN_ROOT}/scripts/check-all.sh" <root>`.
 8. Rotte e controller non li crea lo script: segui la skill `front-routes` (`PagesController@home` nei gruppi lingua, gruppo `root.` + `PagesController@index` per il redirect alla lingua preferita); la home rende `view('pages.home.index')`. Se nel backup c'erano viste referenziate dai controller (es. `base.*`), elenca i `view('...')` da aggiornare.
-9. Rispondi con una tabella `file → NEW/OVER/SAME/SKIP/DEL/TODO`, il percorso del backup (se fatto) e i `FAIL` rimasti, ognuno con la sua regola (`rules/<id>.md`).
+9. Rispondi con una tabella `file → NEW/OVER/SAME/SKIP/DEL/TODO` (più `Meta.php → riparato` se fatto), il percorso del backup (se fatto) e i `FAIL` rimasti, ognuno con la sua regola (`rules/<id>.md`).

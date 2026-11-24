@@ -2,12 +2,15 @@
 # Writes the front scaffolding from templates/, overwriting what differs. Files outside the templates are never touched.
 #   --dry-run          only print what would happen (NEW / OVER / SAME / SKIP / DEL / TODO), write nothing
 #   --backup           copy every file or folder it replaces or deletes into <root>/.scaffold-backup/<timestamp>/
-#   --only <groups>    comma-separated optional groups: views, assets/main/css, assets/main/js, assets/mail (default: all)
+#   --only <groups>    comma-separated groups: views/layouts, views/partials, views/components, views/pages, views/mail,
+#                      assets/main/css, assets/main/js, assets/mail, assets/main/lib, assets/main/icons, assets/main/images,
+#                      assets/main/videos, assets/main/documents; 'views' = every views/* group.
+#                      Default: every views/* group + assets/main/css, assets/main/js, assets/mail
 # Always installed, whatever --only says: Beers (assets/common/beers/, loaded by head and scripts; skipped entirely if
-# the project already has it), component classes
-# (private/front/Main/Components/) and the empty convention folders of assets/main/ (lib, icons, images/defaults, images/icons, videos, documents).
+# the project already has it) and the component classes (private/front/Main/Components/).
 # Usage: scaffold.sh [--dry-run] [--backup] [--only g1,g2] [project-root]
-DRY= BACKUP_ON= ONLY="views,assets/main/css,assets/main/js,assets/mail"
+VIEW_GROUPS="views/layouts,views/partials,views/components,views/pages,views/mail"
+DRY= BACKUP_ON= ONLY="$VIEW_GROUPS,assets/main/css,assets/main/js,assets/mail"
 while [ $# -gt 0 ]; do
   case "$1" in
     --dry-run) DRY=1; shift ;;
@@ -23,10 +26,13 @@ if [ ! -d "$ROOT/private/front/Main" ]; then
   echo "STOP: $(rel "$ROOT/private/front/Main") non esiste. Non è un progetto Master Laravel Enesi (o il tema non è Main)."
   exit 1
 fi
+ONLY=",$ONLY,"; ONLY="${ONLY//,views,/,$VIEW_GROUPS,}"
 for g in ${ONLY//,/ }; do
-  case "$g" in views | assets/main/css | assets/main/js | assets/mail) ;; *) echo "STOP: gruppo sconosciuto '$g'"; exit 1 ;; esac
+  case "$g" in views/layouts | views/partials | views/components | views/pages | views/mail | assets/main/css | assets/main/js | assets/mail     | assets/main/lib | assets/main/icons | assets/main/images | assets/main/videos | assets/main/documents) ;;
+    *) echo "STOP: gruppo sconosciuto '$g'"; exit 1 ;;
+  esac
 done
-want() { [[ ",$ONLY," == *",$1,"* ]]; }
+want() { [[ "$ONLY" == *",$1,"* ]]; }
 [ -n "$DRY" ] && echo "DRY-RUN: nessun file viene scritto"
 
 BACKUP="$ROOT/.scaffold-backup/$(date +%Y%m%d-%H%M%S)"
@@ -57,9 +63,13 @@ copy_tree() { # copy_tree <template dir> <destination dir>
 }
 
 # Optional groups
-if want views; then
-  copy_tree "$T/views" "$VIEWS"
-  folder "$VIEWS/components"; folder "$VIEWS/mail"
+for sub in layouts partials components pages; do
+  want "views/$sub" && copy_tree "$T/views/$sub" "$VIEWS/$sub"
+done
+want views/components && folder "$VIEWS/components"
+want views/mail && folder "$VIEWS/mail"
+# The old base/ held the layout: it goes away with the new layouts/
+if want views/layouts; then
   if [ -d "$VIEWS/base" ]; then
     files=$(find "$VIEWS/base" -type f | wc -l | tr -d ' ')
     [ -n "$DRY" ] || { backup "$VIEWS/base" && rm -rf "$VIEWS/base"; } && echo "DEL   $(rel "$VIEWS/base")/ (struttura vecchia, $files file)"
@@ -68,6 +78,8 @@ fi
 want assets/main/css && copy_tree "$T/assets/main/css" "$ASSETS/main/css"
 want assets/main/js && copy_tree "$T/assets/main/js" "$ASSETS/main/js"
 want assets/mail && folder "$ASSETS/mail"
+for dir in lib icons videos documents; do want "assets/main/$dir" && folder "$ASSETS/main/$dir"; done
+want assets/main/images && { folder "$ASSETS/main/images/defaults"; folder "$ASSETS/main/images/icons"; }
 
 # Always installed
 # Beers has no versioning and projects edit it in place: the only thing never overwritten once present.
@@ -77,7 +89,6 @@ else
   copy_tree "$T/assets/common/beers" "$ASSETS/common/beers"
 fi
 copy_tree "$T/components" "$ROOT/private/front/Main/Components"
-for dir in lib icons images/defaults images/icons videos documents; do folder "$ASSETS/main/$dir"; done
 
 # The component class is useless until a provider registers it; the provider belongs to the project, so only report it.
 PROVIDER=private/app/Providers/FrontServiceProvider.php

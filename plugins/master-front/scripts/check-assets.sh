@@ -4,8 +4,12 @@
 source "$(dirname "$0")/lib.sh" "$@"
 M="$ASSETS/main"
 
-for dir in css js lib icons images images/defaults images/icons; do
+for dir in css js; do
   if [ -d "$M/$dir" ]; then ok assets-structure "assets/main/$dir"; else fail assets-structure "manca assets/main/$dir/"; fi
+done
+# Optional in the scaffold: only a reminder when missing
+for dir in lib icons images/defaults images/icons; do
+  if [ -d "$M/$dir" ]; then ok assets-structure "assets/main/$dir"; else warn assets-structure "manca assets/main/$dir/ (si crea quando serve)"; fi
 done
 need_file assets-structure "$M/css/main.css" && ok assets-structure "main.css"
 need_file assets-structure "$M/css/responsive.css" && ok assets-structure "responsive.css"

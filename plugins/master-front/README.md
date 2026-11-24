@@ -12,7 +12,7 @@ assets, e un manuale d'uso per l'AI fatto di skill piccole, regole satellite e c
 ```
 plugins/master-front/
 ├── commands/analysis.md   /master-front:analysis [root]: dry-run dello scaffold + controlli, non tocca nulla
-├── commands/scaffold.md   /master-front:scaffold [root]: scegli le cartelle (views, assets/main/css, assets/main/js, assets/mail) e il backup, poi sovrascrive dai template
+├── commands/scaffold.md   /master-front:scaffold [root]: lista delle cartelle (views/*, assets/main/css|js, assets/mail marcate; assets/main/lib|icons|images|videos|documents da aggiungere); backup, poi sovrascrive dai template
 ├── commands/site-checklist.md /master-front:site-checklist [root]: verifica veloce (sola lettura) di sitemap, structured data, llms.txt, robots.txt, SEO, Core Web Vitals
 ├── skills/                skill atomiche (una per lavoro), entry point: front-manual
 ├── rules/                 regole satellite: una regola per file, l'id è il nome del file
