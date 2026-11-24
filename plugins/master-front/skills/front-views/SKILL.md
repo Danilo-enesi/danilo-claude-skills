@@ -21,7 +21,7 @@ Percorsi relativi alla radice del plugin (`../../` da questa skill).
    - componente con molta logica → class based component (classe in `private/front/Main/Components/`), registrato con `Blade::component(...)` nel `FrontServiceProvider`, o nell'`AppServiceProvider` se il primo non c'è.
 2. **Estendi il layout**: `@extends('layouts.main')` + `@section('content')`.
 3. **Prepara i dati nel controller** (skill `front-routes` per controller e rotta; o in un viewController): query, filtri, ordinamenti, `->with()` (`rules/blade-logic.md`).
-4. **Scrivi il markup con le direttive Blade**: `@if`, `@foreach`, `@class`, `@selected`, `@json`... (`rules/blade-directives.md`).
+4. **Scrivi il markup** semantico e accessibile (skill `front-html`) **con le direttive Blade**: `@if`, `@foreach`, `@class`, `@selected`, `@json`... (`rules/blade-directives.md`).
 5. **Traduzioni** (`rules/translations.md`): testo → `@lang('front::…')`, attributi (`title`, `alt`, `data-*`…) → `{{ __('front::…') }}`.
 6. **CSS/JS di pagina**: file in `assets/main/` + `@push('styles')` / `@push('scripts')` (`rules/no-inline.md`).
 7. **Verifica**: `bash scripts/check-views.sh <root>`.

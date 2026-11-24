@@ -17,6 +17,7 @@ I percorsi `rules/`, `scripts/`, `templates/` sono relativi alla radice del plug
 | vedere cosa cambierebbe lo scaffold, senza toccare nulla | comando `/master-front:analysis` |
 | il sito ha sitemap, structured data, llms.txt, robots.txt, SEO, Core Web Vitals? (solo verifica) | comando `/master-front:site-checklist` |
 | scrivere una vista (pagina, partial, componente) | `front-views` |
+| semantica e accessibilità di qualsiasi markup (tag, titoli, form, alt, link esterni) | `front-html` |
 | toccare `layouts/main.blade.php` | `front-layout` |
 | scrivere CSS o markup a partire dal design (`DESIGN.md`) | `front-design` |
 | aggiungere CSS, font, librerie, icone in `<head>` | `front-head` |
@@ -25,6 +26,7 @@ I percorsi `rules/`, `scripts/`, `templates/` sono relativi alla radice del plug
 | salvare un file in `assets/` | `front-assets` |
 | script, iframe o font di terze parti | `front-cookie-consent` |
 | title, description, canonical, og:tags (ogni action che rende una vista) | `front-meta` |
+| pagina di errore (tutti i codici) e di manutenzione: obbligatorie | `front-error-pages` |
 | template, blocchi, header/footer delle email | `front-mail` |
 | controller, rotte, home, redirect della root | `front-routes` |
 | un dato che serve a più viste | `front-shared-data` |
@@ -40,6 +42,7 @@ I percorsi `rules/`, `scripts/`, `templates/` sono relativi alla radice del plug
 ## 3. Le regole che valgono sempre
 
 - Niente CSS/JS inline nelle Blade (`rules/no-inline.md`).
+- HTML semantico e accessibile: tag con significato, un `<h1>`, input del tipo giusto con `tabindex` nei form, `alt` su ogni immagine, `rel="noopener noreferrer"` sui link esterni (`rules/html-markup.md`, skill `front-html`).
 - Ciò che si usa due volte è un componente in `components/`, mai due copie (`rules/components-reuse.md`).
 - `DESIGN.md` nella root è obbligatorio: si usa per colori, font, spaziature e componenti, e ogni modifica al design si riporta lì nella stessa modifica (`rules/design-md.md`).
 - Direttive Blade, non PHP crudo (`rules/blade-directives.md`).

@@ -117,5 +117,11 @@ PROVIDER=private/app/Providers/FrontServiceProvider.php
 grep -rqsF "PictureWebp::class" "$ROOT/private/app" || echo "TODO  registra il componente in $PROVIDER, boot(): Blade::component('picture-webp', \\Front\\Main\\Components\\PictureWebp::class);"
 # <x-picture-webp> falls back to this image when it gets none
 [ -f "$ASSETS/main/images/defaults/placeholder.jpg" ] || echo "TODO  aggiungi assets/main/images/defaults/placeholder.jpg (+ .webp): l'immagine di ripiego di <x-picture-webp>"
+# Error and maintenance pages read front::errors.* / front::maintenance.*, generated from ln_upd.php
+LN="$ROOT/private/app/Console/Commands/Utility/ln_upd.php"
+for group in errors maintenance; do
+  [ -f "$LN" ] && grep -qF "front::$group." "$LN" \
+    || echo "TODO  chiavi front::$group.* per pages/$group.blade.php: aggiungile in ln_upd.php e lancia php artisan ln:upd (skill front-error-pages)"
+done
 [ -d "$BACKUP" ] && echo "BACKUP $(rel "$BACKUP")/"
 exit 0

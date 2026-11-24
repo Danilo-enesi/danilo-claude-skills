@@ -17,7 +17,7 @@ plugins/master-front/
 ├── skills/                skill atomiche (una per lavoro), entry point: front-manual
 ├── rules/                 regole satellite: una regola per file, l'id è il nome del file
 ├── data/cdn-plugins.md    plugin disponibili su cdn.ene.si (si consulta con scripts/cdn.sh, non si legge intero)
-├── templates/             layout, head, scripts, header, footer, home, componente picture-webp (+ classe), main.css, responsive.css, main.js, Beers, DESIGN.md
+├── templates/             layout, head, scripts, header, footer, home, errors, maintenance (+ maintenance.css), componente picture-webp (+ classe), main.css, responsive.css, main.js, Beers, DESIGN.md
 └── scripts/               scaffold.sh + check-*.sh (OK / WARN / FAIL con il rimando alla regola) + design-tokens.py (DESIGN.md → variabili CSS)
 ```
 
@@ -41,6 +41,8 @@ plugins/master-front/
 | `front-routes` | controller per entità (resource), PagesController, rotte per lingua tradotte, redirect della root |
 | `front-design` | CSS e HTML da `DESIGN.md`: token in variabili CSS (`scripts/design-tokens.py`), componenti come classi, DESIGN.md sempre aggiornato |
 | `front-cdn` | prima di installare una libreria: `scripts/cdn.sh <nome>` dà URL, versioni e blocco preventivo EPP su cdn.ene.si (lista in `data/cdn-plugins.md`, mai letta intera) |
+| `front-error-pages` | `pages/errors.blade.php` (tutti i codici, solo `$exception`) e `pages/maintenance.blade.php` (senza dati, solo traduzioni): obbligatorie |
+| `front-html` | semantica e accessibilità del markup: tag semantici, un h1, form (tipi, label, tabindex), alt, rel noopener noreferrer |
 | `front-mail` | email: trova se il design vive nell'admin o nel front e lavora solo lì |
 
 ## Controlli

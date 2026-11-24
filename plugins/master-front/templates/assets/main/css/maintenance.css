@@ -1,0 +1,15 @@
+/* Maintenance page (pages/maintenance.blade.php): standalone, no Beers/main.css/libraries and no Google Fonts, so it
+   still works while the site is down. Colors and font from DESIGN.md, written out: the design-tokens variables live
+   in main.css, which this page does not load. */
+
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+.maintenance { display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; padding: 24px 16px; background: #F5F5F5; color: #333333; font: 16px/1.6 -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; }
+.maintenance-card { width: 100%; max-width: 560px; padding: 40px 32px; border-radius: 4px; background: #FFFFFF; box-shadow: 0 2px 16px rgba(0, 0, 0, .06); text-align: center; }
+.maintenance-title { margin: 0 0 12px; font-size: 22px; font-weight: 700; line-height: 1.3; }
+.maintenance p { margin: 0 0 12px; }
+.maintenance hr { margin: 28px 0; border: 0; border-top: 1px solid #EEEEEE; }
+.maintenance-en .maintenance-title { font-size: 18px; }
+.maintenance-en p { color: #767676; }

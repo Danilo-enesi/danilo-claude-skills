@@ -23,9 +23,9 @@ Lo scaffold **sovrascrive**. Prima l'utente sceglie cosa installare e se fare un
    [x] 1  views/layouts      ⚠ sovrascrive main.blade.php (180 righe → 24); elimina Views/base/ (4 file)
    [x] 2  views/partials     ⚠ sovrascrive header.blade.php (95 righe → 8)
    [x] 3  views/components   solo file nuovi
-   [x] 4  views/pages        solo file nuovi
+   [x] 4  views/pages        solo file nuovi (home, errors, maintenance)
    [x] 5  views/mail         solo file nuovi
-   [x] 6  assets/main/css    ⚠ sovrascrive main.css (2300 righe → 30)
+   [x] 6  assets/main/css    ⚠ sovrascrive main.css (2300 righe → 30)  (main, responsive, maintenance)
    [x] 7  assets/main/js     ⚠ sovrascrive main.js (1000 righe → 21)
    [x] 8  assets/mail        solo file nuovi
    [ ] 9  assets/main/lib        solo file nuovi
