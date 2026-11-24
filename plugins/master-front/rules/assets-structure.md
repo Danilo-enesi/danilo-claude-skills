@@ -14,7 +14,7 @@ assets/
 │   │   └── icons/        icone usate nelle pagine (es. telefono)
 │   ├── videos/           per entità se sono tanti
 │   └── documents/        per entità se sono tanti, per estensione se sono pochi
-├── common/beers/         Beers, libreria interna (js, css, immagini)
+├── common/beers/         Beers, libreria interna (js, css, immagini); senza versioni, adattata a ogni progetto: lo scaffold non la sovrascrive mai
 └── mail/                 asset delle email inviate all'UTENTE (non quelle interne dell'admin)
 ```
 

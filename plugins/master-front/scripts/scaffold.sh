@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
 # Writes the front scaffolding from templates/, overwriting what differs. Files outside the templates are never touched.
-#   --dry-run          only print what would happen (NEW / OVER / SAME / DEL / TODO), write nothing
+#   --dry-run          only print what would happen (NEW / OVER / SAME / SKIP / DEL / TODO), write nothing
 #   --backup           copy every file or folder it replaces or deletes into <root>/.scaffold-backup/<timestamp>/
 #   --only <groups>    comma-separated optional groups: views, assets/main/css, assets/main/js, assets/mail (default: all)
-# Always installed, whatever --only says: component classes (private/front/Main/Components/) and the empty
-# convention folders of assets/main/ (lib, icons, images/defaults, images/icons, videos, documents).
+# Always installed, whatever --only says: Beers (assets/common/beers/, loaded by head and scripts; skipped entirely if
+# the project already has it), component classes
+# (private/front/Main/Components/) and the empty convention folders of assets/main/ (lib, icons, images/defaults, images/icons, videos, documents).
 # Usage: scaffold.sh [--dry-run] [--backup] [--only g1,g2] [project-root]
 DRY= BACKUP_ON= ONLY="views,assets/main/css,assets/main/js,assets/mail"
 while [ $# -gt 0 ]; do
@@ -37,7 +38,9 @@ backup() { # backup <path>: copy a file or folder into the backup, keeping its p
 copy() { # copy <template file> <destination>
   if [ -e "$2" ]; then
     if cmp -s "$1" "$2"; then echo "SAME  $(rel "$2")"; return; fi
-    [ -n "$DRY" ] || { backup "$2" && cp "$1" "$2"; } && echo "OVER  $(rel "$2")"
+    # Line counts tell real project work (1000 lines) from a stub about to be aligned (10 lines)
+    local lines; lines="$(wc -l < "$2" | tr -d ' ') righe -> $(wc -l < "$1" | tr -d ' ')"
+    [ -n "$DRY" ] || { backup "$2" && cp "$1" "$2"; } && echo "OVER  $(rel "$2") ($lines)"
     return
   fi
   [ -n "$DRY" ] || { mkdir -p "$(dirname "$2")" && cp "$1" "$2"; } && echo "NEW   $(rel "$2")"
@@ -58,7 +61,8 @@ if want views; then
   copy_tree "$T/views" "$VIEWS"
   folder "$VIEWS/components"; folder "$VIEWS/mail"
   if [ -d "$VIEWS/base" ]; then
-    [ -n "$DRY" ] || { backup "$VIEWS/base" && rm -rf "$VIEWS/base"; } && echo "DEL   $(rel "$VIEWS/base")/ (struttura vecchia)"
+    files=$(find "$VIEWS/base" -type f | wc -l | tr -d ' ')
+    [ -n "$DRY" ] || { backup "$VIEWS/base" && rm -rf "$VIEWS/base"; } && echo "DEL   $(rel "$VIEWS/base")/ (struttura vecchia, $files file)"
   fi
 fi
 want assets/main/css && copy_tree "$T/assets/main/css" "$ASSETS/main/css"
@@ -66,6 +70,12 @@ want assets/main/js && copy_tree "$T/assets/main/js" "$ASSETS/main/js"
 want assets/mail && folder "$ASSETS/mail"
 
 # Always installed
+# Beers has no versioning and projects edit it in place: the only thing never overwritten once present.
+if [ -d "$ASSETS/common/beers" ]; then
+  echo "SKIP  $(rel "$ASSETS/common/beers")/ (esiste già: Beers si adatta al progetto, non si sovrascrive)"
+else
+  copy_tree "$T/assets/common/beers" "$ASSETS/common/beers"
+fi
 copy_tree "$T/components" "$ROOT/private/front/Main/Components"
 for dir in lib icons images/defaults images/icons videos documents; do folder "$ASSETS/main/$dir"; done
 
@@ -73,6 +83,5 @@ for dir in lib icons images/defaults images/icons videos documents; do folder "$
 PROVIDER=private/app/Providers/FrontServiceProvider.php
 [ -f "$ROOT/$PROVIDER" ] || PROVIDER=private/app/Providers/AppServiceProvider.php
 grep -rqsF "PictureWebP" "$ROOT/private/app" || echo "TODO  registra il componente in $PROVIDER, boot(): Blade::component('picture-web-p', \\Front\\Main\\Components\\PictureWebP::class);"
-[ -f "$ASSETS/common/beers/beers.js" ] || echo "TODO  copia Beers (js, css, immagini) in assets/common/beers/ da un progetto che la usa (es. motoupgrade)"
 [ -d "$BACKUP" ] && echo "BACKUP $(rel "$BACKUP")/"
 exit 0

@@ -16,7 +16,7 @@ plugins/master-front/
 ├── commands/site-checklist.md /master-front:site-checklist [root]: verifica veloce (sola lettura) di sitemap, structured data, llms.txt, robots.txt, SEO, Core Web Vitals
 ├── skills/                skill atomiche (una per lavoro), entry point: front-manual
 ├── rules/                 regole satellite: una regola per file, l'id è il nome del file
-├── templates/             layout, head, scripts, header, footer, home, componente picture-web-p (+ classe), main.css, responsive.css, main.js
+├── templates/             layout, head, scripts, header, footer, home, componente picture-web-p (+ classe), main.css, responsive.css, main.js, Beers
 └── scripts/               scaffold.sh + check-*.sh (OK / WARN / FAIL con il rimando alla regola)
 ```
 
