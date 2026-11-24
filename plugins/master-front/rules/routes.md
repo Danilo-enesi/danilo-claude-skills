@@ -36,12 +36,13 @@ Route::group(['prefix' => 'en', 'as' => 'en.', 'locale' => 'en'], function () {
 
 ## Sì
 - Link nelle viste con `Front::route('aboutUs')` (lingua corrente) o `Front::routeLang('aboutUs', 'en')` (lingua precisa): mai URL scritti a mano.
-- Rotta nuova → aggiungila in **tutti** i gruppi lingua, ognuna col suo percorso tradotto.
+- Rotta nuova → aggiungila a mano in **tutti** i gruppi lingua, ognuna col suo percorso tradotto.
 - Nomi delle rotte di entità come il resource controller: `<entità>.index`, `<entità>.show`.
 
 ## No
 - Niente rotte del front fuori da un gruppo lingua (salvo la root).
 - Niente percorso in italiano dentro il gruppo `en.` (o in un'altra lingua): ogni percorso è tradotto.
 - Niente gruppo per una lingua che il website non ha attiva, e niente lingua attiva senza il suo gruppo.
+- Niente `foreach` sulle lingue per generare i gruppi: ogni lingua ha i suoi percorsi tradotti, un ciclo darebbe a tutte lo stesso percorso. Un gruppo scritto a mano per lingua.
 
 Verifica: a mano.

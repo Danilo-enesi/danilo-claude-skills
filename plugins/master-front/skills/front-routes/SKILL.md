@@ -18,9 +18,10 @@ Percorsi relativi alla radice del plugin (`../../` da questa skill).
 3. **Aggiungi la rotta** in `private/front/Main/Routes/web.php` (`rules/routes.md`), in **ogni** gruppo lingua, con lo stesso nome e il percorso tradotto.
 4. **Home**: `PagesController@home` nei gruppi lingua. Se la home è la prima pagina che vede l'utente, servono **insieme**:
    - il gruppo `root.` con `Route::get('/', [PagesController::class, 'index'])->name('index')`;
-   - `PagesController@index` con il redirect 303 alla lingua preferita (codice in `rules/controllers.md`).
+   - `PagesController@index` con il redirect 303 alla lingua preferita (codice in `rules/controllers.md`). Se ne esiste già uno diverso, sostituiscilo per intero con il nostro.
 5. **Link** nelle viste: `Front::route('nome')`, mai URL a mano.
 
 ## No
 - Niente liste o dettagli di entità in `PagesController`.
 - Niente rotta presente in una lingua sola, né percorso non tradotto.
+- Niente `foreach` sulle lingue in `web.php`: i percorsi uscirebbero uguali per tutte.

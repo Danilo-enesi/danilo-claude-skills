@@ -11,7 +11,7 @@ Esempi: `BlogController@index` / `BlogController@show`, `ProductsController@inde
 
 ## Home e redirect della root
 
-La home vive in `PagesController@home`. Se la home è la prima pagina che vede l'utente, la root `/` non mostra nulla: `PagesController@index` sceglie la lingua preferita fra quelle attive del website e rimanda alla home in quella lingua. Lavora insieme al gruppo `root.` di `routes.md`.
+La home vive in `PagesController@home`. Se la home è la prima pagina che vede l'utente, la root `/` non mostra nulla: `PagesController@index` sceglie la lingua preferita fra quelle attive del website e rimanda alla home in quella lingua. Lavora insieme al gruppo `root.` di `routes.md`. Se `PagesController` ha già un metodo `index` (versioni vecchie, altre logiche di redirect), **va sostituito per intero** con questo: non si fonde, non se ne tengono pezzi.
 
 ```php
 use Illuminate\Http\Request;
