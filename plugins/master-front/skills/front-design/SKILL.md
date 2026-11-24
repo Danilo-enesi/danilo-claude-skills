@@ -1,6 +1,6 @@
 ---
 name: front-design
-description: Come usare `DESIGN.md` (root del progetto, formato google-labs-code/design.md) per scrivere il CSS e l'HTML/Blade del front Master Laravel Enesi - token in variabili CSS generate da script, componenti di DESIGN.md come classi, markup che usa solo quelle classi, DESIGN.md aggiornato a ogni modifica di design. Attivala quando crei o modifichi stili o markup del front a partire dal design: «fai il CSS di questa sezione», «crea la card / il bottone», «applica il design», «usa i colori del brand», «cambia il colore primario / il font», «nuovo componente grafico», «converti questo mockup».
+description: Come usare `DESIGN.md` (root del progetto, formato google-labs-code/design.md) per scrivere il CSS e l'HTML/Blade del front Master Laravel Enesi - token in variabili CSS generate da script, componenti di DESIGN.md come classi, markup che usa solo quelle classi, come aggiornare `DESIGN.md` (dove va ogni token, formato YAML, componenti, ordine delle sezioni, rinominare o togliere un token) a ogni modifica di design. Attivala quando crei o modifichi stili o markup del front a partire dal design, o quando cambi il design system: «fai il CSS di questa sezione», «crea la card / il bottone», «applica il design», «usa i colori del brand», «cambia il colore primario / il font», «nuovo componente grafico», «converti questo mockup», «aggiorna DESIGN.md», «aggiungi un colore al design system».
 ---
 
 # CSS e HTML da DESIGN.md
@@ -63,14 +63,64 @@ Scrive (o riscrive) in cima a `main.css` il blocco `:root` fra `design-tokens: s
 - Lo stesso pezzo in due viste è un componente Blade in `components/<concetto>/` (`rules/components-reuse.md`); il nome del componente Blade segue quello di DESIGN.md (`<x-ui.button-primary>` ↔ `components.button-primary`).
 - Testi con `@lang`, attributi con `{{ __() }}` (`rules/translations.md`); immagini con `<x-picture-webp>`.
 
-## 5. Tieni DESIGN.md aggiornato
+## 5. Aggiorna DESIGN.md
 
-Nella **stessa modifica** in cui cambi il design:
-- valore nuovo o cambiato (colore, font, misura) → prima in `DESIGN.md` (front matter + una riga nella sezione), poi rilancia lo script;
-- componente nuovo → voce in `components` + la riga in «Components»;
-- regola d'uso nuova («il rosso solo per gli errori») → in «Do's and Don'ts».
+Nella **stessa modifica** in cui cambi il design, prima `DESIGN.md`, poi il CSS. Formato: https://github.com/google-labs-code/design.md (versione `alpha`).
 
-Se un valore del mockup non corrisponde a nessun token e non è chiaro se sia nuovo o un errore, chiedi prima di aggiungerlo.
+### Quando
+
+| Cambi nel front | In DESIGN.md |
+|---|---|
+| colore nuovo o cambiato | `colors` + riga in «Colors» |
+| font, dimensione, peso, interlinea | `typography` + riga in «Typography» |
+| container, breakpoint, spaziatura ricorrente | `spacing` + riga in «Layout» |
+| raggio degli angoli | `rounded` + riga in «Shapes» |
+| ombra, livelli | riga in «Elevation & Depth» |
+| durata o curva di un'animazione | `motion` + riga in «Motion & Micro-interaction» |
+| componente nuovo o cambiato (bottone, card...) | `components` + riga in «Components» |
+| regola d'uso («il rosso solo per gli errori») | «Do's and Don'ts» |
+
+### Come si scrive
+
+- **Front matter YAML** fra `---` in cima: `version: alpha`, `name` (obbligatorio), poi i gruppi `colors`, `typography`, `rounded`, `spacing`, `motion`, `components`. Gruppi annidabili (`colors.brand.500`).
+- **Tipi**: colore = qualsiasi colore CSS fra virgolette (`"#CC0001"`); misura = numero + `px`/`em`/`rem` (`8px`, `1.5rem`); durata = numero + `ms`; riferimento a un altro token = `"{colors.primary}"`.
+- **Tipografia** = un oggetto per stile, con `fontFamily`, `fontSize`, `fontWeight`, `lineHeight`, `letterSpacing`:
+  ```yaml
+  typography:
+    heading-lg:
+      fontFamily: Barlow
+      fontSize: 2rem
+      fontWeight: 700
+      lineHeight: 1.2
+  ```
+- **Componenti** = un nome con le sole proprietà ammesse (`backgroundColor`, `textColor`, `typography`, `rounded`, `padding`, `size`, `height`, `width`), valori quasi sempre riferimenti; le varianti sono voci a parte con nome affine:
+  ```yaml
+  components:
+    button-primary:
+      backgroundColor: "{colors.primary}"
+      textColor: "{colors.on-primary}"
+      rounded: "{rounded.md}"
+      padding: 12px 24px
+    button-primary-hover:
+      backgroundColor: "{colors.primary-dark}"
+  ```
+- **Nomi**: minuscolo con `-`, per ruolo e non per aspetto (`primary`, `text-muted`, `button-primary`, non `rosso`, `grigio2`). Il nome diventa la variabile (`--color-text-muted`) e la classe (`.button-primary`).
+- **Colori**: c'è sempre un `primary`; se ci sono colori, ci sono anche stili `typography` (il linter avvisa).
+- **Sezioni** `##`, tutte facoltative ma **in quest'ordine**: Overview, Colors, Typography, Layout, Elevation & Depth, Shapes, Motion & Micro-interaction, Voice & Content Strategy, Components, Do's and Don'ts. Una frase concreta per voce: dove e perché si usa, non il valore (sta già nel YAML).
+- **Mai doppioni**: una chiave YAML o un titolo di sezione ripetuti rendono il file non valido. Prima di aggiungere, cerca se esiste già (anche con un altro nome per lo stesso valore: riusa quello).
+
+### Cambiare o togliere un token
+
+- **Valore cambiato**: aggiorna il YAML e rilancia lo script; il CSS che usa la variabile si aggiorna da solo.
+- **Rinominato**: cerca la vecchia variabile in CSS e Blade (`grep -rn -- '--color-vecchio' assets/main/css private/front/Main/Views`) e sostituiscila ovunque nella stessa modifica.
+- **Tolto**: solo se nessun CSS usa più la sua variabile (stessa ricerca); altrimenti prima sostituisci gli usi.
+- Dopo ogni modifica al YAML: `python -I scripts/design-tokens.py <root>/DESIGN.md --write <root>/assets/main/css/main.css`.
+
+### Valori che non ci sono
+
+- Valore del mockup vicino a un token esistente (es. `#CB0002` con `primary` `#CC0001`) → usa il token, è lo stesso colore.
+- Valore davvero nuovo → aggiungilo con un nome di ruolo.
+- Non è chiaro se sia nuovo o un errore del mockup → chiedi prima di aggiungerlo. Mai valori inventati.
 
 ## 6. Verifica
 
