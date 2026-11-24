@@ -61,6 +61,17 @@ Plugin separato `plugins/session-title/`: nome della sessione con il prefisso de
 /plugin install session-title --marketplace Danilo-enesi/danilo-claude-skills
 ```
 
+## Plugin `master-front`
+
+Plugin separato `plugins/master-front/`: scaffolding e manuale del front Master Laravel Enesi (tema Main).
+Comando `/master-front:scaffold`, skill atomiche in italiano (entry point `front-manual`), regole satellite in
+`rules/`, template di layout/head/scripts/assets e controlli bash (`scripts/check-all.sh`). Sostituisce
+`master-front-rules`. Dettagli in `plugins/master-front/README.md`.
+
+```
+/plugin install master-front --marketplace Danilo-enesi/danilo-claude-skills
+```
+
 ## Skill disponibili
 
 | Skill | Descrizione |
@@ -68,7 +79,6 @@ Plugin separato `plugins/session-title/`: nome della sessione con il prefisso de
 | `project-manager` | Comando `/project-manager`: modalità operativa per implementazioni complesse da capire e validare bene prima di eseguire. Un unico flusso a 5 fasi (Comprensione → Strategia/Esecuzione → Verifica → Validazione → Chiusura), con stato persistito su disco e delega ai worker. |
 | `subagent-empowerment` | Checklist per decidere quanto "potere" dare a un sottoagente prima di delegargli lavoro: quale modello, quali skill fargli caricare, quali MCP autorizzargli, se può scrivere su CLAUDE.md, con tetti di concorrenza. |
 | `master-core-fields` | Come creare, valorizzare e personalizzare i campi (Field) dei form admin del Master Laravel Enesi (`$form->addField(...)`). Guida concettuale + script dedicati (`scripts/`) che validano struttura del Field custom e regola "0 JS/CSS inline". |
-| `master-front-rules` | Regole di setup del layout del front (`private/front/Main/Views/base/`): stack `head`/`scripts`, `Meta::render()`, cookie banner EPP, condivisione dati cross-Blade (view composer / `Front::loadSharedContent()`). |
 | `master-page-content` | Sistema di blocchi di contenuto DB-driven (`Contents` field, `page_contents`/`blog_contents`/...): come installarlo su un modulo nuovo, estendere un tipo di blocco, scrivere il rendering frontend. |
 | `template-to-blade` | Trasforma un HTML statico di prototipo (`template/*.html`) in una view Blade del front, replicando markup/classi 1:1 ed estraendo CSS/JS chirurgicamente (mai inline). |
 | `master-code-review` | Revisione di qualità del codice PHP/Laravel del Master: esegue script deterministici (`scripts/`) per le convenzioni strutturali/comportamentali, poi valuta best practice Laravel e DRY/SOLID. Sola lettura, solo segnala. |

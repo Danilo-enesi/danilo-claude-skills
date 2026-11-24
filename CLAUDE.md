@@ -20,13 +20,14 @@ danilo-claude-skills/
 ├── mods/                  ← Claude Code mods (repo-deck pane + mod-kit template/scripts), loaded by no plugin
 ├── plugins/
 │   ├── pdf-design/        ← separate plugin: PDF design comprehension (skills + Python scripts, all English)
+│   ├── master-front/      ← separate plugin: Master front scaffolding + manual (atomic skills in Italian, rules/, templates/, bash checks)
 │   ├── php-upgrade/       ← separate plugin: step-by-step PHP 7.x → 8.x upgrade of legacy Master 7 sites (bash/PHP scripts, guard hook, templates)
 │   ├── session-title/     ← separate plugin: session names with the user prefix (staging server only)
 │   └── prod-to-local/     ← separate plugin: copy a site from a production server to this PC (bash scripts, DPAPI vault, all English)
 └── README.md
 ```
 
-Most of the current skills are domain knowledge for the **Master Laravel Enesi** CMS ecosystem (`master-core-fields`, `master-code-review`, `master-front-rules`, `master-page-content`, `template-to-blade`), plus two meta/workflow skills for orchestrating Claude Code itself (`project-manager`, `subagent-empowerment`).
+Most of the current skills are domain knowledge for the **Master Laravel Enesi** CMS ecosystem (`master-core-fields`, `master-code-review`, `master-page-content`, `template-to-blade`; the front rules live in the `master-front` plugin), plus two meta/workflow skills for orchestrating Claude Code itself (`project-manager`, `subagent-empowerment`).
 
 ## Language convention
 

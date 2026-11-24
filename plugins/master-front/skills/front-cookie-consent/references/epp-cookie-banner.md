@@ -86,7 +86,7 @@ EPP.isAllowedCategory('[PID]');      // => bool
 EPP.allowCategory('[PID]');          // abilita una categoria (azione esplicita dell'utente)
 ```
 
-Va nel bundle JS del progetto (`template/assets/js/`), non inline nelle Blade.
+Va in un file JS del progetto (`assets/main/js/`), non inline nelle Blade.
 
 ## Categorie (PID) usate nei progetti
 

@@ -1,0 +1,32 @@
+/* Global front styles: reusable classes for the whole site. A global class always does the same thing
+   (.btn-black is always black). Media queries go in responsive.css, never here. */
+
+:root {
+  --font-base: 'Open Sans', sans-serif;
+  --color-text: #333333;
+  --color-bg: #FFFFFF;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-base);
+  color: var(--color-text);
+  background: var(--color-bg);
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+.container {
+  width: 90%;
+  max-width: 1320px;
+  margin: 0 auto;
+}

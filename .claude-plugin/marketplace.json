@@ -37,6 +37,11 @@
       "name": "repo-deck",
       "source": "./mods/repo-deck",
       "description": "Terminal pane (/repo-deck) listing this marketplace's plugins and standalone skills, commands, hooks and agents, with install and ask-Claude actions."
+    },
+    {
+      "name": "master-front",
+      "source": "./plugins/master-front",
+      "description": "Front scaffolding and manual for Master Laravel Enesi (theme Main): Views and assets structure, layout/head/scripts, Blade rules, cookie consent, meta, shared data. Atomic skills, satellite rules, templates and bash checks."
     }
   ]
 }
