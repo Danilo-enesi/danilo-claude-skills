@@ -14,7 +14,7 @@ Percorsi relativi alla radice del plugin (`../../` da questa skill).
 1. Parti da `templates/views/partials/base/scripts.blade.php`.
 2. Rispetta l'ordine (`rules/scripts.md`):
    1. `<script>window.front = {...}</script>` con le traduzioni (config di default, non toglierla)
-   2. librerie: CDN o `assets/main/lib/<libreria>/`, sempre caricate
+   2. librerie: prima `bash scripts/cdn.sh <nome>` (skill `front-cdn`); se c'è, da `//cdn.ene.si/...`, altrimenti `assets/main/lib/<libreria>/`; sempre caricate
    3. blocco `@if(config('app.debug'))`: beers.js + main.js (+ moduli), altrimenti `base.min.js`
    4. blocco `@if(session()->has('callbacks'))` con `Beers.callbacks.fireList`
 3. Ogni script locale dentro `\Master\Facades\Version::get(...)` (`rules/assets-versioning.md`).

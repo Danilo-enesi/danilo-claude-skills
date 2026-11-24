@@ -4,7 +4,7 @@ Tutto il JavaScript, nostro e delle librerie. **Solo script.**
 
 Ordine:
 1. **Primo**: lo `<script>` con `window.front = { route, base_url, lang, google_api_key, id_country_italia }` e le traduzioni dalla cache. È la config di default: copiala dal template.
-2. Librerie (CDN o `assets/main/lib/`): sempre caricate, senza split di ambiente.
+2. Librerie (CDN o `assets/main/lib/`): sempre caricate, senza split di ambiente. Di default **jQuery** per prima (Beers e i plugin la usano), poi **Bootstrap** (`bootstrap.bundle.min.js`, Popper incluso), stessa versione del CSS in head.
 3. I nostri script, con lo split di ambiente (vedi `assets-versioning`); nel ramo debug **`beers.js` per primo**, poi `main.js`.
 4. Il blocco `@if(session()->has('callbacks'))` che esegue `Beers.callbacks.fireList(window.front.callbacks)`.
 

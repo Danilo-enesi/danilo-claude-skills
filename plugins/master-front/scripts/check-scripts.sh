@@ -36,6 +36,14 @@ if [ -n "$theme" ]; then
   done < <(grep -nE '<script[^>]+src=' "$F" | grep -vE '/assets/(main/js|common/beers)/')
 fi
 
+# jQuery is required (Beers and the plugins use it) and comes before Beers; Bootstrap by default
+jq=$(grep -nE '<script[^>]+jquery(\.min)?\.js' "$F" | head -1 | cut -d: -f1)
+bjs=$(line_of "$F" "/assets/common/beers/beers.js")
+if [ -z "$jq" ]; then fail scripts "manca jQuery (//cdn.ene.si/jquery/<versione>/jquery.min.js): Beers non funziona senza"
+elif [ -n "$bjs" ] && [ "$jq" -gt "$bjs" ]; then fail scripts "jQuery va caricato prima di beers.js"
+else ok scripts "jQuery"; fi
+grep -qE 'bootstrap(\.bundle)?(\.min)?\.js' "$F" && ok scripts "Bootstrap JS" || warn scripts "Bootstrap JS non caricato (default del front: bootstrap.bundle.min.js dalla CDN)"
+
 # Beers first in the debug branch: our scripts use it
 beers=$(line_of "$F" "/assets/common/beers/beers.js"); main=$(line_of "$F" "/assets/main/js/main.js")
 if [ -z "$beers" ]; then fail scripts "manca beers.js nel ramo debug"

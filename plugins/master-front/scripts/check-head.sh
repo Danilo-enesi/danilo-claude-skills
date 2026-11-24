@@ -36,6 +36,9 @@ for css in /assets/main/css/main.css /assets/main/css/responsive.css; do
   has "$F" "$css" || fail assets-versioning "manca $css nel ramo debug"
 done
 
+# Bootstrap by default (rules/head.md)
+grep -qE 'bootstrap(\.min)?\.css' "$F" && ok head "Bootstrap CSS" || warn head "Bootstrap CSS non caricato (default del front: //cdn.ene.si/bootstrap/<versione>/css/bootstrap.min.css)"
+
 # Beers first in the debug branch: our styles override it
 beers=$(line_of "$F" "/assets/common/beers/beers.css"); main=$(line_of "$F" "/assets/main/css/main.css")
 if [ -z "$beers" ]; then fail head "manca beers.css nel ramo debug"

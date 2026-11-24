@@ -13,10 +13,9 @@
   @endif
 </script>
 
-<!-- Core -->
-<script src="//cdn.ene.si/jquery/3.7.0/jquery.min.js"></script>
-
 <!-- Lib -->
+<script src="//cdn.ene.si/jquery/3.7.0/jquery.min.js"></script>
+<script src="//cdn.ene.si/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
 
 <!-- Theme -->
 @if(config('app.debug'))
