@@ -17,6 +17,7 @@ I percorsi `rules/`, `scripts/`, `templates/` sono relativi alla radice del plug
 | vedere cosa cambierebbe lo scaffold, senza toccare nulla | comando `/master-front:analysis` |
 | il sito ha sitemap, structured data, llms.txt, robots.txt, SEO, Core Web Vitals? (solo verifica) | comando `/master-front:site-checklist` |
 | scrivere una vista (pagina, partial, componente) | `front-views` |
+| CSS e markup con lingue RTL, CJK o a testo lungo (arabo, cinese, tedesco, russo...) | `front-lang-css` |
 | semantica e accessibilità di qualsiasi markup (tag, titoli, form, alt, link esterni) | `front-html` |
 | toccare `layouts/main.blade.php` | `front-layout` |
 | scrivere CSS o markup a partire dal design (`DESIGN.md`) | `front-design` |

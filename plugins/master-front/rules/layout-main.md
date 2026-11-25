@@ -22,6 +22,9 @@
 </html>
 ```
 
+Sito con una lingua RTL o CJK: `<html lang="{{ $htmlLang }}" dir="{{ $htmlDir }}">`, con le variabili dal view composer di `lang-rtl.md` (skill `front-lang-css`).
+
+
 ## Sì
 - `@stack('styles')` **dopo** l'include di head, `@stack('scripts')` **dopo** l'include di scripts: la pagina parte da ciò che la base ha già caricato.
 - Le classi `lang-` e `route-` del body sono il gancio di CSS e JS per lingua o per pagina.

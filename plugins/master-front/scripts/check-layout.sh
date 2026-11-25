@@ -9,7 +9,12 @@ check() { # check <fixed string> <message>
   if has "$F" "$1"; then ok layout-main "$2"; else fail layout-main "manca $2: $1"; fi
 }
 
-check "<html lang=\"{{ Websites::currentLanguage('iso_code2') }}\">" "lang dell'html"
+# html lang: the base form, or lang/dir from the view composer of rules/lang-rtl.md (sites with RTL/CJK languages)
+if has "$F" "<html lang=\"{{ \$htmlLang }}\" dir=\"{{ \$htmlDir }}\">"; then
+  ok layout-main "lang e dir dell'html (composer)"
+else
+  check "<html lang=\"{{ Websites::currentLanguage('iso_code2') }}\">" "lang dell'html"
+fi
 check "lang-{{ Websites::currentLanguage('iso_code2') }}" "classe body lang-"
 check "route-{{ Front::currentRouteName() }}" "classe body route-"
 check "@include('partials.base.head')" "include di head"

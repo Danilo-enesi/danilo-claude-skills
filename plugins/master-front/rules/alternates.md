@@ -100,6 +100,10 @@ public function urlLang(string $lang): ?string
 - **Altre pagine**: l'URL nella lingua di default del website (`Websites::current('lang_front_default')`), il default del trait.
 - La pagina non esiste nella lingua di default → niente x-default (il trait lo salta): non si punta a una lingua a caso.
 
+## Due scritture della stessa lingua
+
+Il trait usa come codice hreflang la chiave della lingua (`iso_code2`): `zh`, `pt`. Se il sito ha due varianti con lo stesso codice a due lettere (cinese semplificato e tradizionale, portoghese di Portogallo e Brasile), quel codice non le distingue: nel trait usa il `locale_code` della lingua con il trattino (`zh-CN`, `zh-TW`, `pt-BR`), lo stesso che finisce nel `lang` dell'`<html>` (`lang-cjk.md`).
+
 ## Sì
 - L'alternate della lingua corrente è uguale al canonical (stesso URL, stessa `page`).
 - Ogni URL passato a `Meta::set('alternate-...')` è assoluto e non vuoto: passa dal trait, che scarta `null`, `''` e URL non validi.

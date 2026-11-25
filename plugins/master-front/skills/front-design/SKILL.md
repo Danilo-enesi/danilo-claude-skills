@@ -9,6 +9,8 @@ description: Come usare `DESIGN.md` (root del progetto, formato google-labs-code
 
 Percorsi relativi alla radice del plugin (`../../` da questa skill). Regola: `rules/design-md.md`.
 
+**Lingue difficili:** se il sito ha (o sta per avere) una lingua RTL (`ar`, `he`, `fa`, `ur`), CJK (`zh`, `ja`, `ko`) o con testo lungo / alfabeto esteso (`de`, `ru`, `pl`, `fil`...), carica anche la skill `front-lang-css` prima di scrivere: controlla le lingue nei `'locale'` di `Routes/web.php`.
+
 ## 1. Leggi DESIGN.md
 
 - **Front matter YAML** = i valori esatti: `colors`, `typography`, `rounded`, `spacing`, `motion`, `components`.

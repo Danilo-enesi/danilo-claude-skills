@@ -9,6 +9,8 @@ description: Semantica e accessibilità dell'HTML/Blade che scrivi nel front Mas
 
 Percorsi relativi alla radice del plugin (`../../` da questa skill). Regola: `rules/html-markup.md`.
 
+**Lingue difficili:** se il sito ha (o sta per avere) una lingua RTL (`ar`, `he`, `fa`, `ur`), CJK (`zh`, `ja`, `ko`) o con testo lungo / alfabeto esteso (`de`, `ru`, `pl`, `fil`...), carica anche la skill `front-lang-css` prima di scrivere: controlla le lingue nei `'locale'` di `Routes/web.php`.
+
 ## 1. Struttura della pagina (landmark)
 
 | Tag | Dove |
