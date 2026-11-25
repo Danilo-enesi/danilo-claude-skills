@@ -17,7 +17,7 @@ plugins/master-front/
 ├── skills/                skill atomiche (una per lavoro), entry point: front-manual
 ├── rules/                 regole satellite: una regola per file, l'id è il nome del file
 ├── data/cdn-plugins.md    plugin disponibili su cdn.ene.si (si consulta con scripts/cdn.sh, non si legge intero)
-├── templates/             layout, head, scripts, header, footer, home, errors, maintenance (+ maintenance.css), componente picture-webp (+ classe), main.css, responsive.css, main.js, Beers, DESIGN.md
+├── templates/             layout, head, scripts, header, footer, home, errors, maintenance (+ maintenance.css), componenti picture-webp (+ classe) e lang-css (solo classe), main.css, responsive.css, main.js, Beers, DESIGN.md
 └── scripts/               scaffold.sh + check-*.sh (OK / WARN / FAIL con il rimando alla regola) + design-tokens.py (DESIGN.md → variabili CSS)
 ```
 
@@ -36,7 +36,7 @@ plugins/master-front/
 | `front-scripts` | `partials/base/scripts.blade.php`: window.front, librerie, JS, callbacks Beers |
 | `front-assets` | dove va un file in `assets/` |
 | `front-cookie-consent` | risorse di terze parti e cookie banner EPP |
-| `front-lang-css` | lingue difficili: RTL (`lang`/`dir`, Bootstrap RTL, proprietà logiche, icone specchiate), CJK (font di sistema, a capo, enfasi), testo lungo e alfabeti estesi (larghezze flessibili, hyphens, glifi); regole `lang-rtl`, `lang-cjk`, `lang-long-text` |
+| `front-lang-css` | lingue difficili: RTL (`lang`/`dir`, Bootstrap RTL, proprietà logiche, icone specchiate), CJK (font di sistema, a capo, enfasi), testo lungo e alfabeti estesi (larghezze flessibili, hyphens, glifi); file `assets/main/css/lang/<iso_code2>.css` con le correzioni di una lingua; regole `lang-rtl`, `lang-cjk`, `lang-long-text` |
 | `front-alternates` | siti multilingua: alternate hreflang + x-default con il trait `SetsAlternates` (salta i siti monolingua, scarta le URL vuote), `urlLang()` nel model, override di `Meta` se il core non li supporta |
 | `front-meta` | title, description, canonical e og:tags in ogni action che rende una vista; pagina 1 = lista base; bug del canonical come `<meta>` |
 | `front-shared-data` | dati condivisi fra più viste |

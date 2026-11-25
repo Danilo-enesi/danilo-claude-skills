@@ -21,6 +21,10 @@
   <link href="{{\Master\Facades\Version::get('/assets/main/css/base.min.css')}}" rel="stylesheet">
 @endif
 
+<!-- Lang Theme -->
+{{-- Correzioni di una sola lingua (testo più lungo, altre scritture): assets/main/css/lang/<iso_code2>.css, niente se non c'è --}}
+<x-lang-css />
+
 <!-- Icons (web-app facoltative: per attivarle togli il commento Blade e metti i png in assets/main/icons/) -->
 <link rel="shortcut icon" href="{{ \Master\Facades\Version::get('/favicon.ico') }}">
 {{-- <link rel="apple-touch-icon" sizes="180x180" href="{{ \Master\Facades\Version::get('/assets/main/icons/icon-apple-180.png') }}">

@@ -9,7 +9,7 @@ Vale quando il website ha fra le lingue front attive `zh`, `ja` o `ko`. La direz
 
 ## Font
 
-I font CJK pesano diversi MB: **niente webfont completi**. Pila di font di sistema per lingua, come token di `DESIGN.md`, applicata con `:lang()`:
+I font CJK pesano diversi MB: **niente webfont completi**. Pila di font di sistema per lingua, come token di `DESIGN.md`, nel file di lingua (`assets/main/css/lang/zh.css`, `ja.css`, `ko.css`; regola `css-split`). Dentro `zh.css` `:lang()` serve ancora, per distinguere semplificato e tradizionale:
 
 ```css
 :lang(zh-Hans), :lang(zh-CN) { font-family: "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
@@ -25,7 +25,7 @@ Se il design impone un font CJK di marca, solo con un subset (`unicode-range` o 
 - `line-height` 1.6-1.8 e corpo minimo 14-16px: sotto, i tratti dei caratteri si impastano.
 - **A capo**: non ci sono spazi fra le parole, il browser va a capo fra i caratteri. `line-break: strict` evita la punteggiatura a inizio riga; `overflow-wrap: anywhere` dove un URL o una parola latina lunga sfonda il contenitore. Per il cinese **niente** `word-break: keep-all` (righe che non vanno più a capo); per il coreano invece sì, perché separa le parole con spazi.
 - **Enfasi**: niente corsivo né sottolineato (il sottolineato è il link). Grassetto o `text-emphasis: filled dot`.
-- Niente `text-transform: uppercase` e niente `letter-spacing` ereditato dal design latino: azzeralo con `:lang()`.
+- Niente `text-transform: uppercase` e niente `letter-spacing` ereditato dal design latino: azzeralo nel file di lingua.
 - Il cinese occupa **meno larghezza** e serve più altezza: titoli e bottoni non devono avere altezze fisse né contare su un numero di righe.
 - La meta description: `Meta` taglia a 160 caratteri, ma in cinese 160 caratteri sono il doppio della larghezza che Google mostra: scrivile di 70-80 caratteri.
 

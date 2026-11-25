@@ -115,6 +115,7 @@ fi
 PROVIDER=private/app/Providers/FrontServiceProvider.php
 [ -f "$ROOT/$PROVIDER" ] || PROVIDER=private/app/Providers/AppServiceProvider.php
 grep -rqsF "PictureWebp::class" "$ROOT/private/app" || echo "TODO  registra il componente in $PROVIDER, boot(): Blade::component('picture-webp', \\Front\\Main\\Components\\PictureWebp::class);"
+grep -rqsF "LangCss::class" "$ROOT/private/app" || echo "TODO  registra il componente in $PROVIDER, boot(): Blade::component('lang-css', \\Front\\Main\\Components\\LangCss::class);"
 # <x-picture-webp> falls back to this image when it gets none
 [ -f "$ASSETS/main/images/defaults/placeholder.jpg" ] || echo "TODO  aggiungi assets/main/images/defaults/placeholder.jpg (+ .webp): l'immagine di ripiego di <x-picture-webp>"
 # Error and maintenance pages read front::errors.* / front::maintenance.*, generated from ln_upd.php

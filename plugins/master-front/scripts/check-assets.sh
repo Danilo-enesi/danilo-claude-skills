@@ -19,10 +19,11 @@ if [ -f "$ASSETS/common/beers/beers.js" ]; then ok assets-structure "Beers"; els
 # Old names of the global stylesheet
 [ -f "$M/css/style.css" ] && fail assets-structure "assets/main/css/style.css: il CSS globale si chiama main.css"
 
-# Media queries only in responsive.css (lib/ and minified bundles excluded)
+# Media queries only in responsive.css (lib/, minified bundles and css/lang/<iso>.css excluded)
 if [ -d "$M/css" ]; then
   while IFS= read -r file; do
     case "$(basename "$file")" in responsive.css|*.min.css) continue ;; esac
+    case "$file" in "$M/css/lang/"*) continue ;; esac
     grep -q '@media' "$file" && fail css-split "$(rel "$file"): @media fuori da responsive.css"
   done < <(find "$M/css" -name '*.css')
 fi

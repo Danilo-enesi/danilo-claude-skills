@@ -52,10 +52,10 @@ Le utility di Bootstrap 5 sono già logiche (`ms-*`, `me-*`, `ps-*`, `pe-*`, `te
 
 ## Tipografia araba
 
-- Mai `letter-spacing` sul testo arabo: spezza l'unione fra le lettere. Se il design ne usa uno (titoli, bottoni), azzeralo: `:lang(ar) .titolo { letter-spacing: 0; }`.
+- Mai `letter-spacing` sul testo arabo: spezza l'unione fra le lettere. Se il design ne usa uno (titoli, bottoni), azzeralo nel file di lingua `assets/main/css/lang/ar.css`: `.titolo { letter-spacing: 0; }`.
 - Niente `text-transform` né corsivo: in arabo non esistono maiuscole né corsivo vero. Enfasi con il peso.
 - `line-height` 1.7-2 e corpo un po' più grande del latino: i diacritici chiedono spazio in verticale.
-- Font con i glifi arabi (Noto Sans Arabic, IBM Plex Sans Arabic, Cairo, Tajawal), come token di `DESIGN.md` per la lingua, applicato con `:lang(ar)`. Se è un Google Font passa dal consenso cookie come gli altri (`cookie-consent.md`).
+- Font con i glifi arabi (Noto Sans Arabic, IBM Plex Sans Arabic, Cairo, Tajawal), come token di `DESIGN.md` per la lingua, applicato in `assets/main/css/lang/ar.css`. Se è un Google Font passa dal consenso cookie come gli altri (`cookie-consent.md`).
 - Niente `text-align: justify`: in arabo allunga i tratti di unione e il testo si legge male.
 
 ## Componenti e JS
