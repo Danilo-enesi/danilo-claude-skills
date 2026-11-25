@@ -57,6 +57,7 @@ Senza argomento usano la root git della cartella corrente. Exit code 1 se c'è a
 ## Convenzioni
 
 - `Views/layouts/` solo layout; `Views/partials/base/` head e scripts; `components/<concetto>/`; `pages/<entità>/`; `mail/` per template e blocchi delle email.
-- Ciò che si usa due volte è un componente (`rules/components-reuse.md`).
+- Ciò che si usa due volte è un componente (`rules/components-reuse.md`): stesso scheletro con dati diversi è lo stesso componente, i dati sono props.
+- I dati per i componenti (breadcrumb, titolo...) li prepara e valida il controller, la vista riceve una variabile (`rules/blade-logic.md`).
 - `assets/main/` = tema Main; Beers in `assets/common/beers/`; email utente in `assets/mail/`.
 - CSS globale `main.css`, media query solo in `responsive.css`, in produzione `base.min.css` / `base.min.js`.

@@ -82,7 +82,31 @@ while IFS= read -r file; do
     && fail blade-logic "$(rel "$file"): query nella Blade: va nel controller o in un viewController"
   grep -qE '(->(map|filter|groupBy|sortBy|sortByDesc|reduce|pluck|reject|flatMap)\(|collect\()' "$file" \
     && warn blade-logic "$(rel "$file"): trasformazione di collezione nella Blade: preparala nel controller"
+  # a component prop bound to an array literal built from translations/routes/calls: the controller prepares it
+  perl -0ne 'exit 1 if /\s:[\w.-]+\s*=\s*"\s*\[[^"]*(=>|\()/s' "$file" \
+    || warn blade-logic "$(rel "$file"): array costruito nella vista e passato a un componente: preparalo nel controller e passa una variabile"
 done < <(find "$VIEWS" -name '*.blade.php')
+
+# Copied component: two views outside components/ sharing a run of 3 class attributes (same skeleton, other data).
+# Bootstrap utility/grid classes and Blade expressions are dropped first, so only the block's own classes count.
+# shortcut: matches exact class sequences only, misses copies with reordered or renamed classes (review stays manual)
+find "$VIEWS" -name '*.blade.php' -not -path "$VIEWS/components/*" -not -path "$VIEWS/mail/*" -print0 \
+  | xargs -0 -r perl -0ne '
+    s/\{\{--.*?--\}\}//gs;
+    my @c;
+    while (/\sclass\s*=\s*"([^"]*)"/g) {
+      (my $v = $1) =~ s/\{\{.*?\}\}|\{!!.*?!!\}|@\w+\(.*?\)//gs;
+      my @t = grep { !/^(container(-\w+)?|row|col(-\w+)*|g[xy]?-\d|[mp][tbsexy]?-(\w+-)?\d|d-\S+|flex-\S+|justify-\S+|align-\S+|text-\S+|fw-\S+|w-\d+|h-\d+|order-\S+|position-\S+|visually-hidden|img-fluid|btn(-\S+)?|list-unstyled|mx-auto)$/ } split " ", $v;
+      push @c, join(" ", @t) if @t;
+    }
+    my %seen;
+    for my $i (0 .. $#c - 2) { my $k = join(" | ", @c[$i .. $i + 2]); print "$ARGV\t$k\n" unless $seen{$k}++ }' \
+  | sort -t$'\t' -k2,2 -k1,1 -u \
+  | awk -F'\t' '$2 == prev && $1 != pfile { print pfile "\t" $1 "\t" $2 } { prev = $2; pfile = $1 }' \
+  | awk -F'\t' '!seen[$1 FS $2]++' \
+  | while IFS=$'\t' read -r a b seq; do
+      warn components-reuse "$(rel "$a") e $(rel "$b") hanno lo stesso scheletro (class: $seq): stesso componente con dati diversi, estrailo in components/"
+    done
 
 # Markup (rules/html-markup.md). Tags can span lines and Blade comments may quote bad examples, so perl reads the
 # whole file without comments and prints "<line> <problem>" for each tag.
