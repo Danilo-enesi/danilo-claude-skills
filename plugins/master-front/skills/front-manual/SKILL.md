@@ -26,6 +26,7 @@ I percorsi `rules/`, `scripts/`, `templates/` sono relativi alla radice del plug
 | salvare un file in `assets/` | `front-assets` |
 | script, iframe o font di terze parti | `front-cookie-consent` |
 | title, description, canonical, og:tags (ogni action che rende una vista) | `front-meta` |
+| alternate hreflang e x-default (sito con 2+ lingue front) | `front-alternates` |
 | pagina di errore (tutti i codici) e di manutenzione: obbligatorie | `front-error-pages` |
 | template, blocchi, header/footer delle email | `front-mail` |
 | controller, rotte, home, redirect della root | `front-routes` |

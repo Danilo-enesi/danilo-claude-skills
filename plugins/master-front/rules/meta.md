@@ -14,7 +14,9 @@ Meta::set('canonical', $post->url); // URL con gli slug giusti (routes.md)
 |---|---|---|
 | `title` | dal CMS con fallback (`meta_title ?: titolo`); pagine statiche: `__('front::controllers.<pagina>_meta_title')` | senza, la pagina non ha title |
 | `description` | dal CMS con fallback (`meta_description ?: riassunto`); statiche: `__('front::controllers.<pagina>_meta_desc')` | senza, niente description |
-| `canonical` | URL pulito della rotta: `Front::route('<nome>', [...])` | il fallback del core è `request()->fullUrl()`: si porta dietro `?utm_...`, filtri, ordinamenti |
+| `canonical` | URL pulito della rotta: `Front::route('<nome>', [...])` | il fallback del core è l'URL richiesto: dal 13.8.1 senza query string (tiene solo `page` > 1), nei core più vecchi `request()->fullUrl()` con `?utm_...`, filtri, ordinamenti. In entrambi i casi non corregge slug o percorsi sbagliati |
+
+Sito multilingua: in più gli alternate hreflang e x-default, con `$this->setAlternates(...)` (`alternates.md`).
 
 ## og:tags
 
@@ -49,7 +51,7 @@ public function index(Request $request) {
 
 ## Bug del core: canonical stampato come `<meta>`
 
-Per diverse versioni di `laravel-master-core` la classe `Meta` stampa il canonical come `<meta name="canonical" rel="...">`, che i motori ignorano: deve essere `<link rel="canonical" href="...">`.
+Nelle versioni di `laravel-master-core` precedenti alla 13.8.1 la classe `Meta` stampa il canonical come `<meta name="canonical" rel="...">`, che i motori ignorano: deve essere `<link rel="canonical" href="...">`.
 
 1. **Controlla**: `scripts/check-meta.sh` (statico: riconosce `<link rel="canonical"` scritto per esteso o costruito dal nome, con qualsiasi spaziatura). Il controllo statico può sbagliare su uno stile nuovo: dove c'è PHP, prima di correggere conferma con la prova vera:
    ```bash
@@ -72,6 +74,31 @@ Per diverse versioni di `laravel-master-core` la classe `Meta` stampa il canonic
    }
    ```
 3. Se il file ha già un `render_property`, aggiungi il caso lì dentro invece di crearne un secondo.
+
+## Bug del core: canonical di fallback con tutta la query string
+
+Nelle versioni di `laravel-master-core` precedenti alla 13.8.1 il canonical e l'`og:url` non impostati valgono `request()->fullUrl()`: `?utm_source=...`, filtri e ordinamenti finiscono nel canonical. Dalla 13.8.1 il core usa l'URL senza query string (tiene solo `page` > 1).
+
+1. **Controlla**: `scripts/check-meta.sh`, o `grep -n "fullUrl" private/vendor/enesisrl/laravel-master-core/src/Foundation/Meta.php`. Nessun risultato → il core è già corretto: **non fare nulla**.
+2. **Correggi in locale**, mai in `vendor/`: in `private/master/Foundation/Meta.php` sovrascrivi `get`, con lo stesso fallback del core 13.8.1:
+   ```php
+   public function get($name)
+   {
+       // Core < 13.8.1: il fallback è request()->fullUrl(), con utm, filtri e ordinamenti
+       if (in_array($name, ['canonical', 'og:url'], true) && empty($this->properties[$name])) {
+           $page = filter_var(request()->query('page'), FILTER_VALIDATE_INT, ['options' => ['min_range' => 2]]);
+
+           return $page ? url()->current() . '?page=' . $page : url()->current();
+       }
+
+       return parent::get($name);
+   }
+   ```
+   `get($name)` senza tipo va bene con tutte le firme del core (`get($name)` e `get(?string $name)`).
+3. Se il file ha già un `get`, aggiungi il caso lì dentro invece di crearne un secondo.
+4. Quando il progetto aggiorna il core alla 13.8.1 o successiva, togli l'override: è identico a quello del core.
+
+L'override corregge solo il fallback: il canonical resta da impostare in ogni action (sopra).
 
 ## No
 - Niente `<title>`/`<meta>`/`<link rel="canonical">` a mano nelle viste.
