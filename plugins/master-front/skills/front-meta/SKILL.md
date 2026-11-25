@@ -36,7 +36,7 @@ Percorsi relativi alla radice del plugin (`../../` da questa skill).
   - **core più vecchi**: `request()->fullUrl()`, con tutta la query string (`?utm_...`, filtri, ordinamenti).
   
   Sui core vecchi si corregge in locale (punto 8). In entrambi i casi è l'URL **richiesto**, non quello giusto (slug sbagliato, rotta raggiunta da un altro percorso): per questo va sempre impostato. Versione installata: `grep -A2 '"name": "enesisrl/laravel-master-core"' private/composer.lock | grep version`.
-- Dal core 13.8.1 il canonical si stampa già come `<link rel="canonical">`: l'override di `render_property` del punto 7 serve solo ai core più vecchi.
+- Dal core 2.4.2 il canonical si stampa già come `<link rel="canonical">`: l'override di `render_property` del punto 7 serve solo ai core più vecchi.
 - `set()` con una chiave sconosciuta ritorna `false` **in silenzio**.
 - Un `og:image` con URL non valido non viene stampato.
 - In `development` il robots è `noindex, nofollow` da solo.

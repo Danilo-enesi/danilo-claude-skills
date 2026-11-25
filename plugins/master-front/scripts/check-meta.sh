@@ -54,7 +54,7 @@ CORE="$ROOT/private/vendor/enesisrl/laravel-master-core/src/Foundation/Meta.php"
 LOCAL="$ROOT/private/master/Foundation/Meta.php"
 # <link rel="canonical" ...> written out, or built from the name: '<link rel="' . e($name) (any spacing, Pint
 # removes it), "<link rel=\"{$name}\"" or sprintf('<link rel="%s"', ...)
-LINKED_RE='<link rel=\\?"(canonical|'"'"'[[:space:]]*\.[[:space:]]*(e|htmlspecialchars|\$)|\{?\$name|%s)'
+LINKED_RE='<link rel=\\?"(canonical|["'"'"'][[:space:]]*\.[[:space:]]*(e|htmlspecialchars|\$)|\{?\$name|%s)'
 linked() { [ -f "$1" ] && grep -q 'canonical' "$1" && grep -qE "$LINKED_RE" "$1"; }
 if [ ! -f "$CORE" ]; then
   warn meta "manca $(rel "$CORE") (composer install?): impossibile controllare il bug del canonical"

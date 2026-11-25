@@ -1,6 +1,6 @@
 {
   "name": "master-front",
-  "version": "0.12.2",
+  "version": "0.12.3",
   "description": "Scaffolding e manuale del front Master Laravel Enesi (tema Main): struttura Views e assets, layout/head/scripts, regole Blade, consenso cookie, meta, dati condivisi. Skill atomiche, regole satellite, template e controlli bash.",
   "author": {
     "name": "Danilo Casale",

@@ -51,7 +51,7 @@ public function index(Request $request) {
 
 ## Bug del core: canonical stampato come `<meta>`
 
-Nelle versioni di `laravel-master-core` precedenti alla 13.8.1 la classe `Meta` stampa il canonical come `<meta name="canonical" rel="...">`, che i motori ignorano: deve essere `<link rel="canonical" href="...">`.
+Nelle versioni di `laravel-master-core` precedenti alla 2.4.2 la classe `Meta` stampa il canonical come `<meta name="canonical" rel="...">`, che i motori ignorano: deve essere `<link rel="canonical" href="...">`.
 
 1. **Controlla**: `scripts/check-meta.sh` (statico: riconosce `<link rel="canonical"` scritto per esteso o costruito dal nome, con qualsiasi spaziatura). Il controllo statico può sbagliare su uno stile nuovo: dove c'è PHP, prima di correggere conferma con la prova vera:
    ```bash
