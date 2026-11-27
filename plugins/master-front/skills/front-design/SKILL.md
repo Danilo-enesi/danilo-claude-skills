@@ -124,6 +124,12 @@ Nella **stessa modifica** in cui cambi il design, prima `DESIGN.md`, poi il CSS.
 - Valore davvero nuovo → aggiungilo con un nome di ruolo.
 - Non è chiaro se sia nuovo o un errore del mockup → chiedi prima di aggiungerlo. Mai valori inventati.
 
+## 5b. Contrasto
+
+Ogni coppia testo/sfondo (componenti con `backgroundColor` + `textColor`, corpo sulla pagina, link, testo su immagine) almeno **4.5:1**, **3:1** per testo grande, bordi dei campi e focus (`rules/design-md.md`, sezione Contrasto). Calcolo: `python -I scripts/contrast.py <testo> <sfondo>`.
+- Design **nuovo** o colori aggiunti ora: la coppia deve passare prima di entrare in `DESIGN.md`; se il colore del brand non ci arriva, aggiungi una variante per il testo.
+- Design **esistente**: non cambiare i colori. Le coppie sotto soglia vanno nel riepilogo come miglioramento proposto (coppia, rapporto, colore alternativo) e come nota in «Do's and Don'ts».
+
 ## 6. Verifica
 
 - `bash scripts/check-design.sh <root>` e `bash scripts/check-assets.sh <root>`.
@@ -133,3 +139,4 @@ Nella **stessa modifica** in cui cambi il design, prima `DESIGN.md`, poi il CSS.
 - Niente esadecimali, `px` di design o nomi di font scritti nel CSS fuori dal blocco generato.
 - Niente blocco `design-tokens` modificato a mano.
 - Niente valore nuovo nel CSS senza la sua voce in `DESIGN.md`.
+- Niente coppia testo/sfondo nuova sotto 4.5:1 (3:1 per testo grande).

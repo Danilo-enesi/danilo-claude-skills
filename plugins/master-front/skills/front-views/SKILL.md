@@ -24,7 +24,7 @@ Percorsi relativi alla radice del plugin (`../../` da questa skill).
 3. **Prepara i dati nel controller** (skill `front-routes` per controller e rotta; o in un viewController): query, filtri, ordinamenti, `->with()`, e i dati da passare ai componenti (breadcrumb, titolo, immagine) già validati: la vista riceve `$breadcrumb`, non costruisce l'array (`rules/blade-logic.md`).
 4. **Scrivi il markup** semantico e accessibile (skill `front-html`) **con le direttive Blade**: `@if`, `@foreach`, `@class`, `@selected`, `@json`... (`rules/blade-directives.md`).
 5. **Traduzioni** (`rules/translations.md`): testo → `@lang('front::…')`, attributi (`title`, `alt`, `data-*`…) → `{{ __('front::…') }}`.
-6. **CSS/JS di pagina**: file in `assets/main/` + `@push('styles')` / `@push('scripts')` (`rules/no-inline.md`).
+6. **CSS/JS di pagina**: file in `assets/main/` + `@push('styles')` / `@push('scripts')` (`rules/no-inline.md`); pagina con molte librerie o molto JS suo → `pages/<entità>/scripts.blade.php` + `assets/main/js/pages/<entità>.js` (`rules/scripts-loading.md`). Immagini, iframe e video: skill `front-performance`.
 7. **Verifica**: `bash scripts/check-views.sh <root>`, poi rileggi tu le viste per il riuso dei componenti (passo 1): l'assenza di WARN non lo sostituisce.
 
 ## No

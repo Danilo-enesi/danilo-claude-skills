@@ -18,6 +18,6 @@
 ## No
 - Niente `asset('assets/...')` o `href="/assets/..."` senza `Version::get()`.
 - Niente `base.min.*` modificati a mano: si rigenerano.
-- Un nostro file nuovo che non entra in `base.min.*` in produzione non esiste: aggiungilo al bundle. Unica eccezione: i file di lingua `css/lang/<iso_code2>.css`, caricati da `<x-lang-css />` fuori dallo split, uguali nei due ambienti (pochi byte, solo nelle pagine di quella lingua; un bundle per lingua duplicherebbe tutto il CSS e invecchierebbe a ogni modifica di `main.css`).
+- Un nostro file nuovo che non entra in `base.min.*` in produzione non esiste: aggiungilo al bundle. Eccezioni: il JS di una pagina `js/pages/<entità>.js`, caricato solo da `pages/<entità>/scripts.blade.php` uguale nei due ambienti (`scripts-loading.md`); i file di lingua `css/lang/<iso_code2>.css`, caricati da `<x-lang-css />` fuori dallo split, uguali nei due ambienti (pochi byte, solo nelle pagine di quella lingua; un bundle per lingua duplicherebbe tutto il CSS e invecchierebbe a ogni modifica di `main.css`).
 
 Verifica: `scripts/check-head.sh`, `scripts/check-scripts.sh`

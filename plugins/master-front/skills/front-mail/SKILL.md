@@ -1,6 +1,6 @@
 ---
 name: front-mail
-description: Email del Master Laravel Enesi: template, blocchi, header/footer delle mail inviate dal sito. Prima capisce dove vive il design (admin con `BaseModulePreset::mail.base` o front con `Views/mail/` completo) e lavora solo lì. Attivala quando crei o modifichi una email: «template email», «mail di conferma», «blocco della mail», «header/footer della mail», «logo nella mail», «nuovo tipo di blocco email».
+description: Email del Master Laravel Enesi: template, blocchi, header/footer delle mail inviate dal sito. Prima capisce dove vive il design (admin con `BaseModulePreset::mail.base` o front con `Views/mail/` completo) e lavora solo lì. Attivala quando crei o modifichi una email: «template email», «mail di conferma», «blocco della mail», «header/footer della mail», «logo nella mail», «nuovo tipo di blocco email», «email accessibile».
 ---
 
 # Email
@@ -20,7 +20,10 @@ Percorsi relativi alla radice del plugin (`../../` da questa skill).
    - front: blocco nuovo = `blocks/<tipo>.blade.php` + `@include` nel `base` + classi negli `<style>` del `base`.
 3. Immagini e loghi delle email in `assets/mail/`.
 4. CSS inline e `<style>` sono ammessi solo qui (`rules/no-inline.md`).
+5. **Accessibilità** (`rules/mail.md`, sezione Accessibilità): `lang` (e `dir="rtl"` per le lingue RTL), `<title>`, tabelle di layout con `role="presentation"`, `alt` su ogni immagine, un `<h1>`, bottoni con testo che dice cosa fanno, testo leggibile anche con le immagini bloccate, versione `text/plain` per le mail importanti.
+6. Verifica: apri la mail con le immagini spente e controlla che si capisca tutto.
 
 ## No
 - Niente header/footer o stili nel front se la mail estende `BaseModulePreset`, e viceversa.
 - Niente template email fuori da `Views/mail/`.
+- Niente informazione solo dentro un'immagine, niente tabella di layout senza `role="presentation"`.

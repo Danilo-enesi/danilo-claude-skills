@@ -6,11 +6,14 @@
     @stack('styles')
   </head>
   <body class="lang-{{ Websites::currentLanguage('iso_code2') }} route-{{ Front::currentRouteName() }}">
+    {{-- Skip link: first element of the page, visible only when it takes the keyboard focus --}}
+    <a href="#main" class="visually-hidden-focusable skip-link">@lang('front::general.skip_to_content')</a>
+
     {{-- Header --}}
     @include('partials.header')
 
     {{-- Content --}}
-    <main class="main">
+    <main class="main" id="main">
       @yield('content')
     </main>
 

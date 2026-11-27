@@ -50,7 +50,8 @@ fi
 while IFS= read -r file; do
   case "$file" in "$VIEWS/partials/base/"* | "$VIEWS/mail/"*) continue ;; esac
   if grep -qiE '<style[ >]' "$file"; then fail no-inline "$(rel "$file"): blocco <style> inline"; fi
-  if grep -iE '<script[ >]' "$file" | grep -qviE 'application/ld\+json'; then
+  # <script src> in a @push is allowed (rules/scripts-loading.md); a <script> with code inside is not
+  if grep -iE '<script[ >]' "$file" | grep -viE 'application/ld\+json' | grep -qviE '<script[^>]*\ssrc\s*='; then
     fail no-inline "$(rel "$file"): <script> inline (usa @push('scripts') con un file in assets/main/js/)"
   fi
   if grep -qiE '\son(click|change|submit|load|input|keyup|keydown)=' "$file"; then
@@ -119,6 +120,12 @@ while IFS= read -r file; do
       href) warn html-markup "$(rel "$file"):$line <a href=\"#\"> o javascript: per un'azione: usa <button type=\"button\">" ;;
       tabindex) warn html-markup "$(rel "$file"):$line campo del form senza tabindex (ordine logico di compilazione)" ;;
       h1) warn html-markup "$(rel "$file"):$line più di un <h1> nella stessa vista: uno solo per pagina" ;;
+      tablename) fail html-markup "$(rel "$file"):$line <table> senza nome: aria-labelledby verso il titolo visibile, o <caption class=\"visually-hidden\">" ;;
+      thscope) fail html-markup "$(rel "$file"):$line <th> senza scope=\"col\"/\"row\"" ;;
+      dims) warn images-loading "$(rel "$file"):$line immagine senza width/height né classe *ratio* (CLS): misure dal design, dalla conversione o dal file" ;;
+      priority) warn images-loading "$(rel "$file"):$line più di un'immagine con priority nella stessa vista: solo quella LCP" ;;
+      iframe) warn images-loading "$(rel "$file"):$line <iframe> senza loading=\"lazy\" (o una facciata con il click)" ;;
+      sizes) warn images-loading "$(rel "$file"):$line :srcset senza sizes: il browser presume 100vw e scarica la più grande" ;;
     esac
   done < <(perl -0ne '
     s/\{\{--.*?--\}\}/" " x length($&)/gse;            # blank comments, keep offsets
@@ -147,7 +154,32 @@ while IFS= read -r file; do
         print at($p), " tabindex\n" unless $t =~ /\stabindex\s*=/i;
       }
     }
-    my $h1 = 0; while (/<h1\b/gi) { print at($-[0]), " h1\n" if ++$h1 == 2 }' "$file")
+    # data tables need a name (aria-labelledby/aria-label or <caption>) and scope on every <th>; layout tables
+    # (role="presentation", emails only) are skipped
+    while (/<table\b(?:[^>"]|"[^"]*")*>.*?<\/table>/gis) {
+      my ($table, $start) = ($&, $-[0]);
+      my ($open) = $table =~ /^(<table\b(?:[^>"]|"[^"]*")*>)/i;
+      next if $open =~ /\srole\s*=\s*"(?:presentation|none)"/i;
+      print at($start), " tablename\n" unless $open =~ /\saria-label(?:ledby)?\s*=/i || $table =~ /<caption\b/i;
+      while ($table =~ /<th\b(?:[^>"]|"[^"]*")*>/gis) {
+        my ($t, $p) = ($&, $start + $-[0]);
+        print at($p), " thscope\n" unless $t =~ /\sscope\s*=/i;
+      }
+    }
+    my $h1 = 0; while (/<h1\b/gi) { print at($-[0]), " h1\n" if ++$h1 == 2 }
+    # images (rules/images-loading.md): dimensions or a *ratio* class on the tag or on a wrapper just before it, one
+    # priority per view, :srcset with sizes; the picture-webp component itself prints a generic <img>
+    unless ($ARGV =~ m{components/picture-webp\.blade\.php$}) {
+      my $prio = 0;
+      while (/<(img|x-picture-webp)\b(?:[^>"]|"[^"]*")*>/gis) {
+        my ($t, $p) = ($&, $-[0]);
+        my $before = substr($_, $p > 400 ? $p - 400 : 0, $p > 400 ? 400 : $p);
+        print at($p), " dims\n" unless ($t =~ /\swidth\s*=/i && $t =~ /\sheight\s*=/i) || $t =~ /\sclass\s*=\s*"[^"]*ratio/i || $before =~ /class\s*=\s*"[^"]*\bratio[^"]*"[^<]*$/i;
+        print at($p), " priority\n" if $t =~ /\spriority(?:[\s>\/=])/i && ++$prio == 2;
+        print at($p), " sizes\n" if $t =~ /\s:srcset\s*=/i && $t !~ /\s:?sizes\s*=/i;
+      }
+    }
+    while (/<iframe\b(?:[^>"]|"[^"]*")*>/gis) { print at($-[0]), " iframe\n" unless $& =~ /\sloading\s*=/i }' "$file")
 done < <(find "$VIEWS" -name '*.blade.php')
 
 # One <main> per page, in the layout around @yield('content')

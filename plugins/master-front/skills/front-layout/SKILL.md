@@ -13,10 +13,11 @@ Percorsi relativi alla radice del plugin (`../../` da questa skill).
 
 1. Parti da `templates/views/layouts/main.blade.php`, copiato com'è.
 2. Tieni i pezzi obbligatori (`rules/layout-main.md`):
-   - `<html lang="{{ Websites::currentLanguage('iso_code2') }}">`
+   - `<html lang="{{ Websites::currentLanguage('iso_code2') }}">` (siti con lingue RTL/CJK: `<html lang="{{ $htmlLang }}" dir="{{ $htmlDir }}">`, skill `front-lang-css`)
    - `@include('partials.base.head')` + `@stack('styles')` dentro `<head>`
    - body con `lang-...` e `route-...`
-   - `<main class="main">@yield('content')</main>`
+   - skip link `<a href="#main" class="visually-hidden-focusable skip-link">` primo elemento del body
+   - `<main class="main" id="main">@yield('content')</main>`
    - `@include('partials.base.scripts')` + `@stack('scripts')` prima di `</body>`
 3. Header, footer, modali: `@include('partials.…')`.
 4. Un layout alternativo (vuoto, landing) va in `layouts/` e rispetta gli stessi pezzi.

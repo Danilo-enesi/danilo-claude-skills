@@ -6,7 +6,7 @@
 assets/
 ├── main/
 │   ├── css/              main.css, responsive.css, <modulo>.css, base.min.css, lang/<iso_code2>.css
-│   ├── js/               main.js, <modulo>.js, base.min.js
+│   ├── js/               main.js, <modulo>.js, base.min.js, pages/<entità>.js
 │   ├── lib/<libreria>/   librerie scaricate (sottocartelle css/ js/ se sono tanti file)
 │   ├── icons/            icone della web-app (favicon, apple-touch, ms-tile)
 │   ├── images/<entità>/  immagini del progetto, per entità

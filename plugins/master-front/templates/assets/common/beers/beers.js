@@ -30,6 +30,11 @@
         return translation;
     };
 
+    // a11y: label of icon-only buttons (close), from window.front.translations.beers.<key> or the Italian fallback
+    function a11yLabel(key, fallback) {
+        return (window.front && window.__('beers.' + key)) || fallback;
+    }
+
 
     /* jQuery
     ------------------------------------------------------------ */
@@ -523,7 +528,8 @@
                 var offset_top = alert.data('offset-top') || 100;
 
                 // TEMPLATE
-                var tpl = '<div class="alert alert-{type}"><span class="msg">{message}</span></div>';
+                // a11y: role="alert" makes screen readers announce the message as soon as it appears
+                var tpl = '<div class="alert alert-{type}" role="alert"><span class="msg">{message}</span></div>';
                 var html = tpl.replace('{type}', options.type).replace('{message}', options.message);
 
                 // SHOW
@@ -567,7 +573,8 @@
             "notify": function (options) {
 
                 // WRAPPER
-                var wrapper = ($('.bee-notify-wrapper').length) ? $('.bee-notify-wrapper') : $('<div />', {'class': 'bee-notify-wrapper', html : ''}).appendTo('body');
+                // a11y: live region, screen readers read each notification added inside it
+                var wrapper = ($('.bee-notify-wrapper').length) ? $('.bee-notify-wrapper') : $('<div />', {'class': 'bee-notify-wrapper', html : '', 'role': 'status', 'aria-live': 'polite'}).appendTo('body');
 
                 if (options === false) {
                     wrapper.remove();
@@ -578,9 +585,10 @@
                 }
 
                 // NOTIFICA
-                var tpl = '<div class="alert alert-{type}"><span class="msg">{message}</span><button class="bee-notify-close"></button></div>';
+                var tpl = '<div class="alert alert-{type}"><span class="msg">{message}</span><button class="bee-notify-close" type="button"></button></div>';
                 var notify_html = tpl.replace('{type}', options.type).replace('{message}', options.message);
                 var notify = $(notify_html).appendTo(wrapper);
+                notify.find('.bee-notify-close').attr('aria-label', a11yLabel('close', 'Chiudi'));
 
                 // CHIUSURA
                 var notify_close = function () {
@@ -600,10 +608,11 @@
 
                 if (options.time > 0) {
                     var notify_timeout = false;
-                    notify.on('mouseenter', function () {
+                    // a11y: keyboard focus pauses the auto close like the mouse does
+                    notify.on('mouseenter focusin', function () {
                         clearTimeout(notify_timeout);
                     });
-                    notify.on('mouseleave', function () {
+                    notify.on('mouseleave focusout', function () {
                         notify_timeout = setTimeout(notify_close, options.time);
                     });
                     notify_timeout = setTimeout(notify_close, options.time);
@@ -653,14 +662,19 @@
 
                 // Add Error
                 errorContainer.addClass('bee-error');
+                // a11y: the field is marked invalid and points to its message, read together with the label
+                var errorId = 'bee-error-' + String(options.field).replace(/[^\w-]/g, '_');
+                input.attr('aria-invalid', 'true');
                 if(typeof options.message !== undefined){
-                    $('<div class="bee-error-message" />').html(options.message).insertAfter(errorContainer).css('top', errorContainer.position().top + errorContainer.outerHeight());
+                    $('<div class="bee-error-message" />').attr('id', errorId).html(options.message).insertAfter(errorContainer).css('top', errorContainer.position().top + errorContainer.outerHeight());
+                    input.attr('aria-describedby', errorId);
                 }
 
                 // Remove error on change
                 input.on('change', function() {
                     errorContainer.removeClass('bee-error');
                     $('.bee-error-message', errorContainer.parent()).remove();
+                    input.removeAttr('aria-invalid aria-describedby');
                 });
 
                 // Scroll if not in view
@@ -709,7 +723,7 @@
                 var form = this;
 
                 // Reset errori
-                $(':input.is-invalid').removeClass('is-invalid');
+                $(':input.is-invalid').removeClass('is-invalid').removeAttr('aria-invalid aria-describedby');
                 $('.invalid-feedback', form).remove();
 
                 var globalMessages = [];
@@ -720,8 +734,13 @@
                         var input = $('[name=' + name + ']', form);
                         $.each(messages, function(i, message){
                             if(input.length) {
-                                input.addClass('is-invalid');
-                                input.after('<div class="invalid-feedback">' + message + '</div>');
+                                // a11y: aria-invalid + aria-describedby towards the message (one id per field)
+                                var feedbackId = 'invalid-' + String(name).replace(/[^\w-]/g, '_');
+                                input.addClass('is-invalid').attr({'aria-invalid': 'true', 'aria-describedby': feedbackId});
+                                if (!$('#' + feedbackId, form).length) {
+                                    input.after('<div class="invalid-feedback" id="' + feedbackId + '"></div>');
+                                }
+                                $('#' + feedbackId, form).append($('<div />').html(message));
                             } else {
                                 globalMessages.push(message);
                             }
@@ -729,7 +748,7 @@
                     });
                 }
 
-                if(globalMessages.lenght){
+                if(globalMessages.length){
                     bootbox.alert({
                         message: globalMessages.join('<br />')
                     });
@@ -1327,6 +1346,8 @@
         }, options);
 
         self.open = function () {
+            // a11y: remember who opened the dialog, focus goes back there on close
+            self.opener = document.activeElement;
             _init(function () {
                 var bw_before = $('body').width();
                 Beers.documentLock(true);
@@ -1342,6 +1363,9 @@
                     }
                     self.dialog.trigger('beers:dialog.open');
                     Beers.load(self.dialog);
+                    // a11y: focus inside the dialog (first focusable element, or the dialog box itself)
+                    var first = _focusables().first();
+                    (first.length ? first : self.inner).trigger('focus');
                     _triggerFunction('open', self.options.onOpen);
                     if(typeof window.EPP !== 'undefined') {
                         window.EPP.consent.load();
@@ -1359,8 +1383,17 @@
                 self.dialog.trigger('beers:dialog.close');
                 _triggerFunction('close', self.options.onClose);
                 self.dialog.remove();
+                // a11y: focus back to the element that opened the dialog, if it is still in the page
+                if (self.opener && document.body.contains(self.opener) && typeof self.opener.focus === 'function') {
+                    self.opener.focus();
+                }
             });
         };
+
+        // a11y: visible elements that take the keyboard focus inside the dialog
+        function _focusables() {
+            return self.inner.find('a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), iframe, [tabindex]:not([tabindex="-1"])').filter(':visible');
+        }
 
         function _init(ok) {
             _loadContent(function () {
@@ -1422,7 +1455,8 @@
 
         function _create() {
             self.dialog = $('<div />', {'class': 'bee-dialog'});
-            self.inner = $('<div />', {'class': 'bee-dialog-inner'}).appendTo(self.dialog);
+            // a11y: modal dialog; tabindex -1 lets the box take the focus when it has no focusable element
+            self.inner = $('<div />', {'class': 'bee-dialog-inner', 'role': 'dialog', 'aria-modal': 'true', 'tabindex': '-1'}).appendTo(self.dialog);
 
             // Main
             var main = $('<div />', {'class': 'bee-dialog-main', 'html': self.content}).appendTo(self.inner);
@@ -1458,7 +1492,7 @@
             // Close
             if (self.options.close === true) {
                 self.dialog.addClass('bee-has-close');
-                self.inner.append('<button class="bee-dialog-close" data-dialog-action="close" type="button"></button>');
+                self.inner.append($('<button class="bee-dialog-close" data-dialog-action="close" type="button"></button>').attr('aria-label', a11yLabel('close', 'Chiudi')));
 
                 if (self.options.backclose === true) {
                     self.dialog.on('mousedown', function (e) {
@@ -1468,6 +1502,31 @@
                     });
                 }
             }
+
+            // a11y: Esc closes (only when the dialog can be closed), Tab stays inside the dialog
+            self.dialog.on('keydown', function (e) {
+                if (e.key === 'Escape' && self.options.close === true) {
+                    e.stopPropagation();
+                    self.close();
+                    return;
+                }
+                if (e.key !== 'Tab') {
+                    return;
+                }
+                var items = _focusables();
+                if (!items.length) {
+                    e.preventDefault();
+                    return;
+                }
+                var first = items.get(0), last = items.get(items.length - 1);
+                if (e.shiftKey && (document.activeElement === first || document.activeElement === self.inner[0])) {
+                    e.preventDefault();
+                    last.focus();
+                } else if (!e.shiftKey && document.activeElement === last) {
+                    e.preventDefault();
+                    first.focus();
+                }
+            });
 
             // Actions
             self.dialog.on('click', '[data-dialog-action]', function (e) {

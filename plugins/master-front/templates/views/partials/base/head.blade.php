@@ -2,6 +2,9 @@
 {!! Meta::render() !!}
 {!! Dom::renderCookieBanner() !!}
 
+<!-- Preconnect: DNS e TLS della CDN aperti subito, prima che il browser trovi i suoi CSS e JS -->
+<link rel="preconnect" href="https://cdn.ene.si">
+
 <!-- Fonts (facoltativi: per attivarli togli il commento Blade, preconnect compresi; Meta::googleFonts li blocca fino al consenso) -->
 {{-- <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

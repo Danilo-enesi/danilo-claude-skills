@@ -21,7 +21,9 @@ check "@include('partials.base.head')" "include di head"
 check "@stack('styles')" "stack styles"
 check "@include('partials.base.scripts')" "include di scripts"
 check "@stack('scripts')" "stack scripts"
-check '<main class="main">' "contenitore main"
+check '<main class="main"' "contenitore main"
+check 'id="main"' "id=\"main\" sul <main> (destinazione dello skip link)"
+check 'href="#main"' "skip link verso #main"
 check "@yield('content')" "yield content"
 
 # Order: include first, then its stack (pages can override/extend what the base loads)

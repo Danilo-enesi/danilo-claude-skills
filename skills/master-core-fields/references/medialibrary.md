@@ -72,6 +72,7 @@ public function registerMediaConversions(?Media $media = null): void
 
 1. Il model ha (o eredita) il trait/interfaccia Spatie `HasMedia`?
 2. Serve `registerMediaCollections()` con lo stesso nome di `name` e coerente `singleFile()`/non-singleFile con `maxNumberOfFiles`?
-3. Servono conversioni (`registerMediaConversions()`) per generare thumbnail coerenti col frontend?
+3. Servono conversioni (`registerMediaConversions()`) per generare thumbnail coerenti col frontend? Convenzione del front (`master-front` `rules/images-loading.md`): `<conversione>-sm` e `<conversione>-lg`, ognuna con la sua `-webp`, `performOnCollections()` sulla collection giusta, con `Fit::Max` e la sola larghezza (l'immagine non si deforma né si taglia).
+   - Il cliente può caricare una **versione mobile** della foto? Collection a parte `<nome>_mobile` (`singleFile()`) con il suo campo `MediaLibrary` (`'name' => '<nome>_mobile'`, `help` con le misure consigliate) e la conversione `<conversione>-mobile` + `-mobile-webp`. È facoltativa: il front usa la principale quando manca.
 4. `addField('MediaLibrary', ['name'=>..., 'maxNumberOfFiles'=>..., 'allowedFileTypes'=>[...], 'label'=>...])`.
 5. Se il modulo è nuovo/in creazione, verifica che il campo sia in un tab raggiungibile anche prima del primo salvataggio (per non nasconderlo del tutto).

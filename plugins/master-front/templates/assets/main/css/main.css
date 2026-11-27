@@ -30,3 +30,14 @@ img {
   max-width: 1320px;
   margin: 0 auto;
 }
+
+/* Skip link (layout-main): hidden by Bootstrap's visually-hidden-focusable, shown on top when it takes the focus */
+.skip-link:focus {
+  position: fixed;
+  top: 0.5rem;
+  inset-inline-start: 0.5rem;
+  z-index: 1090;
+  padding: 0.75rem 1rem;
+  color: var(--color-bg);
+  background: var(--color-text);
+}

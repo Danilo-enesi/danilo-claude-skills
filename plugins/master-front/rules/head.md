@@ -5,11 +5,12 @@ Tutto ciò che va in `<head>`: meta, cookie banner, font, link, librerie CSS, i 
 Ordine:
 1. `{!! Meta::render() !!}`
 2. `{!! Dom::renderCookieBanner() !!}` (se il sito gestisce i cookie), prima di ogni `<link>`/`<script>`
-3. font, **facoltativi** (nel template sono commentati): preconnect + `{!! Meta::googleFonts(...) !!}`; si attivano togliendo il commento Blade
-4. librerie (minificate se possibile): di default **Bootstrap** (`//cdn.ene.si/bootstrap/<versione>/css/bootstrap.min.css`)
-5. i nostri CSS, con lo split di ambiente (vedi `assets-versioning`); nel ramo debug **`beers.css` per primo**, poi `main.css`, poi `responsive.css`
+3. `<link rel="preconnect" href="https://cdn.ene.si">`: la connessione alla CDN parte subito invece di aspettare il primo `<link>`/`<script>` che la usa (librerie CSS e JS). **Senza `crossorigin`**: i `<link>` e `<script>` della CDN sono richieste normali, e una connessione aperta con `crossorigin` non verrebbe riusata (il `crossorigin` serve solo per i font, come `fonts.gstatic.com`). Un preconnect per ogni altro dominio da cui la pagina carica risorse **subito** (es. un'altra CDN); non per quelli caricati dopo il consenso o in poche pagine.
+4. font, **facoltativi** (nel template sono commentati): preconnect + `{!! Meta::googleFonts(...) !!}`; si attivano togliendo il commento Blade
+5. librerie (minificate se possibile): di default **Bootstrap** (`//cdn.ene.si/bootstrap/<versione>/css/bootstrap.min.css`)
+6. i nostri CSS, con lo split di ambiente (vedi `assets-versioning`); nel ramo debug **`beers.css` per primo**, poi `main.css`, poi `responsive.css`
    - subito dopo, fuori dallo split, il **file di lingua** `assets/main/css/lang/<iso_code2>.css` se esiste: così le correzioni di una lingua sovrascrivono `main.css` e `responsive.css` (regola `css-split`). Lo stampa il componente `<x-lang-css />` (sezione "File di lingua"), non un `file_exists()` nella Blade
-6. favicon (sempre); icone web-app (`apple-touch-icon`, `icon-192`) **facoltative**, commentate nel template: si attivano togliendo il commento e mettendo i png in `assets/main/icons/`; gtag
+7. favicon (sempre); icone web-app (`apple-touch-icon`, `icon-192`) **facoltative**, commentate nel template: si attivano togliendo il commento e mettendo i png in `assets/main/icons/`; gtag
 
 ## File di lingua
 

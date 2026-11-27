@@ -24,6 +24,7 @@ I percorsi `rules/`, `scripts/`, `templates/` sono relativi alla radice del plug
 | aggiungere CSS, font, librerie, icone in `<head>` | `front-head` |
 | installare una libreria/plugin JS o CSS (prima la CDN di Enesi) | `front-cdn` |
 | aggiungere JS o librerie JS | `front-scripts` |
+| immagini, iframe, video, librerie di una sola pagina, velocità (LCP, CLS) | `front-performance` |
 | salvare un file in `assets/` | `front-assets` |
 | script, iframe o font di terze parti | `front-cookie-consent` |
 | title, description, canonical, og:tags (ogni action che rende una vista) | `front-meta` |

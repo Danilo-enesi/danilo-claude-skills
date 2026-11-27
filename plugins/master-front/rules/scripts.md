@@ -11,6 +11,7 @@ Ordine:
 ## No
 - Niente `main.js` prima di `beers.js`: i nostri script usano Beers.
 - Niente librerie dopo i nostri script: le librerie vanno prima.
+- Niente librerie usate solo da alcune pagine: vanno nella pagina (`@push`) o in `pages/<entità>/scripts.blade.php` (`scripts-loading.md`).
 - Niente markup (es. il bottone torna-su): non è uno script, va nel layout o in un partial.
 
 Verifica: `scripts/check-scripts.sh` · Template: `templates/views/partials/base/scripts.blade.php`

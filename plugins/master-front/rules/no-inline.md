@@ -4,6 +4,7 @@
 - CSS e JS in file sotto `assets/main/` (vedi `assets-structure`).
 - CSS/JS di una sola pagina o componente: `@push('styles')` / `@push('scripts')` con un `<link>`/`<script src>` versionato.
 - Componente presente più volte: `@pushOnce('scripts', 'chiave')`.
+- Pagina con molte librerie o molto JS suo: `pages/<entità>/scripts.blade.php` con soli `@push` di `<script src>`/`<link>` (`scripts-loading.md`).
 - Dati per il JS: attributi `data-*` sul markup, o `window.front`.
 
 ## No

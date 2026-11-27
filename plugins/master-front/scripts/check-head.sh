@@ -16,6 +16,13 @@ if [ -n "$banner" ] && [ -n "$first_asset" ] && [ "$banner" -gt "$first_asset" ]
   fail cookie-consent "il cookie banner va prima di ogni <link>/<script>"
 fi
 
+# Preconnect to the CDN (rules/head.md): without crossorigin, or it is not reused by plain <link>/<script>
+if grep -qE '<link[^>]+rel="preconnect"[^>]+cdn\.ene\.si' "$F"; then
+  grep -qE '<link[^>]+rel="preconnect"[^>]+cdn\.ene\.si[^>]*crossorigin' "$F"     && warn head "preconnect a cdn.ene.si con crossorigin: toglilo, CSS e JS della CDN non lo usano"     || ok head "preconnect a cdn.ene.si"
+elif grep -q 'cdn\.ene\.si' "$F"; then
+  warn head "la pagina carica da cdn.ene.si senza <link rel=\"preconnect\" href=\"https://cdn.ene.si\">"
+fi
+
 # Google Fonts only through Meta::googleFonts() (blocked until consent)
 if grep -E '<link[^>]+href="https://fonts\.googleapis\.com/css' "$F" >/dev/null; then
   fail cookie-consent "Google Fonts con <link href> diretto: usa Meta::googleFonts(...)"

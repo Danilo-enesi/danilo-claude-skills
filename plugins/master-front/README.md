@@ -36,6 +36,7 @@ plugins/master-front/
 | `front-scripts` | `partials/base/scripts.blade.php`: window.front, librerie, JS, callbacks Beers |
 | `front-assets` | dove va un file in `assets/` |
 | `front-cookie-consent` | risorse di terze parti e cookie banner EPP |
+| `front-performance` | Core Web Vitals: immagine LCP con `priority`, dimensioni o `aspect-ratio`, `:srcset`/`sizes` e `:sources` in `<x-picture-webp>`, iframe lazy o con facciata, preconnect alla CDN, librerie solo dove servono con `pages/<entità>/scripts.blade.php` |
 | `front-lang-css` | lingue difficili: RTL (`lang`/`dir`, Bootstrap RTL, proprietà logiche, icone specchiate), CJK (font di sistema, a capo, enfasi), testo lungo e alfabeti estesi (larghezze flessibili, hyphens, glifi); file `assets/main/css/lang/<iso_code2>.css` con le correzioni di una lingua; regole `lang-rtl`, `lang-cjk`, `lang-long-text` |
 | `front-alternates` | siti multilingua: alternate hreflang + x-default con il trait `SetsAlternates` (salta i siti monolingua, scarta le URL vuote), `urlLang()` nel model, override di `Meta` se il core non li supporta |
 | `front-meta` | title, description, canonical e og:tags in ogni action che rende una vista; pagina 1 = lista base; bug del canonical come `<meta>` |
@@ -59,6 +60,7 @@ Senza argomento usano la root git della cartella corrente. Exit code 1 se c'è a
 ## Convenzioni
 
 - `Views/layouts/` solo layout; `Views/partials/base/` head e scripts; `components/<concetto>/`; `pages/<entità>/`; `mail/` per template e blocchi delle email.
+- Accessibilità (skill `front-html`): modali e offcanvas, anche scritti a mano, con Esc e focus che torna al bottone; `prefers-reduced-motion`; slider con pausa; Beers con dialog, notifiche ed errori accessibili (`rules/beers-a11y.md`, patch funzione per funzione nei progetti); contrasto AA con `scripts/contrast.py` (`rules/design-md.md`); email accessibili (`rules/mail.md`).
 - Ciò che si usa due volte è un componente (`rules/components-reuse.md`): stesso scheletro con dati diversi è lo stesso componente, i dati sono props.
 - I dati per i componenti (breadcrumb, titolo...) li prepara e valida il controller, la vista riceve una variabile (`rules/blade-logic.md`).
 - `assets/main/` = tema Main; Beers in `assets/common/beers/`; email utente in `assets/mail/`.

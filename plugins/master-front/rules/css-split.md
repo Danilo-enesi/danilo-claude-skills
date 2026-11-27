@@ -3,6 +3,7 @@
 | File | Contiene |
 |---|---|
 | `main.js` | helper, init dei plugin, listener generici **e la logica delle pagine del front** (slider della home, filtri di una lista, form di contatto...) |
+| `pages/<entità>.js` | il JavaScript di **una pagina** che ne ha molto (o molte librerie): caricato solo lì da `pages/<entità>/scripts.blade.php`, fuori dal bundle (`scripts-loading.md`). Alternativa a riempire `main.js` con la logica di ogni pagina |
 | `<modulo>.js` | solo una funzionalità **complessa e autonoma** che gestisce molte cose insieme: ecommerce (carrello, checkout), `map.js` (mappa, marker, filtri, popup)... |
 | `main.css` | classi globali riusabili |
 | `responsive.css` | **tutte** le media query, e solo quelle |
@@ -18,6 +19,6 @@
 - Niente correzioni di una sola lingua in `main.css`/`responsive.css` (`:lang(fil) ...`): vanno nel suo file di lingua. `main.css` resta uguale per tutte le lingue.
 - Niente copia di `main.css` per lingua: il file di lingua ha solo le regole che cambiano.
 - Niente override di una classe globale da una classe figlia, salvo quando è voluto ed evidente.
-- Niente file modulo per codice generico o per la logica di una pagina: va in `main.*`. Un modulo nasce solo quando la funzionalità è complessa e starebbe male dentro `main.js`.
+- Niente file modulo per codice generico o per la logica **leggera** di una pagina: va in `main.*`; la logica pesante di una pagina va in `pages/<entità>.js`. Un modulo nasce solo quando la funzionalità è complessa e starebbe male dentro `main.js`.
 
 Verifica: `scripts/check-assets.sh`

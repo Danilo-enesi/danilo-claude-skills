@@ -133,10 +133,13 @@ class TextBlock extends Component
 class ArticleBlock extends Component
 {
     public $image;
+    public string $alt = '';
 
     public function __construct(public $block)
     {
         $this->image = $block->getContentMedia('Article');
+        // alt dalla media (custom property `alt`, se l'admin la salva); senza, decorativa: il testo accanto porta il contenuto
+        $this->alt = (string) ($this->image?->getCustomProperty('alt') ?? '');
     }
 
     public function render(): View { return view('components.blocks.article'); }
@@ -147,11 +150,14 @@ class ArticleBlock extends Component
 {{-- article.blade.php --}}
 <div class="block-article block-article--{{ $block->getBlockData('option') ?? 'left-pic-right-text' }}">
     @if($image)
-        <img class="block-article__image" src="{{ $image->getUrl() }}" alt="" loading="lazy" />
+        <x-picture-webp class="block-article__image" :image="$image" :alt="$alt" loading="lazy" />
     @endif
     <div class="block-article__text">{!! $block->getBlockData('text') !!}</div>
 </div>
 ```
+
+- Immagine con `<x-picture-webp>` (webp automatico, `alt` obbligatorio; componente del plugin `master-front`), mai `<img>` scritto a mano.
+- `alt`: la custom property `alt` della media se il progetto la gestisce nell'admin; altrimenti `alt=""`, corretto **solo** perché l'immagine accompagna un testo che dice già tutto. Se le immagini del blocco portano informazione propria (schemi, prodotti, persone), il progetto deve far inserire l'`alt` nell'admin: segnalalo, non inventare un `alt` dal nome del file.
 
 L'ordine visivo (immagine prima/dopo, sopra/sotto) è responsabilità del CSS che leggi sul modificatore `--left-pic-right-text` ecc. — non del markup, che resta identico per tutte le varianti.
 
@@ -166,11 +172,20 @@ Markup minimo, semanticamente corretto, **funzionante senza JS** (elenco di link
 ```php
 class GalleryBlock extends Component
 {
-    public $images;
+    public $items;
 
     public function __construct(public $block)
     {
-        $this->images = $block->getContentMedia('Gallery') ?? collect();
+        $images = $block->getContentMedia('Gallery') ?? collect();
+        $total = $images->count();
+
+        // Ogni link deve avere un nome accessibile: l'alt della media, o «Immagine 2 di 8» se manca
+        $this->items = $images->values()->map(fn ($image, $i) => [
+            'image' => $image,
+            'url'   => $image->getUrl(),
+            'alt'   => (string) ($image->getCustomProperty('alt')
+                ?: __('front::blocks.gallery_image', ['n' => $i + 1, 'total' => $total])),
+        ]);
     }
 
     public function render(): View { return view('components.blocks.gallery'); }
@@ -179,18 +194,22 @@ class GalleryBlock extends Component
 
 ```blade
 {{-- gallery.blade.php — PLACEHOLDER: sostituisci con la libreria scelta dal progetto --}}
-@if($images->isNotEmpty())
+@if($items->isNotEmpty())
     <ul class="block-gallery">
-        @foreach($images as $image)
+        @foreach($items as $item)
             <li class="block-gallery__item">
-                <a href="{{ $image->getUrl() }}">
-                    <img src="{{ $image->getUrl('gallery-thumb') ?: $image->getUrl() }}" alt="" loading="lazy" />
+                <a href="{{ $item['url'] }}">
+                    <x-picture-webp :image="$item['image']" conversion="gallery-thumb" :alt="$item['alt']" loading="lazy" />
                 </a>
             </li>
         @endforeach
     </ul>
 @endif
 ```
+
+- `conversion="gallery-thumb"` presuppone che il model registri quella conversione (Spatie solleva un'eccezione per una conversione sconosciuta): se il progetto non ce l'ha, togli `conversion` (immagine originale) o registra la conversione.
+- L'immagine è l'unico contenuto del link: il suo `alt` è il nome del link. Per questo qui `alt=""` non va mai bene: senza la custom property `alt`, la classe mette «Immagine 2 di 8» (`front::blocks.gallery_image` = `Immagine :n di :total`).
+- La libreria che sostituirà il placeholder (lightbox, carousel) deve rispettare le regole di `master-front` `rules/html-markup.md`: Esc chiude il lightbox, il focus torna sulla miniatura, frecce come `<button>` con `aria-label`, bottone di pausa se scorre da solo, niente autoplay con `prefers-reduced-motion`.
 
 **Prima di andare in produzione**: scegli una libreria, sostituisci il markup di `gallery.blade.php` con quello richiesto dalla libreria (attributi `data-*`, wrapper aggiuntivi), e registra gli asset JS/CSS nel bundle del progetto. Non lasciare questo placeholder in un sito live — funziona, ma l'esperienza (niente carousel/lightbox) non è quella richiesta da un blocco "galleria".
 
@@ -292,7 +311,9 @@ class ImageFullBlock extends Component
 </div>
 ```
 
-Il parallax (se `data.option === 'si'`) è un effetto JS/CSS specifico del progetto — qui solo il modificatore di classe è previsto, l'implementazione dell'effetto no.
+Il parallax (se `data.option === 'si'`) è un effetto JS/CSS specifico del progetto — qui solo il modificatore di classe è previsto, l'implementazione dell'effetto no. Qualunque implementazione si ferma con `prefers-reduced-motion: reduce` (`master-front` `rules/html-markup.md`, sezione Movimento).
+
+L'immagine è uno sfondo CSS: per un lettore di schermo non esiste, ed è giusto solo perché è decorativa (il contenuto sta nel testo sopra). Se nel progetto l'immagine porta informazione propria, usa `<x-picture-webp>` con `alt` dentro il blocco invece dello sfondo. Il testo sopra l'immagine ha bisogno di un velo scuro (o chiaro) che gli dia contrasto 4.5:1 su qualunque immagine carichi l'admin.
 
 ---
 
@@ -300,5 +321,8 @@ Il parallax (se `data.option === 'si'`) è un effetto JS/CSS specifico del proge
 
 - ❌ Costruire il layout (sidebar, colonne, griglia editoriale) dentro un componente di blocco — quella è composizione di pagina, non del blocco singolo.
 - ❌ Copiare il markup `gallery` in produzione senza sostituire la libreria — è marcato PLACEHOLDER apposta.
+- ❌ `<img>` scritto a mano nei blocchi — si usa `<x-picture-webp>` con `alt` (regole `master-front` `components-reuse.md`).
+- ❌ `alt=""` su un'immagine che è l'unico contenuto di un link (gallery, card cliccabile) — il link resta senza nome per il lettore di schermo.
+- ❌ `alt` preso dal nome del file o inventato — o la custom property `alt` dell'admin, o `alt=""` quando il testo accanto dice già tutto.
 - ❌ Riusare classi CSS generiche non dedicate (`.card`, `.section`) come classe radice di un blocco — ogni tipo ha la sua (`block-<tipo>`), anche se visivamente simile a un altro.
 - ❌ Mettere la logica di full-bleed nel renderer globale invece che nel componente — un domani un nuovo tipo full-bleed condizionale (come `text`/`video_embed`) richiederebbe di toccare il renderer invece del proprio componente.

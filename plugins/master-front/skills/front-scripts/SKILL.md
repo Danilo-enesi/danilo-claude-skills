@@ -19,9 +19,11 @@ Percorsi relativi alla radice del plugin (`../../` da questa skill).
    4. blocco `@if(session()->has('callbacks'))` con `Beers.callbacks.fireList`
 3. Ogni script locale dentro `\Master\Facades\Version::get(...)` (`rules/assets-versioning.md`).
 4. **Dove va il nostro JS** (`rules/css-split.md`):
-   - logica di una pagina del front (slider, filtri, form, toggle...) → **in `main.js`**, in una sezione per pagina che parte solo se la pagina c'è (elemento presente o `window.front.route`);
+   - logica **leggera** di una pagina del front (slider, filtri, form, toggle...) → **in `main.js`**, in una sezione per pagina che parte solo se la pagina c'è (elemento presente o `window.front.route`);
    - funzionalità **complessa** che gestisce molte cose (ecommerce: carrello e checkout; `map.js`: mappa, marker, filtri, popup) → modulo `<nome>.js`: entra nel ramo debug **e** nel bundle `base.min.js`, oppure `@push('scripts')` solo dalle pagine che lo usano.
-5. Verifica: `bash scripts/check-scripts.sh <root>`.
+   - una pagina con **molte librerie o molto JS suo** → `assets/main/js/pages/<entità>.js` caricato da `pages/<entità>/scripts.blade.php`, fuori dal bundle (`rules/scripts-loading.md`): alternativa a riempire `main.js`.
+5. **Solo dove serve** (`rules/scripts-loading.md`): in questo file solo ciò che usano tutte le pagine; una libreria di una pagina va nella pagina (`@push`), una pagina con molte librerie o molto JS suo ha `pages/<entità>/scripts.blade.php` + `assets/main/js/pages/<entità>.js`.
+6. Verifica: `bash scripts/check-scripts.sh <root>`.
 
 ## No
 - Niente librerie dopo i nostri script.
